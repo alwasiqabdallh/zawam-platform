@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>تفاصيل الدورة | زوام</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="navbar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                Z
+            </div>
+
+            <div>
+                <h2>زوام</h2>
+                <span>ZAWAM</span>
+            </div>
+
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                الرئيسية
+            </a>
+
+            <a href="courses.html">
+                الدورات
+            </a>
+
+            <a href="index.html#categories">
+                التخصصات
+            </a>
+
+        </nav>
+
+        <div class="nav-buttons">
+
+            <button class="language-btn" onclick="changeLanguage()">
+                English
+            </button>
+
+            <div id="authButtons">
+
+                <a href="login.html" class="login-btn">
+                    تسجيل الدخول
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= COURSE DETAILS ================= -->
+
+    <section class="course-details">
+
+        <div class="details-container">
+
+            <!-- INFO -->
+
+            <div class="details-info">
+
+                <span class="course-category" id="courseCategory">
+                    جاري التحميل...
+                </span>
+
+                <h1 id="courseTitle">
+                    جاري تحميل الدورة...
+                </h1>
+
+                <p class="details-description" id="courseDescription">
+                    جاري تحميل بيانات الدورة...
+                </p>
+
+                <div class="details-stats">
+
+                    <span>
+                        👨‍🎓 متاح للطلاب
+                    </span>
+
+                    <span id="courseDuration">
+                        ⏱️ جاري التحميل...
+                    </span>
+
+                </div>
+
+                <div class="instructor">
+
+                    <div class="instructor-avatar">
+                        👨‍🏫
+                    </div>
+
+                    <div>
+
+                        <small>
+                            المدرب
+                        </small>
+
+                        <strong id="courseInstructor">
+                            جاري التحميل...
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- COURSE CARD -->
+
+            <div class="enroll-card">
+
+                <div class="details-image" id="courseIcon">
+                    💻
+                </div>
+
+                <h2>
+                    ابدأ التعلم الآن
+                </h2>
+
+                <p id="enrollMessage">
+                    احصل على الوصول الكامل للدورة.
+                </p>
+
+                <button class="enroll-btn" id="enrollButton" onclick="startCourse()">
+                    التسجيل في الدورة
+                </button>
+
+                <ul>
+
+                    <li>✓ دروس فيديو</li>
+
+                    <li>✓ اختبارات</li>
+
+                    <li>✓ شهادة إكمال</li>
+
+                    <li>✓ وصول للدورة</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= LESSONS ================= -->
+
+    <section class="lessons">
+
+        <div class="lessons-container">
+
+            <h2>
+                محتوى الدورة
+            </h2>
+
+            <div id="lessonsContainer">
+
+                <p>
+                    جاري تحميل المحاضرات...
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="copyright">
+
+            © 2026 ZAWAM Educational Platform
+
+        </div>
+
+    </footer>
+
+
+    <script>
+
+        let currentCourse = null;
+
+        const urlParams =
+            new URLSearchParams(window.location.search);
+
+        const courseId =
+            urlParams.get("id");
+
+
+        // ==================================================
+        // AUTH NAVBAR
+        // ==================================================
+
+        function updateAuthButtons() {
+
+            const authButtons =
+                document.getElementById("authButtons");
+
+            if (!authButtons) return;
+
+            const loggedIn =
+                localStorage.getItem("zawamLoggedIn") === "true";
+
+            const userName =
+                localStorage.getItem("zawamUserName") || "الطالب";
+
+            if (loggedIn) {
+
+                authButtons.innerHTML = `
+
+                    <div style="
+                        display:flex;
+                        align-items:center;
+                        gap:10px;
+                    ">
+
+                        <a
+                            href="profile.html"
+                            class="login-btn"
+                            style="text-decoration:none;"
+                        >
+                            👤 ${userName}
+                        </a>
+
+                        <button
+                            onclick="logoutUser()"
+                            class="login-btn"
+                            style="
+                                border:none;
+                                cursor:pointer;
+                                font-family:inherit;
+                            "
+                        >
+                            تسجيل الخروج
+                        </button>
+
+                    </div>
+
+                `;
+
+            } else {
+
+                authButtons.innerHTML = `
+
+                    <a
+                        href="login.html"
+                        class="login-btn"
+                    >
+                        تسجيل الدخول
+                    </a>
+
+                `;
+
+            }
+
+        }
+
+
+        // ==================================================
+        // LOGOUT
+        // ==================================================
+
+        function logoutUser() {
+
+            localStorage.removeItem("zawamUserId");
+            localStorage.removeItem("zawamUserName");
+            localStorage.removeItem("zawamUserEmail");
+            localStorage.removeItem("zawamLoggedIn");
+
+            window.location.href = "index.html";
+
+        }
+
+
+        // ==================================================
+        // LOAD COURSE
+        // ==================================================
+
+        async function loadCourse() {
+
+            if (!courseId) {
+
+                document.getElementById("courseTitle").textContent =
+                    "لم يتم تحديد الدورة";
+
+                return;
+
+            }
+
+            try {
+
+                const response =
+                    await fetch("/api/courses");
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "فشل تحميل الدورات"
+                    );
+
+                }
+
+                const data =
+                    await response.json();
+
+                const courses =
+                    Array.isArray(data)
+                        ? data
+                        : data.courses;
+
+
+                if (!Array.isArray(courses)) {
+
+                    throw new Error(
+                        "بيانات الدورات غير صحيحة"
+                    );
+
+                }
+
+
+                currentCourse =
+                    courses.find(
+                        course =>
+                            String(course.id) ===
+                            String(courseId)
+                    );
+
+
+                if (!currentCourse) {
+
+                    document.getElementById("courseTitle").textContent =
+                        "الدورة غير موجودة";
+
+                    return;
+
+                }
+
+
+                // ===============================
+                // COURSE INFORMATION
+                // ===============================
+
+                document.getElementById(
+                    "courseCategory"
+                ).textContent =
+                    currentCourse.category || "عام";
+
+
+                document.getElementById(
+                    "courseTitle"
+                ).textContent =
+                    currentCourse.title || "دورة تعليمية";
+
+
+                document.getElementById(
+                    "courseDescription"
+                ).textContent =
+                    currentCourse.description ||
+                    "لا يوجد وصف لهذه الدورة.";
+
+
+                document.getElementById(
+                    "courseDuration"
+                ).textContent =
+                    "⏱️ " +
+                    (
+                        currentCourse.duration ||
+                        "غير محدد"
+                    );
+
+
+                document.getElementById(
+                    "courseInstructor"
+                ).textContent =
+                    currentCourse.instructor ||
+                    "زوام أكاديمي";
+
+
+                // ===============================
+                // COURSE ICON
+                // ===============================
+
+                const icon =
+                    document.getElementById("courseIcon");
+
+
+                if (currentCourse.category === "برمجة") {
+
+                    icon.textContent = "💻";
+
+                }
+
+                else if (
+                    currentCourse.category === "إنجليزي"
+                ) {
+
+                    icon.textContent = "🇬🇧";
+
+                }
+
+                else if (
+                    currentCourse.category === "تصميم"
+                ) {
+
+                    icon.textContent = "🎨";
+
+                }
+
+                else {
+
+                    icon.textContent = "📚";
+
+                }
+
+
+                // ===============================
+                // CHECK ENROLLMENT
+                // ===============================
+
+                await checkEnrollment();
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "COURSE DETAILS ERROR:",
+                    error
+                );
+
+                document.getElementById(
+                    "courseTitle"
+                ).textContent =
+                    "تعذر تحميل الدورة";
+
+            }
+
+        }
+
+
+        // ==================================================
+        // CHECK IF STUDENT IS ALREADY ENROLLED
+        // ==================================================
+
+        async function checkEnrollment() {
+
+            const loggedIn =
+                localStorage.getItem("zawamLoggedIn");
+
+            const userId =
+                localStorage.getItem("zawamUserId");
+
+
+            if (
+                loggedIn !== "true" ||
+                !userId ||
+                !courseId
+            ) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/enrollment/${userId}/${courseId}`
+                    );
+
+
+                if (!response.ok) {
+
+                    return;
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                const button =
+                    document.getElementById(
+                        "enrollButton"
+                    );
+
+                const message =
+                    document.getElementById(
+                        "enrollMessage"
+                    );
+
+
+                if (
+                    data.success &&
+                    data.enrolled
+                ) {
+
+                    button.textContent =
+                        "ابدأ الدورة";
+
+                    message.textContent =
+                        "أنت مسجل بالفعل في هذه الدورة.";
+
+                }
+
+                else {
+
+                    button.textContent =
+                        "التسجيل في الدورة";
+
+                    message.textContent =
+                        "احصل على الوصول الكامل للدورة.";
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "ENROLLMENT CHECK ERROR:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // ==================================================
+        // LOAD LESSONS
+        // ==================================================
+
+        async function loadLessons() {
+
+            const container =
+                document.getElementById(
+                    "lessonsContainer"
+                );
+
+
+            if (!courseId) {
+
+                container.innerHTML = `
+
+                    <p>
+                        لم يتم تحديد الدورة.
+                    </p>
+
+                `;
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/lessons/${courseId}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "فشل تحميل المحاضرات"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                const lessons =
+                    Array.isArray(data)
+                        ? data
+                        : data.lessons;
+
+
+                if (!Array.isArray(lessons)) {
+
+                    throw new Error(
+                        "بيانات المحاضرات غير صحيحة"
+                    );
+
+                }
+
+
+                if (lessons.length === 0) {
+
+                    container.innerHTML = `
+
+                        <p style="
+                            text-align:center;
+                            padding:30px;
+                        ">
+                            لا توجد محاضرات متاحة لهذه الدورة حالياً.
+                        </p>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                container.innerHTML =
+                    lessons.map(
+                        (lesson, index) => `
+
+                        <div
+                            class="lesson"
+                            onclick="openLesson(${lesson.id})"
+                            style="cursor:pointer;"
+                        >
+
+                            <span>
+                                ${String(index + 1).padStart(2, "0")}
+                            </span>
+
+                            <div>
+
+                                <h3>
+                                    ${lesson.title || "محاضرة"}
+                                </h3>
+
+                                <p>
+                                    ${lesson.description || ""}
+                                </p>
+
+                            </div>
+
+                            <strong>
+                                ${lesson.duration || ""}
+                            </strong>
+
+                        </div>
+
+                    `
+                    ).join("");
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "LESSONS ERROR:",
+                    error
+                );
+
+                container.innerHTML = `
+
+                    <p style="
+                        color:red;
+                        text-align:center;
+                        padding:30px;
+                    ">
+                        تعذر تحميل المحاضرات.
+                    </p>
+
+                `;
+
+            }
+
+        }
+
+
+        // ==================================================
+        // OPEN LESSON
+        // ==================================================
+
+        function openLesson(id) {
+
+            const loggedIn =
+                localStorage.getItem(
+                    "zawamLoggedIn"
+                ) === "true";
+
+
+            if (!loggedIn) {
+
+                alert(
+                    "يجب تسجيل الدخول والتسجيل في الدورة أولاً."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            const userId =
+                localStorage.getItem(
+                    "zawamUserId"
+                );
+
+
+            if (!userId) {
+
+                alert(
+                    "تعذر تحديد حساب الطالب."
+                );
+
+                return;
+
+            }
+
+
+            checkEnrollmentBeforeLesson(id);
+
+        }
+
+
+        // ==================================================
+        // CHECK ENROLLMENT BEFORE OPENING LESSON
+        // ==================================================
+
+        async function checkEnrollmentBeforeLesson(
+            lessonId
+        ) {
+
+            const userId =
+                localStorage.getItem(
+                    "zawamUserId"
+                );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/enrollment/${userId}/${courseId}`
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    data.success &&
+                    data.enrolled
+                ) {
+
+                    window.location.href =
+                        `lesson.html?id=${lessonId}`;
+
+                    return;
+
+                }
+
+
+                alert(
+                    "يجب التسجيل في الدورة أولاً."
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "LESSON ENROLLMENT CHECK ERROR:",
+                    error
+                );
+
+                alert(
+                    "حدث خطأ أثناء التحقق من التسجيل."
+                );
+
+            }
+
+        }
+
+
+        // ==================================================
+        // START / ENROLL COURSE
+        // ==================================================
+
+        async function startCourse() {
+
+            const loggedIn =
+                localStorage.getItem(
+                    "zawamLoggedIn"
+                ) === "true";
+
+
+            // ------------------------------------------
+            // NOT LOGGED IN
+            // ------------------------------------------
+
+            if (!loggedIn) {
+
+                alert(
+                    "يجب تسجيل الدخول أولاً للتسجيل في الدورة."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            // ------------------------------------------
+            // USER ID
+            // ------------------------------------------
+
+            const userId =
+                localStorage.getItem(
+                    "zawamUserId"
+                );
+
+
+            if (!userId) {
+
+                alert(
+                    "تعذر تحديد حساب الطالب. يرجى تسجيل الدخول مرة أخرى."
+                );
+
+                return;
+
+            }
+
+
+            if (!courseId) {
+
+                alert(
+                    "لم يتم تحديد الدورة."
+                );
+
+                return;
+
+            }
+
+
+            const button =
+                document.getElementById(
+                    "enrollButton"
+                );
+
+
+            // ------------------------------------------
+            // CHECK IF ALREADY ENROLLED
+            // ------------------------------------------
+
+            try {
+
+                const checkResponse =
+                    await fetch(
+                        `/api/enrollment/${userId}/${courseId}`
+                    );
+
+
+                const checkData =
+                    await checkResponse.json();
+
+
+                if (
+                    checkData.success &&
+                    checkData.enrolled
+                ) {
+
+                    const firstLesson =
+                        document.querySelector(".lesson");
+
+
+                    if (firstLesson) {
+
+                        firstLesson.click();
+
+                    }
+
+                    else {
+
+                        alert(
+                            "لا توجد محاضرات متاحة لهذه الدورة حالياً."
+                        );
+
+                    }
+
+                    return;
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "CHECK ENROLLMENT ERROR:",
+                    error
+                );
+
+            }
+
+
+            // ------------------------------------------
+            // DISABLE BUTTON
+            // ------------------------------------------
+
+            button.disabled = true;
+
+            button.textContent =
+                "جاري التسجيل...";
+
+
+            // ------------------------------------------
+            // ENROLL
+            // ------------------------------------------
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/enroll",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                user_id:
+                                    Number(userId),
+
+                                course_id:
+                                    Number(courseId)
+
+                            })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "ENROLL RESPONSE:",
+                    data
+                );
+
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    throw new Error(
+                        data.message ||
+                        "فشل التسجيل في الدورة"
+                    );
+
+                }
+
+
+                // ------------------------------------------
+                // SUCCESS
+                // ------------------------------------------
+
+                button.textContent =
+                    "تم التسجيل ✓";
+
+
+                document.getElementById(
+                    "enrollMessage"
+                ).textContent =
+                    "تم تسجيلك في الدورة بنجاح.";
+
+
+                alert(
+                    "تم التسجيل في الدورة بنجاح ✓"
+                );
+
+
+                // ------------------------------------------
+                // OPEN FIRST LESSON
+                // ------------------------------------------
+
+                const firstLesson =
+                    document.querySelector(".lesson");
+
+
+                if (firstLesson) {
+
+                    firstLesson.click();
+
+                }
+
+                else {
+
+                    button.textContent =
+                        "ابدأ الدورة";
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "ENROLL ERROR:",
+                    error
+                );
+
+
+                alert(
+                    "حدث خطأ أثناء التسجيل: " +
+                    error.message
+                );
+
+
+                button.disabled = false;
+
+                button.textContent =
+                    "التسجيل في الدورة";
+
+            }
+
+        }
+
+
+        // ==================================================
+        // LANGUAGE
+        // ==================================================
+
+        function changeLanguage() {
+
+            alert(
+                "ميزة اللغة الإنجليزية سيتم تفعيلها لاحقاً."
+            );
+
+        }
+
+
+        // ==================================================
+        // START
+        // ==================================================
+
+        updateAuthButtons();
+
+        loadCourse();
+
+        loadLessons();
+
+    </script>
+
+</body>
+
+</html>

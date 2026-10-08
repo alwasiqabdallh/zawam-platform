@@ -1,0 +1,3140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>مشاهدة الدرس | زوام التعليمية</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* =====================================================
+           ضبط اتجاه الصفحة العربية
+        ===================================================== */
+
+        html {
+            direction: rtl;
+        }
+
+        body {
+            direction: rtl;
+            text-align: right;
+            font-family: "Cairo", sans-serif;
+        }
+
+        /* النصوص العربية القادمة من قاعدة البيانات */
+        #courseName,
+        #headerLessonTitle,
+        #lessonTitle,
+        #lessonDescription,
+        #tabDescription,
+        #completionMessage,
+        .lesson-list,
+        .sidebar-lesson,
+        .sidebar-lesson strong,
+        .sidebar-lesson small,
+        .lesson-info,
+        .tab-content,
+        .certificate-box,
+        .certificate-language-box {
+            direction: rtl;
+            unicode-bidi: plaintext;
+        }
+
+        /* =====================================================
+           تقدم المحاضرة الحالية
+        ===================================================== */
+
+        .current-lesson-progress {
+            margin-top: 15px;
+            padding: 15px 18px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            direction: rtl;
+        }
+
+        .current-progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            direction: rtl;
+        }
+
+        .current-progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+            direction: ltr;
+        }
+
+        .current-progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #2563eb;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .video-complete-message {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #ecfdf5;
+            color: #047857;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            direction: rtl;
+        }
+
+        .next-btn:disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed !important;
+        }
+
+        .course-progress-number {
+            font-size: 14px;
+            font-weight: 800;
+            direction: rtl;
+            unicode-bidi: plaintext;
+        }
+
+        /* =====================================================
+           الشهادة
+        ===================================================== */
+
+        .certificate-box {
+            display: none;
+            margin-top: 15px;
+            padding: 22px 15px;
+            text-align: center;
+            background: linear-gradient(135deg,
+                    #ffffff,
+                    #f8fafc);
+            border-radius: 15px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .certificate-icon {
+            font-size: 42px;
+            margin-bottom: 8px;
+        }
+
+        .certificate-box h3 {
+            margin: 5px 0 8px;
+            color: #102a43;
+            direction: rtl;
+        }
+
+        .certificate-box p {
+            margin: 0 0 15px;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.8;
+            direction: rtl;
+            unicode-bidi: plaintext;
+        }
+
+        .certificate-main-btn {
+            width: 100%;
+            border: none;
+            padding: 13px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 800;
+            color: white;
+            background: #102a43;
+            transition: 0.2s ease;
+        }
+
+        .certificate-main-btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.95;
+        }
+
+        .certificate-language-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .certificate-language-box strong {
+            display: block;
+            margin-bottom: 12px;
+            color: #102a43;
+            direction: rtl;
+        }
+
+        .certificate-language-btn {
+            width: 100%;
+            border: none;
+            padding: 11px 12px;
+            margin-top: 8px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .certificate-ar-btn {
+            background: #102a43;
+            color: white;
+            direction: rtl;
+        }
+
+        .certificate-en-btn {
+            background: #c9a227;
+            color: white;
+            direction: ltr;
+        }
+
+        .certificate-language-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* =====================================================
+           عناوين ومحتوى الدروس
+        ===================================================== */
+
+        #lessonTitle {
+            direction: rtl;
+            text-align: right;
+            unicode-bidi: plaintext;
+        }
+
+        #lessonDescription {
+            direction: rtl;
+            text-align: right;
+            unicode-bidi: plaintext;
+            line-height: 2;
+        }
+
+        #tabDescription {
+            direction: rtl;
+            text-align: right;
+            unicode-bidi: plaintext;
+            line-height: 2;
+        }
+
+        #courseName {
+            direction: rtl;
+            unicode-bidi: plaintext;
+        }
+
+        #headerLessonTitle {
+            direction: rtl;
+            unicode-bidi: plaintext;
+        }
+
+        /* =====================================================
+           قائمة الدروس
+        ===================================================== */
+
+        .lesson-list {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .sidebar-lesson {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .sidebar-lesson>div:last-child {
+            direction: rtl;
+            text-align: right;
+            unicode-bidi: plaintext;
+        }
+
+        .sidebar-lesson strong {
+            direction: rtl;
+            text-align: right;
+            unicode-bidi: plaintext;
+            display: block;
+        }
+
+        .sidebar-lesson small {
+            direction: rtl;
+            text-align: right;
+            unicode-bidi: plaintext;
+            display: block;
+        }
+
+        /* =====================================================
+           المحتوى
+        ===================================================== */
+
+        .tab-content {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .tab-content h2,
+        .tab-content h3,
+        .tab-content p,
+        .tab-content li {
+            direction: rtl;
+            text-align: right;
+            unicode-bidi: plaintext;
+        }
+
+        /* =====================================================
+           الأرقام والنسب
+        ===================================================== */
+
+        #progressText,
+        #sidebarProgress,
+        #currentLessonProgressText {
+            unicode-bidi: plaintext;
+        }
+
+        /* =====================================================
+           الفيديو
+        ===================================================== */
+
+        #lessonVideo {
+            direction: ltr;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+    <header class="lesson-header">
+
+        <div class="lesson-brand">
+
+            <div class="logo-icon">
+                Z
+            </div>
+
+            <div>
+
+                <strong>
+                    زوام
+                </strong>
+
+                <small>
+                    ZAWAM
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="lesson-title">
+
+            <span id="courseName">
+                جاري تحميل الدورة...
+            </span>
+
+            <strong id="headerLessonTitle">
+                جاري تحميل الدرس...
+            </strong>
+
+        </div>
+
+
+        <div class="lesson-progress">
+
+            <span>
+                تقدم الدورة
+            </span>
+
+            <strong id="progressText">
+                أكملت 0 من 0 — 0%
+            </strong>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ===================================================== -->
+
+    <main class="learning-page">
+
+
+        <!-- =================================================
+             VIDEO SECTION
+        ================================================= -->
+
+        <section class="video-section">
+
+
+            <div class="video-player">
+
+                <div id="lessonVideo" style="
+                        width:100%;
+                        height:500px;
+                        background:#000;
+                    ">
+                </div>
+
+            </div>
+
+
+            <!-- تقدم المحاضرة الحالية -->
+
+            <div class="current-lesson-progress">
+
+                <div class="current-progress-top">
+
+                    <span>
+                        تقدم المحاضرة الحالية
+                    </span>
+
+                    <strong id="currentLessonProgressText">
+                        0%
+                    </strong>
+
+                </div>
+
+
+                <div class="current-progress-bar">
+
+                    <div class="current-progress-fill" id="currentLessonProgressFill">
+                    </div>
+
+                </div>
+
+
+                <div id="videoCompleteMessage" class="video-complete-message">
+
+                    ✅ انتهت المحاضرة وتم تسجيلها كمكتملة
+
+                </div>
+
+            </div>
+
+
+            <!-- معلومات الدرس -->
+
+            <div class="lesson-info">
+
+                <div>
+
+                    <span class="lesson-number" id="lessonNumber">
+                        الدرس
+                    </span>
+
+
+                    <h1 id="lessonTitle">
+                        جاري تحميل الدرس...
+                    </h1>
+
+
+                    <p id="lessonDescription">
+                        جاري تحميل بيانات الدرس...
+                    </p>
+
+                </div>
+
+
+                <button class="complete-btn" id="completeButton" onclick="completeLesson()">
+
+                    ✓ إكمال الدرس
+
+                </button>
+
+            </div>
+
+
+            <!-- التنقل -->
+
+            <div class="lesson-navigation">
+
+                <button class="next-btn" id="nextButton" onclick="nextLesson()">
+
+                    ← الدرس التالي
+
+                </button>
+
+
+                <button class="previous-btn" id="previousButton" onclick="previousLesson()">
+
+                    الدرس السابق →
+
+                </button>
+
+            </div>
+
+
+            <!-- TABS -->
+
+            <div class="lesson-tabs">
+
+                <button class="tab active">
+                    📝 الوصف
+                </button>
+
+                <button class="tab">
+                    📎 الملفات
+                </button>
+
+                <button class="tab">
+                    💬 الملاحظات
+                </button>
+
+            </div>
+
+
+            <div class="tab-content">
+
+                <h2>
+                    عن هذا الدرس
+                </h2>
+
+                <p id="tabDescription">
+                    جاري تحميل محتوى الدرس...
+                </p>
+
+
+                <h3>
+                    ماذا ستتعلم؟
+                </h3>
+
+
+                <ul>
+
+                    <li>
+                        فهم محتوى المحاضرة
+                    </li>
+
+                    <li>
+                        تطوير مهارة الاستماع باللغة الإنجليزية
+                    </li>
+
+                    <li>
+                        تطبيق ما تم تعلمه في المحاضرات القادمة
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SIDEBAR
+        ================================================= -->
+
+        <aside class="lessons-sidebar">
+
+
+            <div class="sidebar-title">
+
+                <h2>
+                    محتوى الدورة
+                </h2>
+
+                <span id="lessonCount">
+                    جاري التحميل...
+                </span>
+
+            </div>
+
+
+            <!-- تقدم الدورة -->
+
+            <div class="course-progress">
+
+                <div class="progress-top">
+
+                    <span>
+                        تقدم الدورة
+                    </span>
+
+                    <strong id="sidebarProgress" class="course-progress-number">
+                        أكملت 0 من 0 — 0%
+                    </strong>
+
+                </div>
+
+
+                <div class="progress-bar">
+
+                    <div class="progress-fill" id="progressFill">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- قائمة الدروس -->
+
+            <div class="lesson-list" id="lessonList">
+
+                <p>
+                    جاري تحميل المحاضرات...
+                </p>
+
+            </div>
+
+
+            <!-- بطاقة الإنجاز -->
+
+            <div class="completion-card" id="completionCard">
+
+                <div class="completion-icon">
+                    🎓
+                </div>
+
+
+                <strong>
+                    أكمل الدورة واحصل على شهادتك
+                </strong>
+
+
+                <p id="completionMessage">
+
+                    ستتمكن من الحصول على شهادة إكمال
+                    الدورة بعد إنهاء جميع الدروس.
+
+                </p>
+
+            </div>
+
+
+            <!-- الشهادة -->
+
+            <div id="certificateBox" class="certificate-box">
+
+                <div class="certificate-icon">
+                    🏆
+                </div>
+
+
+                <h3>
+                    مبروك! 🎉
+                </h3>
+
+
+                <p>
+
+                    لقد أكملت جميع دروس الدورة بنجاح.
+                    يمكنك الآن إصدار شهادتك.
+
+                </p>
+
+
+                <button class="certificate-main-btn" onclick="showCertificateLanguages()">
+
+                    🎓 الحصول على الشهادة
+
+                </button>
+
+
+                <!-- اختيار لغة الشهادة -->
+
+                <div id="certificateLanguageBox" class="certificate-language-box">
+
+                    <strong>
+                        اختر لغة الشهادة:
+                    </strong>
+
+
+                    <button class="certificate-language-btn certificate-ar-btn" onclick="getCertificate('ar')">
+
+                        🇸🇩 الشهادة بالعربية
+
+                    </button>
+
+
+                    <button class="certificate-language-btn certificate-en-btn" onclick="getCertificate('en')">
+
+                        🇬🇧 Certificate in English
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </main>
+
+
+    <!-- =====================================================
+         YOUTUBE API
+    ===================================================== -->
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+
+    <script>
+
+        /* =====================================================
+           المتغيرات
+        ===================================================== */
+
+        let currentLesson = null;
+
+        let allLessons = [];
+
+        let completedLessons = [];
+
+        let youtubePlayer = null;
+
+        let youtubeVideoId = "";
+
+        let progressTimer = null;
+
+        let videoEnded = false;
+
+        let finishingVideo = false;
+
+
+        /* =====================================================
+           قراءة ID الدرس من الرابط
+        ===================================================== */
+
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const lessonId =
+            urlParams.get("id");
+
+
+        /* =====================================================
+           المستخدم
+        ===================================================== */
+
+        function getUserId() {
+
+            const id =
+                localStorage.getItem("zawamUserId") ||
+                localStorage.getItem("userId");
+
+            return id;
+
+        }
+
+
+        /* =====================================================
+           استخراج YouTube Video ID
+        ===================================================== */
+
+        function getYouTubeVideoId(url) {
+
+            if (!url) {
+                return "";
+            }
+
+            url = String(url).trim();
+
+            let videoId = "";
+
+
+            if (url.includes("youtu.be/")) {
+
+                videoId =
+                    url
+                        .split("youtu.be/")[1]
+                        .split("?")[0]
+                        .split("&")[0];
+
+            }
+
+            else if (url.includes("watch?v=")) {
+
+                videoId =
+                    url
+                        .split("watch?v=")[1]
+                        .split("&")[0];
+
+            }
+
+            else if (url.includes("/shorts/")) {
+
+                videoId =
+                    url
+                        .split("/shorts/")[1]
+                        .split("?")[0]
+                        .split("&")[0];
+
+            }
+
+            else if (url.includes("/embed/")) {
+
+                videoId =
+                    url
+                        .split("/embed/")[1]
+                        .split("?")[0]
+                        .split("&")[0];
+
+            }
+
+            else {
+
+                videoId = url;
+
+            }
+
+
+            return videoId;
+
+        }
+
+
+        /* =====================================================
+           إنشاء YouTube Player
+        ===================================================== */
+
+        function createYouTubePlayer() {
+
+            if (!youtubeVideoId) {
+
+                console.log(
+                    "لا يوجد رابط فيديو"
+                );
+
+                return;
+
+            }
+
+
+            if (
+                typeof YT === "undefined" ||
+                typeof YT.Player === "undefined"
+            ) {
+
+                setTimeout(
+                    createYouTubePlayer,
+                    500
+                );
+
+                return;
+
+            }
+
+
+            if (youtubePlayer) {
+
+                try {
+
+                    youtubePlayer.destroy();
+
+                }
+
+                catch (error) {
+
+                    console.log(
+                        "YOUTUBE DESTROY ERROR:",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            videoEnded = false;
+
+            finishingVideo = false;
+
+
+            youtubePlayer =
+                new YT.Player(
+                    "lessonVideo",
+                    {
+
+                        videoId:
+                            youtubeVideoId,
+
+                        playerVars: {
+
+                            rel: 0,
+
+                            modestbranding: 1,
+
+                            playsinline: 1,
+
+                            enablejsapi: 1
+
+                        },
+
+                        events: {
+
+                            onReady:
+                                onYouTubeReady,
+
+                            onStateChange:
+                                onYouTubeStateChange
+
+                        }
+
+                    }
+                );
+
+        }
+
+
+        /* =====================================================
+           جاهزية الفيديو
+        ===================================================== */
+
+        function onYouTubeReady() {
+
+            console.log(
+                "✅ YouTube Player Ready"
+            );
+
+            startVideoProgressTracking();
+
+        }
+
+
+        /* =====================================================
+           حالة الفيديو
+        ===================================================== */
+
+        function onYouTubeStateChange(event) {
+
+            console.log(
+                "YouTube State:",
+                event.data
+            );
+
+
+            if (
+                event.data ===
+                YT.PlayerState.PLAYING
+            ) {
+
+                startVideoProgressTracking();
+
+            }
+
+
+            if (
+                event.data ===
+                YT.PlayerState.PAUSED
+            ) {
+
+                startVideoProgressTracking();
+
+            }
+
+
+            if (
+                event.data ===
+                YT.PlayerState.ENDED
+            ) {
+
+                finishCurrentVideo();
+
+            }
+
+        }
+
+
+        /* =====================================================
+           متابعة الفيديو
+        ===================================================== */
+
+        function startVideoProgressTracking() {
+
+            stopVideoProgressTracking();
+
+
+            progressTimer =
+                setInterval(
+                    updateVideoProgress,
+                    500
+                );
+
+        }
+
+
+        function stopVideoProgressTracking() {
+
+            if (progressTimer) {
+
+                clearInterval(
+                    progressTimer
+                );
+
+                progressTimer = null;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           حساب تقدم الفيديو
+        ===================================================== */
+
+        function updateVideoProgress() {
+
+            if (
+                !youtubePlayer ||
+                typeof youtubePlayer.getCurrentTime !== "function"
+            ) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const currentTime =
+                    youtubePlayer.getCurrentTime();
+
+
+                const duration =
+                    youtubePlayer.getDuration();
+
+
+                if (
+                    !duration ||
+                    duration <= 0
+                ) {
+
+                    return;
+
+                }
+
+
+                let percentage =
+                    Math.floor(
+                        (
+                            currentTime /
+                            duration
+                        ) * 100
+                    );
+
+
+                percentage =
+                    Math.max(
+                        0,
+                        Math.min(
+                            100,
+                            percentage
+                        )
+                    );
+
+
+                setCurrentLessonProgress(
+                    percentage
+                );
+
+
+                if (
+                    percentage >= 99 &&
+                    !videoEnded
+                ) {
+
+                    finishCurrentVideo();
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.log(
+                    "VIDEO PROGRESS ERROR:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           تقدم المحاضرة الحالية
+        ===================================================== */
+
+        function setCurrentLessonProgress(
+            percentage
+        ) {
+
+            percentage =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        Number(percentage) || 0
+                    )
+                );
+
+
+            const text =
+                document.getElementById(
+                    "currentLessonProgressText"
+                );
+
+
+            const fill =
+                document.getElementById(
+                    "currentLessonProgressFill"
+                );
+
+
+            if (text) {
+
+                text.textContent =
+                    `${percentage}%`;
+
+            }
+
+
+            if (fill) {
+
+                fill.style.width =
+                    `${percentage}%`;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           تحديث تقدم الدورة
+        ===================================================== */
+
+        function updateProgressUI() {
+
+            const total =
+                allLessons.length;
+
+
+            const completed =
+                completedLessons.length;
+
+
+            let percentage = 0;
+
+
+            if (total > 0) {
+
+                percentage =
+                    Math.round(
+                        (
+                            completed /
+                            total
+                        ) * 100
+                    );
+
+            }
+
+
+            const progressText =
+                document.getElementById(
+                    "progressText"
+                );
+
+
+            const sidebarProgress =
+                document.getElementById(
+                    "sidebarProgress"
+                );
+
+
+            const progressFill =
+                document.getElementById(
+                    "progressFill"
+                );
+
+
+            if (progressText) {
+
+                progressText.textContent =
+                    `أكملت ${completed} من ${total} — ${percentage}%`;
+
+            }
+
+
+            if (sidebarProgress) {
+
+                sidebarProgress.textContent =
+                    `أكملت ${completed} من ${total} — ${percentage}%`;
+
+            }
+
+
+            if (progressFill) {
+
+                progressFill.style.width =
+                    `${percentage}%`;
+
+            }
+
+
+            const certificateBox =
+                document.getElementById(
+                    "certificateBox"
+                );
+
+
+            const completionMessage =
+                document.getElementById(
+                    "completionMessage"
+                );
+
+
+            const languageBox =
+                document.getElementById(
+                    "certificateLanguageBox"
+                );
+
+
+            if (
+                total > 0 &&
+                completed >= total
+            ) {
+
+                if (certificateBox) {
+
+                    certificateBox.style.display =
+                        "block";
+
+                }
+
+
+                if (completionMessage) {
+
+                    completionMessage.textContent =
+                        "🎉 أكملت جميع دروس الدورة! يمكنك الآن الحصول على شهادة إكمال الدورة.";
+
+                }
+
+            }
+
+            else {
+
+                if (certificateBox) {
+
+                    certificateBox.style.display =
+                        "none";
+
+                }
+
+
+                if (languageBox) {
+
+                    languageBox.style.display =
+                        "none";
+
+                }
+
+
+                if (completionMessage) {
+
+                    completionMessage.textContent =
+                        `أكملت ${completed} من ${total} درس. أكمل جميع الدروس للحصول على الشهادة.`;
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           إنهاء المحاضرة
+        ===================================================== */
+
+        async function finishCurrentVideo() {
+
+            if (finishingVideo) {
+                return;
+            }
+
+
+            if (videoEnded) {
+                return;
+            }
+
+
+            finishingVideo = true;
+
+            videoEnded = true;
+
+
+            stopVideoProgressTracking();
+
+
+            setCurrentLessonProgress(100);
+
+
+            const message =
+                document.getElementById(
+                    "videoCompleteMessage"
+                );
+
+
+            if (message) {
+
+                message.style.display =
+                    "block";
+
+            }
+
+
+            console.log(
+                "🎉 VIDEO FINISHED"
+            );
+
+
+            const success =
+                await saveLessonProgress();
+
+
+            if (!success) {
+
+                finishingVideo = false;
+
+                videoEnded = false;
+
+
+                if (message) {
+
+                    message.style.display =
+                        "none";
+
+                }
+
+
+                alert(
+                    "❌ لم يتم حفظ تقدم المحاضرة.\n\nتأكد من تسجيل الدخول وتشغيل السيرفر."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                currentLesson &&
+                !completedLessons.includes(
+                    Number(
+                        currentLesson.id
+                    )
+                )
+            ) {
+
+                completedLessons.push(
+                    Number(
+                        currentLesson.id
+                    )
+                );
+
+            }
+
+
+            renderLessonList();
+
+            updateProgressUI();
+
+            updateCompleteButton();
+
+
+            const currentIndex =
+                allLessons.findIndex(
+                    lesson =>
+                        String(lesson.id) ===
+                        String(lessonId)
+                );
+
+
+            updateNavigation(
+                currentIndex
+            );
+
+
+            if (
+                currentIndex ===
+                allLessons.length - 1
+            ) {
+
+                if (
+                    completedLessons.length >=
+                    allLessons.length
+                ) {
+
+                    setTimeout(
+                        () => {
+
+                            alert(
+                                "🎉 مبروك! أكملت جميع دروس الدورة. يمكنك الآن الحصول على الشهادة."
+                            );
+
+                        },
+                        500
+                    );
+
+                }
+
+
+                finishingVideo = false;
+
+                return;
+
+            }
+
+
+            if (
+                currentIndex >= 0 &&
+                currentIndex <
+                allLessons.length - 1
+            ) {
+
+                const nextLessonData =
+                    allLessons[
+                    currentIndex + 1
+                    ];
+
+
+                setTimeout(
+                    () => {
+
+                        window.location.href =
+                            `lesson.html?id=${nextLessonData.id}`;
+
+                    },
+                    1200
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           تحميل الدرس
+        ===================================================== */
+
+        async function loadLesson() {
+
+            if (!lessonId) {
+
+                document.getElementById(
+                    "lessonTitle"
+                ).textContent =
+                    "لم يتم تحديد الدرس";
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/lesson/${encodeURIComponent(lessonId)}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `فشل تحميل الدرس - HTTP ${response.status}`
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "LESSON SERVER RESPONSE:",
+                    data
+                );
+
+
+                if (data.lesson) {
+
+                    currentLesson =
+                        data.lesson;
+
+                }
+
+                else if (data.data) {
+
+                    currentLesson =
+                        data.data;
+
+                }
+
+                else {
+
+                    currentLesson =
+                        data;
+
+                }
+
+
+                if (
+                    !currentLesson ||
+                    !currentLesson.id
+                ) {
+
+                    throw new Error(
+                        "بيانات الدرس غير صحيحة"
+                    );
+
+                }
+
+
+                const videoUrl =
+                    currentLesson.video_url ||
+                    "";
+
+
+                youtubeVideoId =
+                    getYouTubeVideoId(
+                        videoUrl
+                    );
+
+
+                if (youtubeVideoId) {
+
+                    createYouTubePlayer();
+
+                }
+
+                else {
+
+                    document.getElementById(
+                        "lessonVideo"
+                    ).innerHTML = `
+
+                        <div style="
+                            color:white;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            height:100%;
+                            font-family:Cairo;
+                            direction:rtl;
+                            text-align:center;
+                        ">
+
+                            لا يوجد فيديو لهذا الدرس
+
+                        </div>
+
+                    `;
+
+                }
+
+
+                const order =
+                    currentLesson.lesson_order ||
+                    1;
+
+
+                const title =
+                    currentLesson.title ||
+                    "بدون عنوان";
+
+
+                document.getElementById(
+                    "lessonTitle"
+                ).textContent =
+                    title;
+
+
+                document.getElementById(
+                    "headerLessonTitle"
+                ).textContent =
+                    `الدرس ${String(order).padStart(2, "0")}: ${title}`;
+
+
+                document.getElementById(
+                    "lessonNumber"
+                ).textContent =
+                    `الدرس ${order}`;
+
+
+                const description =
+                    currentLesson.description ||
+                    "لا يوجد وصف لهذا الدرس حالياً.";
+
+
+                document.getElementById(
+                    "lessonDescription"
+                ).textContent =
+                    description;
+
+
+                document.getElementById(
+                    "tabDescription"
+                ).textContent =
+                    description;
+
+
+                await loadCourseName(
+                    currentLesson.course_id
+                );
+
+
+                await loadCourseLessons(
+                    currentLesson.course_id
+                );
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "LESSON ERROR:",
+                    error
+                );
+
+
+                document.getElementById(
+                    "lessonTitle"
+                ).textContent =
+                    "تعذر تحميل الدرس";
+
+
+                document.getElementById(
+                    "lessonDescription"
+                ).textContent =
+                    error.message;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           اسم الدورة
+        ===================================================== */
+
+        async function loadCourseName(
+            courseId
+        ) {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/courses"
+                    );
+
+
+                if (!response.ok) {
+                    return;
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                let courses = [];
+
+
+                if (Array.isArray(data)) {
+
+                    courses =
+                        data;
+
+                }
+
+                else if (
+                    Array.isArray(
+                        data.courses
+                    )
+                ) {
+
+                    courses =
+                        data.courses;
+
+                }
+
+
+                const course =
+                    courses.find(
+                        item =>
+                            String(item.id) ===
+                            String(courseId)
+                    );
+
+
+                if (course) {
+
+                    document.getElementById(
+                        "courseName"
+                    ).textContent =
+                        course.title;
+
+                }
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "COURSE NAME ERROR:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           تحميل دروس الدورة
+        ===================================================== */
+
+        async function loadCourseLessons(
+            courseId
+        ) {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/lessons/${encodeURIComponent(courseId)}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "فشل تحميل دروس الدورة"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "COURSE LESSONS RESPONSE:",
+                    data
+                );
+
+
+                if (Array.isArray(data)) {
+
+                    allLessons =
+                        data;
+
+                }
+
+                else if (
+                    Array.isArray(
+                        data.lessons
+                    )
+                ) {
+
+                    allLessons =
+                        data.lessons;
+
+                }
+
+                else {
+
+                    allLessons = [];
+
+                }
+
+
+                allLessons.sort(
+                    (a, b) =>
+                        Number(a.lesson_order || 0) -
+                        Number(b.lesson_order || 0)
+                );
+
+
+                document.getElementById(
+                    "lessonCount"
+                ).textContent =
+                    `${allLessons.length} درس`;
+
+
+                await loadProgress(
+                    courseId
+                );
+
+
+                renderLessonList();
+
+                updateProgressUI();
+
+
+                const currentIndex =
+                    allLessons.findIndex(
+                        lesson =>
+                            String(lesson.id) ===
+                            String(lessonId)
+                    );
+
+
+                updateNavigation(
+                    currentIndex
+                );
+
+
+                updateCompleteButton();
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "COURSE LESSONS ERROR:",
+                    error
+                );
+
+
+                document.getElementById(
+                    "lessonList"
+                ).innerHTML =
+                    "<p>تعذر تحميل المحاضرات.</p>";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           حماية النصوص
+        ===================================================== */
+
+        function escapeHtml(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        /* =====================================================
+           قائمة الدروس
+        ===================================================== */
+
+        function renderLessonList() {
+
+            const list =
+                document.getElementById(
+                    "lessonList"
+                );
+
+
+            if (allLessons.length === 0) {
+
+                list.innerHTML =
+                    "<p>لا توجد محاضرات حالياً.</p>";
+
+                return;
+
+            }
+
+
+            list.innerHTML =
+                allLessons.map(
+                    (lesson, index) => {
+
+                        const isCurrent =
+                            String(lesson.id) ===
+                            String(lessonId);
+
+
+                        const isCompleted =
+                            completedLessons.includes(
+                                Number(
+                                    lesson.id
+                                )
+                            );
+
+
+                        const isUnlocked =
+                            isLessonUnlocked(
+                                index
+                            );
+
+
+                        let status =
+                            "🔒";
+
+
+                        if (isCompleted) {
+
+                            status =
+                                "✅";
+
+                        }
+
+                        else if (isCurrent) {
+
+                            status =
+                                "▶️";
+
+                        }
+
+                        else if (isUnlocked) {
+
+                            status =
+                                "○";
+
+                        }
+
+
+                        return `
+
+                            <div
+                                class="sidebar-lesson ${isCurrent ? "current" : ""}"
+                                onclick="openLesson(${Number(lesson.id)})"
+                                style="
+                                    cursor:${isUnlocked ? "pointer" : "not-allowed"};
+                                    opacity:${isUnlocked ? "1" : "0.55"};
+                                    direction:rtl;
+                                    text-align:right;
+                                "
+                            >
+
+                                <div class="lesson-status">
+
+                                    ${status}
+
+                                </div>
+
+
+                                <div
+                                    style="
+                                        direction:rtl;
+                                        text-align:right;
+                                    "
+                                >
+
+                                    <strong>
+
+                                        ${String(index + 1).padStart(2, "0")}.
+                                        ${escapeHtml(lesson.title || "بدون عنوان")}
+
+                                    </strong>
+
+
+                                    <small>
+
+                                        ${escapeHtml(lesson.duration || "")}
+
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+                ).join("");
+
+        }
+
+
+        /* =====================================================
+           تحميل تقدم الطالب
+        ===================================================== */
+
+        async function loadProgress(
+            courseId
+        ) {
+
+            const userId =
+                getUserId();
+
+
+            if (!userId) {
+
+                completedLessons = [];
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/progress/${encodeURIComponent(userId)}/${encodeURIComponent(courseId)}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `HTTP ${response.status}`
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "PROGRESS SERVER RESPONSE:",
+                    data
+                );
+
+
+                let progressData = [];
+
+
+                if (Array.isArray(data)) {
+
+                    progressData =
+                        data;
+
+                }
+
+                else if (
+                    Array.isArray(
+                        data.progress
+                    )
+                ) {
+
+                    progressData =
+                        data.progress;
+
+                }
+
+                else if (
+                    Array.isArray(
+                        data.data
+                    )
+                ) {
+
+                    progressData =
+                        data.data;
+
+                }
+
+
+                completedLessons =
+                    progressData
+                        .filter(
+                            item => {
+
+                                return (
+                                    Number(item.completed) === 1 ||
+                                    item.completed === true ||
+                                    item.completed === "1"
+                                );
+
+                            }
+                        )
+                        .map(
+                            item =>
+                                Number(
+                                    item.lesson_id
+                                )
+                        )
+                        .filter(
+                            id =>
+                                !Number.isNaN(id)
+                        );
+
+
+                completedLessons =
+                    [
+                        ...new Set(
+                            completedLessons
+                        )
+                    ];
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "PROGRESS ERROR:",
+                    error
+                );
+
+
+                completedLessons = [];
+
+            }
+
+        }
+
+
+        /* =====================================================
+           هل الدرس مفتوح؟
+        ===================================================== */
+
+        function isLessonUnlocked(index) {
+
+            if (index <= 0) {
+
+                return true;
+
+            }
+
+
+            const previousLesson =
+                allLessons[index - 1];
+
+
+            if (!previousLesson) {
+
+                return false;
+
+            }
+
+
+            return completedLessons.includes(
+                Number(
+                    previousLesson.id
+                )
+            );
+
+        }
+
+
+        /* =====================================================
+           فتح الدرس
+        ===================================================== */
+
+        function openLesson(id) {
+
+            const index =
+                allLessons.findIndex(
+                    lesson =>
+                        String(lesson.id) ===
+                        String(id)
+                );
+
+
+            if (index === -1) {
+
+                return;
+
+            }
+
+
+            if (
+                !isLessonUnlocked(index)
+            ) {
+
+                alert(
+                    "🔒 يجب إنهاء المحاضرة السابقة أولاً."
+                );
+
+                return;
+
+            }
+
+
+            window.location.href =
+                `lesson.html?id=${encodeURIComponent(id)}`;
+
+        }
+
+
+        /* =====================================================
+           تحديث أزرار التنقل
+        ===================================================== */
+
+        function updateNavigation(
+            index
+        ) {
+
+            const nextButton =
+                document.getElementById(
+                    "nextButton"
+                );
+
+
+            const previousButton =
+                document.getElementById(
+                    "previousButton"
+                );
+
+
+            if (!nextButton || !previousButton) {
+                return;
+            }
+
+
+            if (index < 0) {
+
+                nextButton.style.display =
+                    "none";
+
+
+                previousButton.style.display =
+                    "none";
+
+
+                return;
+
+            }
+
+
+            if (index > 0) {
+
+                previousButton.style.display =
+                    "block";
+
+                previousButton.disabled =
+                    false;
+
+            }
+
+            else {
+
+                previousButton.style.display =
+                    "none";
+
+            }
+
+
+            if (
+                index <
+                allLessons.length - 1
+            ) {
+
+                nextButton.style.display =
+                    "block";
+
+
+                const currentCompleted =
+                    currentLesson &&
+                    completedLessons.includes(
+                        Number(
+                            currentLesson.id
+                        )
+                    );
+
+
+                if (currentCompleted) {
+
+                    nextButton.disabled =
+                        false;
+
+                    nextButton.textContent =
+                        "← الدرس التالي";
+
+                    nextButton.style.opacity =
+                        "1";
+
+                    nextButton.style.cursor =
+                        "pointer";
+
+                }
+
+                else {
+
+                    nextButton.disabled =
+                        true;
+
+                    nextButton.textContent =
+                        "🔒 أكمل المحاضرة أولاً";
+
+                    nextButton.style.opacity =
+                        "0.5";
+
+                    nextButton.style.cursor =
+                        "not-allowed";
+
+                }
+
+            }
+
+            else {
+
+                nextButton.style.display =
+                    "none";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           الدرس التالي
+        ===================================================== */
+
+        function nextLesson() {
+
+            const index =
+                allLessons.findIndex(
+                    lesson =>
+                        String(lesson.id) ===
+                        String(lessonId)
+                );
+
+
+            if (index === -1) {
+                return;
+            }
+
+
+            if (
+                index >=
+                allLessons.length - 1
+            ) {
+
+                return;
+
+            }
+
+
+            const currentCompleted =
+                currentLesson &&
+                completedLessons.includes(
+                    Number(
+                        currentLesson.id
+                    )
+                );
+
+
+            if (
+                !videoEnded &&
+                !currentCompleted
+            ) {
+
+                alert(
+                    "🔒 يجب إنهاء المحاضرة الحالية أولاً."
+                );
+
+                return;
+
+            }
+
+
+            const next =
+                allLessons[
+                index + 1
+                ];
+
+
+            if (!next) {
+                return;
+            }
+
+
+            window.location.href =
+                `lesson.html?id=${encodeURIComponent(next.id)}`;
+
+        }
+
+
+        /* =====================================================
+           الدرس السابق
+        ===================================================== */
+
+        function previousLesson() {
+
+            const index =
+                allLessons.findIndex(
+                    lesson =>
+                        String(lesson.id) ===
+                        String(lessonId)
+                );
+
+
+            if (index > 0) {
+
+                window.location.href =
+                    `lesson.html?id=${encodeURIComponent(
+                        allLessons[index - 1].id
+                    )}`;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           زر إكمال الدرس
+        ===================================================== */
+
+        function updateCompleteButton() {
+
+            const button =
+                document.getElementById(
+                    "completeButton"
+                );
+
+
+            if (!button || !currentLesson) {
+                return;
+            }
+
+
+            const completed =
+                completedLessons.includes(
+                    Number(
+                        currentLesson.id
+                    )
+                );
+
+
+            if (completed) {
+
+                button.textContent =
+                    "✓ تم إكمال الدرس";
+
+
+                button.disabled =
+                    true;
+
+            }
+
+            else {
+
+                button.textContent =
+                    "✓ إكمال الدرس";
+
+
+                button.disabled =
+                    false;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           حفظ تقدم الدرس
+        ===================================================== */
+
+        async function saveLessonProgress() {
+
+            const userId =
+                getUserId();
+
+
+            if (!userId) {
+
+                alert(
+                    "يجب تسجيل الدخول أولاً."
+                );
+
+
+                window.location.href =
+                    "login.html";
+
+
+                return false;
+
+            }
+
+
+            if (!currentLesson) {
+
+                return false;
+
+            }
+
+
+            const lessonNumber =
+                Number(
+                    currentLesson.id
+                );
+
+
+            if (
+                completedLessons.includes(
+                    lessonNumber
+                )
+            ) {
+
+                return true;
+
+            }
+
+
+            const courseId =
+                Number(
+                    currentLesson.course_id
+                );
+
+
+            if (
+                !Number.isInteger(
+                    Number(userId)
+                ) ||
+                !Number.isInteger(
+                    courseId
+                ) ||
+                !Number.isInteger(
+                    lessonNumber
+                )
+            ) {
+
+                console.error(
+                    "INVALID PROGRESS DATA:",
+                    {
+                        userId,
+                        courseId,
+                        lessonNumber
+                    }
+                );
+
+                return false;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/progress",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    user_id:
+                                        Number(
+                                            userId
+                                        ),
+
+                                    course_id:
+                                        courseId,
+
+                                    lesson_id:
+                                        lessonNumber
+
+                                })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "SAVE PROGRESS RESPONSE:",
+                    data
+                );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "فشل تسجيل إكمال الدرس"
+                    );
+
+                }
+
+
+                if (
+                    !completedLessons.includes(
+                        lessonNumber
+                    )
+                ) {
+
+                    completedLessons.push(
+                        lessonNumber
+                    );
+
+                }
+
+
+                return true;
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "SAVE PROGRESS ERROR:",
+                    error
+                );
+
+
+                return false;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           إكمال الدرس يدويًا
+        ===================================================== */
+
+        async function completeLesson() {
+
+            const button =
+                document.getElementById(
+                    "completeButton"
+                );
+
+
+            if (!button) {
+                return;
+            }
+
+
+            button.disabled =
+                true;
+
+
+            button.textContent =
+                "جاري الحفظ...";
+
+
+            const success =
+                await saveLessonProgress();
+
+
+            if (!success) {
+
+                button.disabled =
+                    false;
+
+
+                button.textContent =
+                    "✓ إكمال الدرس";
+
+
+                alert(
+                    "❌ تعذر حفظ التقدم.\nتأكد من تسجيل الدخول وتشغيل السيرفر."
+                );
+
+                return;
+
+            }
+
+
+            videoEnded = true;
+
+
+            updateProgressUI();
+
+            renderLessonList();
+
+            updateCompleteButton();
+
+
+            const currentIndex =
+                allLessons.findIndex(
+                    lesson =>
+                        String(lesson.id) ===
+                        String(lessonId)
+                );
+
+
+            updateNavigation(
+                currentIndex
+            );
+
+
+            if (
+                completedLessons.length >=
+                allLessons.length
+            ) {
+
+                alert(
+                    "🎉 مبروك! أكملت جميع دروس الدورة. يمكنك الآن الحصول على الشهادة."
+                );
+
+            }
+
+            else {
+
+                alert(
+                    "✅ تم تسجيل المحاضرة كمكتملة.\nيمكنك الآن فتح المحاضرة التالية."
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           إظهار خيارات لغة الشهادة
+        ===================================================== */
+
+        function showCertificateLanguages() {
+
+            const languageBox =
+                document.getElementById(
+                    "certificateLanguageBox"
+                );
+
+
+            if (!languageBox) {
+                return;
+            }
+
+
+            if (
+                languageBox.style.display ===
+                "block"
+            ) {
+
+                languageBox.style.display =
+                    "none";
+
+            }
+
+            else {
+
+                languageBox.style.display =
+                    "block";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           الحصول على الشهادة
+        ===================================================== */
+
+        async function getCertificate(language) {
+
+            const userId =
+                getUserId();
+
+
+            if (!userId) {
+
+                alert(
+                    "يجب تسجيل الدخول أولاً."
+                );
+
+
+                window.location.href =
+                    "login.html";
+
+
+                return;
+
+            }
+
+
+            if (!currentLesson) {
+
+                alert(
+                    "لم يتم تحميل بيانات الدورة."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                allLessons.length === 0 ||
+                completedLessons.length <
+                allLessons.length
+            ) {
+
+                alert(
+                    "🔒 يجب إكمال جميع دروس الدورة أولاً."
+                );
+
+                return;
+
+            }
+
+
+            language =
+                language === "en"
+                    ? "en"
+                    : "ar";
+
+
+            const courseId =
+                Number(
+                    currentLesson.course_id
+                );
+
+
+            const numericUserId =
+                Number(
+                    userId
+                );
+
+
+            if (
+                !Number.isInteger(
+                    numericUserId
+                ) ||
+                numericUserId <= 0
+            ) {
+
+                alert(
+                    "بيانات المستخدم غير صحيحة. يرجى تسجيل الدخول مرة أخرى."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                !Number.isInteger(
+                    courseId
+                ) ||
+                courseId <= 0
+            ) {
+
+                alert(
+                    "بيانات الدورة غير صحيحة."
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                console.log(
+                    "================================="
+                );
+
+                console.log(
+                    "🎓 REQUESTING CERTIFICATE"
+                );
+
+                console.log(
+                    "USER ID:",
+                    numericUserId
+                );
+
+                console.log(
+                    "COURSE ID:",
+                    courseId
+                );
+
+                console.log(
+                    "LANGUAGE:",
+                    language
+                );
+
+                console.log(
+                    "================================="
+                );
+
+
+                /* طلب إنشاء أو استرجاع الشهادة */
+
+                const response =
+                    await fetch(
+                        "/api/certificate",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    user_id:
+                                        numericUserId,
+
+                                    course_id:
+                                        courseId,
+
+                                    language:
+                                        language
+
+                                })
+
+                        }
+                    );
+
+
+                /* قراءة رد السيرفر */
+
+                let data;
+
+
+                try {
+
+                    data =
+                        await response.json();
+
+                }
+
+                catch (jsonError) {
+
+                    console.error(
+                        "CERTIFICATE JSON ERROR:",
+                        jsonError
+                    );
+
+                    throw new Error(
+                        `السيرفر لم يرجع استجابة صحيحة. HTTP ${response.status}`
+                    );
+
+                }
+
+
+                console.log(
+                    "CERTIFICATE SERVER RESPONSE:",
+                    data
+                );
+
+
+                /* فشل الطلب */
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        data.error ||
+                        `تعذر إنشاء الشهادة. HTTP ${response.status}`
+                    );
+
+                }
+
+
+                /* التأكد من وجود بيانات الشهادة */
+
+                if (
+                    !data ||
+                    !data.certificate
+                ) {
+
+                    console.error(
+                        "NO CERTIFICATE OBJECT:",
+                        data
+                    );
+
+                    throw new Error(
+                        "السيرفر لم يرجع بيانات الشهادة."
+                    );
+
+                }
+
+
+                /* =================================================
+                   مهم جدًا
+
+                   id = رقم قاعدة البيانات
+                   certificate_id = رقم الشهادة الظاهر للمستخدم
+
+                   رابط PDF يحتاج id وليس certificate_id
+                ================================================= */
+
+                const certificateDbId =
+                    Number(
+                        data.certificate.id
+                    );
+
+
+                if (
+                    !Number.isInteger(
+                        certificateDbId
+                    ) ||
+                    certificateDbId <= 0
+                ) {
+
+                    console.error(
+                        "INVALID CERTIFICATE DB ID:",
+                        data.certificate.id
+                    );
+
+                    throw new Error(
+                        "معرف الشهادة المستلم من السيرفر غير صحيح."
+                    );
+
+                }
+
+
+                const certificateNumber =
+                    data.certificate.certificate_id ||
+                    data.certificate.certificate_number ||
+                    "";
+
+
+                console.log(
+                    "CERTIFICATE DATABASE ID:",
+                    certificateDbId
+                );
+
+
+                console.log(
+                    "CERTIFICATE NUMBER:",
+                    certificateNumber
+                );
+
+
+                /* =================================================
+                   رابط PDF الصحيح
+                ================================================= */
+
+                const certificateUrl =
+                    `/api/certificate/${encodeURIComponent(
+                        certificateDbId
+                    )}/pdf?language=${encodeURIComponent(
+                        language
+                    )}`;
+
+
+                console.log(
+                    "CERTIFICATE PDF URL:",
+                    certificateUrl
+                );
+
+
+                /* فتح الشهادة */
+
+                const certificateWindow =
+                    window.open(
+                        certificateUrl,
+                        "_blank"
+                    );
+
+
+                if (!certificateWindow) {
+
+                    alert(
+                        "⚠️ المتصفح منع فتح الشهادة.\n\nاسمح بالنوافذ المنبثقة لهذا الموقع ثم اضغط على الشهادة مرة أخرى."
+                    );
+
+                    return;
+
+                }
+
+
+                console.log(
+                    "✅ CERTIFICATE PDF OPENED"
+                );
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "================================="
+                );
+
+                console.error(
+                    "❌ CERTIFICATE ERROR:",
+                    error
+                );
+
+                console.error(
+                    "================================="
+                );
+
+
+                alert(
+                    error.message ||
+                    "حدث خطأ أثناء إنشاء الشهادة."
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           تنظيف الصفحة
+        ===================================================== */
+
+        window.addEventListener(
+            "beforeunload",
+            () => {
+
+                stopVideoProgressTracking();
+
+            }
+        );
+
+
+        /* =====================================================
+           تشغيل الصفحة
+        ===================================================== */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+                loadLesson();
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

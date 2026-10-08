@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>تسجيل الدخول | ZAWAM</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-page">
+
+    <div class="auth-container">
+
+        <div class="auth-brand">
+            <div class="logo">ZAWAM</div>
+
+            <h1>مرحباً بعودتك 👋</h1>
+
+            <p>
+                سجل دخولك للوصول إلى دوراتك التعليمية
+                ومتابعة رحلة التعلم.
+            </p>
+
+            <div class="auth-illustration">
+                🎓
+            </div>
+        </div>
+
+
+        <div class="auth-box">
+
+            <a href="index.html" class="back-home">
+                ← العودة للرئيسية
+            </a>
+
+            <h2>تسجيل الدخول</h2>
+
+            <p class="auth-subtitle">
+                أدخل بيانات حسابك للمتابعة
+            </p>
+
+
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="loginEmail">
+                        البريد الإلكتروني
+                    </label>
+
+                    <input type="email" id="loginEmail" placeholder="example@email.com" required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="loginPassword">
+                        كلمة المرور
+                    </label>
+
+                    <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
+
+                </div>
+
+
+                <div class="form-options">
+
+                    <label class="remember">
+
+                        <input type="checkbox">
+
+                        تذكرني
+
+                    </label>
+
+
+                    <a href="#" onclick="forgotPassword(); return false;">
+                        نسيت كلمة المرور؟
+                    </a>
+
+                </div>
+
+
+                <button type="submit" class="auth-btn">
+                    تسجيل الدخول
+                </button>
+
+            </form>
+
+
+            <div class="divider">
+                <span>أو</span>
+            </div>
+
+
+            <button class="google-btn" onclick="googleLogin()">
+                🌐 المتابعة باستخدام Google
+            </button>
+
+
+            <p class="switch-auth">
+
+                ليس لديك حساب؟
+
+                <a href="register.html">
+                    إنشاء حساب جديد
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        document
+            .getElementById("loginForm")
+            .addEventListener("submit", async function (event) {
+
+                event.preventDefault();
+
+                const email =
+                    document.getElementById("loginEmail").value.trim();
+
+                const password =
+                    document.getElementById("loginPassword").value;
+
+
+                try {
+
+                    const response = await fetch(
+                        "http://localhost:5000/api/login",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                email: email,
+                                password: password
+                            })
+                        }
+                    );
+
+
+                    const data = await response.json();
+
+
+                    if (!response.ok || !data.success) {
+
+                        alert(
+                            data.message ||
+                            "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+                        );
+
+                        return;
+                    }
+
+
+                    /* =========================
+                       حفظ بيانات المستخدم
+                       ========================= */
+
+                    localStorage.setItem(
+                        "zawamUserId",
+                        data.user.id
+                    );
+
+                    localStorage.setItem(
+                        "zawamUserName",
+                        data.user.name
+                    );
+
+                    localStorage.setItem(
+                        "zawamUserEmail",
+                        data.user.email
+                    );
+
+                    localStorage.setItem(
+                        "zawamLoggedIn",
+                        "true"
+                    );
+
+
+                    alert("تم تسجيل الدخول بنجاح ✅");
+
+
+                    window.location.href = "index.html";
+
+                }
+
+
+                catch (error) {
+
+                    console.error(error);
+
+                    alert(
+                        "تعذر الاتصال بالسيرفر. تأكد من تشغيل سيرفر ZAWAM."
+                    );
+
+                }
+
+            });
+
+
+        /* =========================
+           نسيت كلمة المرور
+           ========================= */
+
+        function forgotPassword() {
+
+            alert(
+                "ميزة استعادة كلمة المرور سيتم إضافتها لاحقاً."
+            );
+
+        }
+
+
+        /* =========================
+           Google Login
+           ========================= */
+
+        function googleLogin() {
+
+            alert(
+                "تسجيل الدخول باستخدام Google سيتم إضافته لاحقاً."
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>

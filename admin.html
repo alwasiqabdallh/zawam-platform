@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>ZAWAM | لوحة الإدارة</title>
+
+    <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="admin.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo-area">
+
+            <div class="logo-box">
+                Z
+            </div>
+
+            <div>
+                <h2>ZAWAM</h2>
+                <span>لوحة الإدارة</span>
+            </div>
+
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <button
+                class="menu-item active"
+                onclick="showSection('dashboard', this)">
+                <span>📊</span>
+                <span>الرئيسية</span>
+            </button>
+
+            <button
+                class="menu-item"
+                onclick="showSection('courses', this)">
+                <span>📚</span>
+                <span>الدورات</span>
+            </button>
+
+            <button
+                class="menu-item"
+                onclick="showSection('lessons', this)">
+                <span>🎥</span>
+                <span>المحاضرات</span>
+            </button>
+
+            <button
+                class="menu-item"
+                onclick="showSection('users', this)">
+                <span>👥</span>
+                <span>المستخدمون</span>
+            </button>
+
+            <button
+                class="menu-item"
+                onclick="showSection('certificates', this)">
+                <span>🎓</span>
+                <span>الشهادات</span>
+            </button>
+
+        </nav>
+
+        <button
+            class="logout-button"
+            onclick="adminLogout()">
+
+            🚪 تسجيل الخروج
+
+        </button>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="main-content">
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1 id="pageTitle">
+                    لوحة التحكم
+                </h1>
+
+                <p>
+                    إدارة منصة ZAWAM التعليمية
+                </p>
+
+            </div>
+
+            <div class="admin-info">
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+                <div>
+
+                    <strong id="adminName">
+                        المسؤول
+                    </strong>
+
+                    <small>
+                        Administrator
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             DASHBOARD
+        ========================== -->
+
+        <section
+            id="dashboardSection"
+            class="page-section active">
+
+            <div class="welcome-box">
+
+                <div>
+
+                    <h2>
+                        مرحبًا بك في لوحة إدارة ZAWAM 👋
+                    </h2>
+
+                    <p>
+                        من هنا يمكنك إدارة الدورات والمحاضرات
+                        والمستخدمين والشهادات.
+                    </p>
+
+                </div>
+
+                <div class="welcome-icon">
+                    🎓
+                </div>
+
+            </div>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        📚
+                    </div>
+
+                    <div>
+                        <span>الدورات</span>
+                        <strong id="coursesCount">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        🎥
+                    </div>
+
+                    <div>
+                        <span>المحاضرات</span>
+                        <strong id="lessonsCount">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon orange">
+                        👥
+                    </div>
+
+                    <div>
+                        <span>المستخدمون</span>
+                        <strong id="usersCount">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon purple">
+                        🎓
+                    </div>
+
+                    <div>
+                        <span>الشهادات</span>
+                        <strong id="certificatesCount">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="quick-actions">
+
+                <h2>
+                    إجراءات سريعة
+                </h2>
+
+                <div class="quick-grid">
+
+                    <button
+                        onclick="showSectionByName('courses')">
+
+                        <span>➕</span>
+
+                        <strong>
+                            إضافة دورة
+                        </strong>
+
+                        <small>
+                            أضف دورة جديدة للمنصة
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        onclick="showSectionByName('lessons')">
+
+                        <span>🎥</span>
+
+                        <strong>
+                            إضافة محاضرة
+                        </strong>
+
+                        <small>
+                            أضف فيديو أو رابط محاضرة
+                        </small>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             COURSES
+        ========================== -->
+
+        <section
+            id="coursesSection"
+            class="page-section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        إدارة الدورات
+                    </h2>
+
+                    <p>
+                        إضافة وتعديل وحذف دورات ZAWAM
+                    </p>
+
+                </div>
+
+                <button
+                    class="primary-button"
+                    onclick="openCourseModal()">
+
+                    ➕ إضافة دورة
+
+                </button>
+
+            </div>
+
+
+            <div class="table-card">
+
+                <div class="table-header">
+
+                    <input
+                        type="text"
+                        id="courseSearch"
+                        placeholder="🔎 البحث عن دورة..."
+                        oninput="filterCourses()">
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    اسم الدورة
+                                </th>
+
+                                <th>
+                                    التصنيف
+                                </th>
+
+                                <th>
+                                    المدرب
+                                </th>
+
+                                <th>
+                                    المدة
+                                </th>
+
+                                <th>
+                                    الإجراءات
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="coursesTableBody">
+
+                            <tr>
+
+                                <td
+                                    colspan="6"
+                                    class="empty-row">
+
+                                    جاري تحميل الدورات...
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             LESSONS
+        ========================== -->
+
+        <section
+            id="lessonsSection"
+            class="page-section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        إدارة المحاضرات
+                    </h2>
+
+                    <p>
+                        إضافة محاضرات للدورات
+                    </p>
+
+                </div>
+
+                <button
+                    class="primary-button"
+                    onclick="openLessonModal()">
+
+                    ➕ إضافة محاضرة
+
+                </button>
+
+            </div>
+
+
+            <div class="lesson-select-box">
+
+                <label>
+                    اختر الدورة
+                </label>
+
+                <select
+                    id="lessonCourseSelect"
+                    onchange="loadAdminLessons()">
+
+                    <option value="">
+                        اختر الدورة...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="table-card">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    عنوان المحاضرة
+                                </th>
+
+                                <th>
+                                    الرابط
+                                </th>
+
+                                <th>
+                                    الإجراءات
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="lessonsTableBody">
+
+                            <tr>
+
+                                <td
+                                    colspan="4"
+                                    class="empty-row">
+
+                                    اختر دورة لعرض المحاضرات
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             USERS
+        ========================== -->
+
+        <section
+            id="usersSection"
+            class="page-section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        المستخدمون
+                    </h2>
+
+                    <p>
+                        مستخدمو منصة ZAWAM
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-card">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    الاسم
+                                </th>
+
+                                <th>
+                                    البريد الإلكتروني
+                                </th>
+
+                                <th>
+                                    تاريخ التسجيل
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="usersTableBody">
+
+                            <tr>
+
+                                <td
+                                    colspan="4"
+                                    class="empty-row">
+
+                                    جاري تحميل المستخدمين...
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             CERTIFICATES
+        ========================== -->
+
+        <section
+            id="certificatesSection"
+            class="page-section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        الشهادات
+                    </h2>
+
+                    <p>
+                        الشهادات التي حصل عليها الطلاب
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-card">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    رقم الشهادة
+                                </th>
+
+                                <th>
+                                    الطالب
+                                </th>
+
+                                <th>
+                                    الدورة
+                                </th>
+
+                                <th>
+                                    تاريخ الإصدار
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="certificatesTableBody">
+
+                            <tr>
+
+                                <td
+                                    colspan="4"
+                                    class="empty-row">
+
+                                    جاري تحميل الشهادات...
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         COURSE MODAL
+    ========================== -->
+
+    <div
+        id="courseModal"
+        class="modal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2 id="courseModalTitle">
+                    إضافة دورة جديدة
+                </h2>
+
+                <button
+                    onclick="closeCourseModal()">
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                id="courseForm"
+                onsubmit="saveCourse(event)">
+
+                <input
+                    type="hidden"
+                    id="courseId">
+
+
+                <div class="form-group">
+
+                    <label>
+                        اسم الدورة
+                    </label>
+
+                    <input
+                        type="text"
+                        id="courseTitle"
+                        placeholder="مثال: مقدمة في البرمجة"
+                        required>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            التصنيف
+                        </label>
+
+                        <select
+                            id="courseCategory"
+                            required>
+
+                            <option value="">
+                                اختر التصنيف
+                            </option>
+
+                            <option value="برمجة">
+                                برمجة
+                            </option>
+
+                            <option value="إنجليزي">
+                                إنجليزي
+                            </option>
+
+                            <option value="تصميم">
+                                تصميم
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            المدرب
+                        </label>
+
+                        <input
+                            type="text"
+                            id="courseInstructor"
+                            placeholder="مثال: إبراهيم عادل"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        مدة الدورة
+                    </label>
+
+                    <input
+                        type="text"
+                        id="courseDuration"
+                        placeholder="مثال: 12 ساعة">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        وصف الدورة
+                    </label>
+
+                    <textarea
+                        id="courseDescription"
+                        rows="5"
+                        placeholder="اكتب وصف الدورة..."></textarea>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        onclick="closeCourseModal()">
+
+                        إلغاء
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="primary-button">
+
+                        💾 حفظ الدورة
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         LESSON MODAL
+    ========================== -->
+
+    <div
+        id="lessonModal"
+        class="modal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2>
+                    إضافة محاضرة
+                </h2>
+
+                <button
+                    onclick="closeLessonModal()">
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                id="lessonForm"
+                onsubmit="saveLesson(event)">
+
+                <div class="form-group">
+
+                    <label>
+                        الدورة
+                    </label>
+
+                    <select
+                        id="lessonCourse"
+                        required>
+
+                        <option value="">
+                            اختر الدورة
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        عنوان المحاضرة
+                    </label>
+
+                    <input
+                        type="text"
+                        id="lessonTitle"
+                        placeholder="مثال: ماهي البرمجة"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        رابط المحاضرة
+                    </label>
+
+                    <input
+                        type="url"
+                        id="lessonUrl"
+                        placeholder="https://www.youtube.com/..."
+                        required>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        onclick="closeLessonModal()">
+
+                        إلغاء
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="primary-button">
+
+                        💾 حفظ المحاضرة
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         TOAST
+    ========================== -->
+
+    <div
+        id="toast"
+        class="toast">
+    </div>
+
+
+    <script src="admin.js"></script>
+
+</body>
+
+</html>

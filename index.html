@@ -1,0 +1,1058 @@
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>زوام التعليمية | ZAWAM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="navbar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                Z
+            </div>
+
+            <div>
+
+                <h2>زوام</h2>
+
+                <span>ZAWAM</span>
+
+            </div>
+
+        </div>
+
+
+        <nav>
+
+            <a href="index.html">
+                الرئيسية
+            </a>
+
+            <a href="index.html#categories">
+                التخصصات
+            </a>
+
+            <a href="index.html#courses">
+                الدورات
+            </a>
+
+            <a href="index.html#about">
+                من نحن
+            </a>
+
+        </nav>
+
+
+        <div class="nav-buttons">
+
+            <button class="language-btn" onclick="changeLanguage()">
+                English
+            </button>
+
+
+            <div id="authButtons">
+
+                <a href="login.html" class="login-btn">
+                    تسجيل الدخول
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero" id="home">
+
+        <div class="hero-content">
+
+
+            <div class="hero-text">
+
+
+                <div class="small-title">
+                    🚀 مرحباً بك في زوام التعليمية
+                </div>
+
+
+                <h1>
+
+                    تعلّم اليوم،
+
+                    <span>
+                        وابنِ مستقبلك غداً.
+                    </span>
+
+                </h1>
+
+
+                <p>
+
+                    اكتسب المهارات والمعرفة التي تحتاجها
+                    من خلال دورات تعليمية مصممة لتساعدك
+                    على التطور وتحقيق أهدافك.
+
+                </p>
+
+
+                <div class="hero-buttons">
+
+
+                    <button class="main-btn" onclick="window.location.href='index.html#courses'">
+
+                        استكشف الدورات
+
+                        <span>
+                            ←
+                        </span>
+
+                    </button>
+
+
+                    <button class="watch-btn" onclick="window.location.href='course-details.html?id=1'">
+
+                        ▶ شاهد كيف تعمل المنصة
+
+                    </button>
+
+                </div>
+
+
+                <div class="students">
+
+
+                    <div class="avatars">
+
+                        <div>👨‍💻</div>
+                        <div>👩‍🎓</div>
+                        <div>👨‍🎓</div>
+                        <div>👩‍💻</div>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            +10,000
+                        </strong>
+
+                        <small>
+                            طالب يتعلمون معنا
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================= ILLUSTRATION ================= -->
+
+            <div class="hero-illustration">
+
+
+                <div class="circle circle-one"></div>
+
+                <div class="circle circle-two"></div>
+
+
+                <div class="book book-one">
+
+                    <div class="book-cover">
+                        HTML
+                    </div>
+
+                </div>
+
+
+                <div class="book book-two">
+
+                    <div class="book-cover">
+                        CSS
+                    </div>
+
+                </div>
+
+
+                <div class="book book-three">
+
+                    <div class="book-cover">
+                        JS
+                    </div>
+
+                </div>
+
+
+                <div class="laptop">
+
+                    <div class="screen">
+
+                        <div class="screen-top">
+
+                            <span></span>
+                            <span></span>
+                            <span></span>
+
+                        </div>
+
+
+                        <div class="code-line line-one"></div>
+                        <div class="code-line line-two"></div>
+                        <div class="code-line line-three"></div>
+                        <div class="code-line line-four"></div>
+
+
+                        <div class="screen-title">
+                            ZAWAM
+                        </div>
+
+                    </div>
+
+
+                    <div class="keyboard"></div>
+
+                </div>
+
+
+                <div class="graduation-cap">
+                    🎓
+                </div>
+
+
+                <div class="floating-card card-course">
+
+                    <div class="card-icon">
+                        📚
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            دورات جديدة
+                        </strong>
+
+                        <small>
+                            تعلم معنا
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="floating-card card-certificate">
+
+                    <div class="card-icon">
+                        🏆
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            شهادة
+                        </strong>
+
+                        <small>
+                            بعد إكمال الدورة
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= CATEGORIES ================= -->
+
+    <section class="categories" id="categories">
+
+
+        <div class="section-heading">
+
+
+            <span>
+                تعلّم ما تحب
+            </span>
+
+
+            <h2>
+                استكشف تخصصاتنا
+            </h2>
+
+
+            <p>
+
+                اختر المجال الذي تريد تطوير مهاراتك فيه
+                وابدأ رحلة التعلم.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="category-grid">
+
+
+            <!-- البرمجة -->
+
+            <div class="category-card" onclick="window.location.href='course.html?category=programming'">
+
+                <div class="category-icon programming">
+                    💻
+                </div>
+
+
+                <h3>
+                    البرمجة
+                </h3>
+
+
+                <p>
+                    تعلم البرمجة من الصفر وتطوير المواقع والتطبيقات.
+                </p>
+
+
+                <span class="courses-count">
+                    دورات البرمجة
+                </span>
+
+            </div>
+
+
+
+            <!-- الإنجليزية -->
+
+            <div class="category-card" onclick="window.location.href='course.html?category=english'">
+
+                <div class="category-icon networking">
+                    🇬🇧
+                </div>
+
+
+                <h3>
+                    اللغة الإنجليزية
+                </h3>
+
+
+                <p>
+                    طوّر مهاراتك في اللغة الإنجليزية من البداية.
+                </p>
+
+
+                <span class="courses-count">
+                    دورات الإنجليزية
+                </span>
+
+            </div>
+
+
+
+            <!-- التصميم الجرافيكي -->
+
+            <div class="category-card" onclick="window.location.href='course.html?category=design'">
+
+                <div class="category-icon design">
+                    🎨
+                </div>
+
+
+                <h3>
+                    التصميم الجرافيكي
+                </h3>
+
+
+                <p>
+                    تعلم أساسيات التصميم الجرافيكي وتصميم الواجهات.
+                </p>
+
+
+                <span class="courses-count">
+                    دورات التصميم
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= COURSES ================= -->
+
+    <section class="courses" id="courses">
+
+
+        <div class="section-heading">
+
+
+            <span>
+                ابدأ رحلة التعلم
+            </span>
+
+
+            <h2>
+                الدورات المميزة
+            </h2>
+
+
+            <p>
+
+                مجموعة من الدورات المختارة لمساعدتك
+                على اكتساب مهارات جديدة.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="course-grid" id="courseGrid">
+
+            <p>
+                جاري تحميل الدورات...
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ================= WHY ZAWAM ================= -->
+
+    <section class="why-us" id="about">
+
+
+        <div class="why-content">
+
+
+            <div>
+
+
+                <span class="section-label">
+                    لماذا زوام؟
+                </span>
+
+
+                <h2>
+
+                    تعلم بطريقة أبسط،
+
+                    <br>
+
+                    وتطور بطريقة أسرع.
+
+                </h2>
+
+
+                <p>
+
+                    في زوام نؤمن أن التعليم يجب أن يكون
+                    متاحاً وسهلاً ومفيداً للجميع.
+
+                </p>
+
+
+            </div>
+
+
+
+            <div class="features">
+
+
+                <div class="feature">
+
+                    <div>
+                        📚
+                    </div>
+
+                    <section>
+
+                        <h3>
+                            محتوى تعليمي
+                        </h3>
+
+                        <p>
+                            دورات منظمة وسهلة المتابعة.
+                        </p>
+
+                    </section>
+
+                </div>
+
+
+
+                <div class="feature">
+
+                    <div>
+                        🎓
+                    </div>
+
+                    <section>
+
+                        <h3>
+                            شهادات إكمال
+                        </h3>
+
+                        <p>
+                            احصل على شهادة بعد إكمال الدورة.
+                        </p>
+
+                    </section>
+
+                </div>
+
+
+
+                <div class="feature">
+
+                    <div>
+                        📱
+                    </div>
+
+                    <section>
+
+                        <h3>
+                            تعلم من أي مكان
+                        </h3>
+
+                        <p>
+                            تعلم باستخدام الهاتف أو الكمبيوتر.
+                        </p>
+
+                    </section>
+
+                </div>
+
+
+
+                <div class="feature">
+
+                    <div>
+                        🌍
+                    </div>
+
+                    <section>
+
+                        <h3>
+                            عربي و English
+                        </h3>
+
+                        <p>
+                            محتوى وواجهة بلغتين.
+                        </p>
+
+                    </section>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= CTA ================= -->
+
+    <section class="cta">
+
+
+        <div>
+
+
+            <h2>
+                مستعد تبدأ رحلة التعلم؟
+            </h2>
+
+
+            <p>
+                انضم إلى زوام وابدأ في تطوير مهاراتك اليوم.
+            </p>
+
+
+            <button onclick="window.location.href='register.html'">
+
+                إنشاء حساب مجاني
+
+            </button>
+
+
+        </div>
+
+
+        <div class="cta-books">
+            📚 🎓 💻
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+
+        <div class="footer-content">
+
+
+            <div class="footer-logo">
+
+
+                <div class="logo-icon">
+                    Z
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        زوام
+                    </h2>
+
+                    <span>
+                        ZAWAM
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <p>
+                منصة زوام التعليمية — تعلم، تطور، اصنع مستقبلك.
+            </p>
+
+
+            <div class="socials">
+
+                <a href="https://t.me/ZAWAM_Education" target="_blank" rel="noopener noreferrer">
+
+                    📱 Telegram
+
+                </a>
+
+
+                <a href="https://www.facebook.com/share/18YbiweaP1/" target="_blank" rel="noopener noreferrer">
+
+                    📘 Facebook
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="copyright">
+
+            © 2026 ZAWAM Educational Platform
+
+        </div>
+
+
+    </footer>
+
+
+
+    <!-- ================= SCRIPT ================= -->
+
+    <script src="script.js"></script>
+
+
+    <script>
+
+        /* ==========================================
+           إظهار حساب الطالب بعد تسجيل الدخول
+           ========================================== */
+
+        function updateAuthButtons() {
+
+            const authButtons =
+                document.getElementById("authButtons");
+
+            if (!authButtons) return;
+
+
+            const isLoggedIn =
+                localStorage.getItem("zawamLoggedIn") === "true";
+
+
+            const userName =
+                localStorage.getItem("zawamUserName") || "الطالب";
+
+
+            if (isLoggedIn) {
+
+                authButtons.innerHTML = `
+
+                    <div style="
+                        display:flex;
+                        align-items:center;
+                        gap:10px;
+                    ">
+
+                        <a
+                            href="profile.html"
+                            class="login-btn"
+                            style="text-decoration:none;"
+                        >
+                            👤 ${userName}
+                        </a>
+
+                        <button
+                            onclick="logoutUser()"
+                            class="login-btn"
+                            style="
+                                border:none;
+                                cursor:pointer;
+                                font-family:inherit;
+                            "
+                        >
+                            تسجيل الخروج
+                        </button>
+
+                    </div>
+
+                `;
+
+            } else {
+
+                authButtons.innerHTML = `
+
+                    <a
+                        href="login.html"
+                        class="login-btn"
+                    >
+                        تسجيل الدخول
+                    </a>
+
+                `;
+
+            }
+
+        }
+
+
+        /* ==========================================
+           تسجيل الخروج
+           ========================================== */
+
+        function logoutUser() {
+
+            localStorage.removeItem("zawamUserName");
+            localStorage.removeItem("zawamUserEmail");
+            localStorage.removeItem("zawamLoggedIn");
+
+            window.location.href = "index.html";
+
+        }
+
+
+        /* ==========================================
+           تحميل الدورات
+           ========================================== */
+
+        async function loadCourses() {
+
+            const courseGrid =
+                document.getElementById("courseGrid");
+
+
+            try {
+
+                const response =
+                    await fetch("/api/courses");
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Failed to load courses"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                const courses =
+                    data.courses;
+
+
+                if (
+                    !data.success ||
+                    !Array.isArray(courses) ||
+                    courses.length === 0
+                ) {
+
+                    courseGrid.innerHTML = `
+                        <p>
+                            لا توجد دورات حالياً.
+                        </p>
+                    `;
+
+                    return;
+
+                }
+
+
+                const allowedCategories = [
+                    "برمجة",
+                    "إنجليزي",
+                    "تصميم"
+                ];
+
+
+                const filteredCourses =
+                    courses.filter(course =>
+                        allowedCategories.includes(
+                            course.category
+                        )
+                    );
+
+
+                if (filteredCourses.length === 0) {
+
+                    courseGrid.innerHTML = `
+                        <p>
+                            لا توجد دورات حالياً.
+                        </p>
+                    `;
+
+                    return;
+
+                }
+
+
+                courseGrid.innerHTML =
+                    filteredCourses.map(course => {
+
+
+                        let icon = "📚";
+
+                        let imageClass =
+                            "programming-bg";
+
+
+                        if (
+                            course.category === "برمجة"
+                        ) {
+
+                            icon = "💻";
+
+                            imageClass =
+                                "programming-bg";
+
+                        }
+
+
+                        else if (
+                            course.category === "إنجليزي"
+                        ) {
+
+                            icon = "🇬🇧";
+
+                            imageClass =
+                                "network-bg";
+
+                        }
+
+
+                        else if (
+                            course.category === "تصميم"
+                        ) {
+
+                            icon = "🎨";
+
+                            imageClass =
+                                "cyber-bg";
+
+                        }
+
+
+                        return `
+
+                            <div class="course-card">
+
+
+                                <div
+                                    class="course-image ${imageClass}">
+
+                                    <div
+                                        class="course-image-icon">
+
+                                        ${icon}
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="course-body">
+
+
+                                    <span
+                                        class="course-category">
+
+                                        ${course.category || "عام"}
+
+                                    </span>
+
+
+                                    <h3>
+
+                                        ${course.title || "دورة تعليمية"}
+
+                                    </h3>
+
+
+                                    <p>
+
+                                        ${course.description ||
+                            "دورة تعليمية مميزة من منصة زوام."
+                            }
+
+                                    </p>
+
+
+                                    <div class="course-info">
+
+
+                                        <span>
+
+                                            👨‍🏫
+                                            ${course.instructor ||
+                            "زوام أكاديمي"}
+
+                                        </span>
+
+
+                                        <span>
+
+                                            ⏱
+                                            ${course.duration ||
+                            "غير محدد"}
+
+                                        </span>
+
+
+                                    </div>
+
+
+                                    <button
+                                        class="course-btn"
+                                        onclick="window.location.href='course-details.html?id=${course.id}'">
+
+                                        مشاهدة الدورة
+
+                                    </button>
+
+
+                                </div>
+
+
+                            </div>
+
+                        `;
+
+
+                    }).join("");
+
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Courses Error:",
+                    error
+                );
+
+
+                courseGrid.innerHTML = `
+
+                    <p>
+
+                        تعذر تحميل الدورات.
+                        تأكد من تشغيل سيرفر ZAWAM.
+
+                    </p>
+
+                `;
+
+            }
+
+        }
+
+
+        /* ==========================================
+           تشغيل الصفحة
+           ========================================== */
+
+        updateAuthButtons();
+
+        loadCourses();
+
+    </script>
+
+
+</body>
+
+</html>
+```

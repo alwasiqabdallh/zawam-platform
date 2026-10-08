@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>تسجيل دخول الإدارة | ZAWAM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Cairo", sans-serif;
+
+            background:
+                linear-gradient(135deg,
+                    #071a35,
+                    #0b2c52,
+                    #123d68);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .login-card {
+            background: #ffffff;
+
+            border-radius: 22px;
+
+            padding: 38px 32px;
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.25);
+
+            text-align: center;
+        }
+
+        .logo {
+            width: 75px;
+            height: 75px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 20px;
+
+            background: #0b2c52;
+
+            color: #ffffff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 40px;
+            font-weight: 800;
+
+            box-shadow:
+                0 10px 25px rgba(11, 44, 82, 0.25);
+        }
+
+        h1 {
+            color: #0b2c52;
+
+            font-size: 25px;
+
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: #777;
+
+            font-size: 14px;
+
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            text-align: right;
+
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #333;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            height: 50px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 12px;
+
+            padding: 0 15px;
+
+            font-family: "Cairo", sans-serif;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: #0b2c52;
+
+            box-shadow:
+                0 0 0 3px rgba(11, 44, 82, 0.08);
+        }
+
+        .login-button {
+            width: 100%;
+
+            height: 52px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: #0b2c52;
+
+            color: #ffffff;
+
+            font-family: "Cairo", sans-serif;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .login-button:hover {
+            background: #123d68;
+
+            transform: translateY(-1px);
+        }
+
+        .login-button:disabled {
+            opacity: 0.7;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+        .message {
+            display: none;
+
+            margin-top: 18px;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            font-size: 13px;
+        }
+
+        .message.error {
+            display: block;
+
+            background: #fff0f0;
+
+            color: #c62828;
+        }
+
+        .message.success {
+            display: block;
+
+            background: #effaf2;
+
+            color: #218838;
+        }
+
+        .back-link {
+            display: inline-block;
+
+            margin-top: 22px;
+
+            color: #0b2c52;
+
+            text-decoration: none;
+
+            font-size: 13px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+
+            color: rgba(255, 255, 255, 0.75);
+
+            font-size: 12px;
+
+            margin-top: 18px;
+        }
+
+        @media (max-width: 480px) {
+
+            .login-card {
+                padding: 30px 22px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <div class="logo">
+                Z
+            </div>
+
+            <h1>
+                إدارة ZAWAM
+            </h1>
+
+            <p class="subtitle">
+                تسجيل الدخول إلى لوحة تحكم المنصة
+            </p>
+
+            <form id="adminLoginForm">
+
+                <div class="form-group">
+
+                    <label for="email">
+                        البريد الإلكتروني
+                    </label>
+
+                    <input type="email" id="email" placeholder="admin@example.com" required autocomplete="email">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="password">
+                        كلمة المرور
+                    </label>
+
+                    <input type="password" id="password" placeholder="أدخل كلمة المرور" required
+                        autocomplete="current-password">
+
+                </div>
+
+                <button type="submit" class="login-button" id="loginButton">
+                    تسجيل الدخول
+                </button>
+
+            </form>
+
+            <div id="message" class="message"></div>
+
+            <a href="/index.html" class="back-link">
+                العودة إلى منصة ZAWAM
+            </a>
+
+        </div>
+
+        <div class="footer">
+            ZAWAM Educational Platform © 2026
+        </div>
+
+    </div>
+
+    <script>
+
+        const form =
+            document.getElementById("adminLoginForm");
+
+        const emailInput =
+            document.getElementById("email");
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+        const message =
+            document.getElementById("message");
+
+
+        function showMessage(text, type = "error") {
+
+            message.textContent = text;
+
+            message.className =
+                `message ${type}`;
+        }
+
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    emailInput.value.trim();
+
+                const password =
+                    passwordInput.value;
+
+
+                if (!email || !password) {
+
+                    showMessage(
+                        "أدخل البريد الإلكتروني وكلمة المرور."
+                    );
+
+                    return;
+                }
+
+
+                loginButton.disabled = true;
+
+                loginButton.textContent =
+                    "جاري تسجيل الدخول...";
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "/api/admin/login",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+                                    email,
+                                    password
+                                })
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (
+                        !response.ok ||
+                        !data.success
+                    ) {
+
+                        throw new Error(
+                            data.message ||
+                            "فشل تسجيل الدخول."
+                        );
+                    }
+
+
+                    /* =====================================
+                       حفظ بيانات الأدمن
+                    ===================================== */
+
+                    localStorage.setItem(
+                        "zawamAdminToken",
+                        data.token
+                    );
+
+                    localStorage.setItem(
+                        "zawamAdminLoggedIn",
+                        "true"
+                    );
+
+                    localStorage.setItem(
+                        "zawamAdminName",
+                        data.admin?.name ||
+                        "مدير المنصة"
+                    );
+
+                    localStorage.setItem(
+                        "zawamAdminEmail",
+                        data.admin?.email ||
+                        email
+                    );
+
+                    localStorage.setItem(
+                        "zawamAdminId",
+                        String(
+                            data.admin?.id || ""
+                        )
+                    );
+
+
+                    showMessage(
+                        "تم تسجيل الدخول بنجاح، جاري فتح لوحة التحكم...",
+                        "success"
+                    );
+
+
+                    /* =====================================
+                       الانتقال التلقائي إلى لوحة التحكم
+                    ===================================== */
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            "/admin-dashboard.html";
+
+                    }, 300);
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Admin login error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "حدث خطأ أثناء تسجيل الدخول.",
+                        "error"
+                    );
+
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "تسجيل الدخول";
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

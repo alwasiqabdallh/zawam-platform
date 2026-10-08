@@ -1,0 +1,2591 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>لوحة تحكم ZAWAM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Cairo", sans-serif;
+            background: #f4f6f9;
+            color: #172033;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 260px;
+            background: #101a33;
+            color: white;
+            min-height: 100vh;
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+            padding: 25px 15px;
+
+            /* التعديل: جعل محتوى القائمة مرتبًا عموديًا */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 58px;
+            height: 58px;
+            background: #d4af37;
+            color: #101a33;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .logo h2 {
+            margin-top: 10px;
+            font-size: 22px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #aeb8d0;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .menu button {
+            border: 0;
+            background: transparent;
+            color: #c9d1e5;
+            text-align: right;
+            padding: 13px 15px;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .menu button:hover,
+        .menu button.active {
+            background: #1e2b4e;
+            color: white;
+        }
+
+        .logout-btn {
+            width: 100%;
+
+            /* التعديل الأساسي */
+            position: static;
+            margin-top: auto;
+
+            border: 1px solid #394666;
+            background: transparent;
+            color: #ffb4b4;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #3a1e2a;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            width: calc(100% - 260px);
+            margin-right: 260px;
+            padding: 25px;
+        }
+
+        .topbar {
+            background: white;
+            border-radius: 15px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        .topbar h1 {
+            font-size: 23px;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 43px;
+            height: 43px;
+            border-radius: 50%;
+            background: #101a33;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .admin-info small {
+            color: #7b8498;
+        }
+
+        /* =========================
+           SECTIONS
+        ========================= */
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 21px;
+        }
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 22px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        .stat-title {
+            color: #7b8498;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 29px;
+            font-weight: 800;
+            color: #101a33;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .btn {
+            border: 0;
+            border-radius: 9px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #101a33;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d2b50;
+        }
+
+        .btn-gold {
+            background: #d4af37;
+            color: #101a33;
+        }
+
+        .btn-danger {
+            background: #d64545;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e8ebf2;
+            color: #27334e;
+        }
+
+        .btn-small {
+            padding: 7px 12px;
+            font-size: 12px;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            overflow-x: auto;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th,
+        td {
+            padding: 14px 15px;
+            text-align: right;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 13px;
+        }
+
+        th {
+            background: #f8f9fb;
+            color: #687289;
+            font-weight: 700;
+        }
+
+        td {
+            color: #30394e;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        /* =========================
+           FORMS
+        ========================= */
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.04);
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #4e5870;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            border: 1px solid #dfe3eb;
+            border-radius: 9px;
+            padding: 11px 13px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #101a33;
+        }
+
+        .form-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 17, 35, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: min(750px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+        }
+
+        .close {
+            border: 0;
+            background: #edf0f5;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 20px;
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast {
+            position: fixed;
+            left: 25px;
+            bottom: 25px;
+            background: #101a33;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.success {
+            border-right: 5px solid #2eb85c;
+        }
+
+        .toast.error {
+            border-right: 5px solid #d64545;
+        }
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        .loading {
+            text-align: center;
+            padding: 35px;
+            color: #7b8498;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #7b8498;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 750px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .main {
+                width: calc(100% - 220px);
+                margin-right: 220px;
+                padding: 15px;
+            }
+
+            .topbar h1 {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                min-height: auto;
+                padding-bottom: 80px;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .main {
+                width: 100%;
+                margin-right: 0;
+            }
+
+            .logout-btn {
+                position: static;
+                margin-top: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- =========================
+             SIDEBAR
+        ========================= -->
+
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">Z</div>
+                <h2>ZAWAM</h2>
+                <p>لوحة الإدارة</p>
+            </div>
+
+            <div class="menu">
+
+                <button class="active" onclick="showSection('dashboard', this)">
+                    🏠 الرئيسية
+                </button>
+
+                <button onclick="showSection('courses', this)">
+                    📚 الدورات
+                </button>
+
+                <button onclick="showSection('lessons', this)">
+                    🎥 المحاضرات
+                </button>
+
+                <button onclick="showSection('users', this)">
+                    👥 الطلاب
+                </button>
+
+                <button onclick="showSection('certificates', this)">
+                    🏆 الشهادات
+                </button>
+
+            </div>
+
+            <button class="logout-btn" onclick="logoutAdmin()">
+                🚪 تسجيل الخروج
+            </button>
+
+        </aside>
+
+
+        <!-- =========================
+             MAIN
+        ========================= -->
+
+        <main class="main">
+
+            <div class="topbar">
+
+                <h1 id="pageTitle">
+                    لوحة تحكم ZAWAM
+                </h1>
+
+                <div class="admin-info">
+
+                    <div>
+                        <strong id="adminName">الأدمن</strong>
+                        <br>
+                        <small>مدير المنصة</small>
+                    </div>
+
+                    <div class="admin-avatar">
+                        Z
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 DASHBOARD
+            ========================= -->
+
+            <section id="dashboard" class="section active">
+
+                <div class="section-header">
+                    <h2>نظرة عامة</h2>
+                </div>
+
+                <div class="stats">
+
+                    <div class="stat-card">
+                        <div class="stat-title">
+                            إجمالي الدورات
+                        </div>
+
+                        <div class="stat-number" id="statCourses">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-title">
+                            إجمالي المحاضرات
+                        </div>
+
+                        <div class="stat-number" id="statLessons">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-title">
+                            إجمالي الطلاب
+                        </div>
+
+                        <div class="stat-number" id="statUsers">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-title">
+                            الشهادات
+                        </div>
+
+                        <div class="stat-number" id="statCertificates">
+                            0
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-card">
+
+                    <h3 style="margin-bottom:10px;">
+                        مرحبًا بك في لوحة تحكم ZAWAM 👋
+                    </h3>
+
+                    <p style="color:#70798c; line-height:2;">
+                        من هنا يمكنك إدارة الدورات والمحاضرات والطلاب والشهادات.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 COURSES
+            ========================= -->
+
+            <section id="courses" class="section">
+
+                <div class="section-header">
+
+                    <h2>
+                        إدارة الدورات
+                    </h2>
+
+                    <button class="btn btn-gold" onclick="openCourseModal()">
+                        + إضافة دورة
+                    </button>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>#</th>
+                                <th>اسم الدورة</th>
+                                <th>التصنيف</th>
+                                <th>المدرب</th>
+                                <th>المدة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="coursesTable">
+
+                            <tr>
+                                <td colspan="6" class="loading">
+                                    جاري تحميل الدورات...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 LESSONS
+            ========================= -->
+
+            <section id="lessons" class="section">
+
+                <div class="section-header">
+
+                    <h2>
+                        إدارة المحاضرات
+                    </h2>
+
+                    <button class="btn btn-gold" onclick="openLessonModal()">
+                        + إضافة محاضرة
+                    </button>
+
+                </div>
+
+                <div class="form-card">
+
+                    <div class="form-group">
+
+                        <label>
+                            اختر الدورة لعرض محاضراتها
+                        </label>
+
+                        <select id="lessonCourseFilter" onchange="loadLessonsByCourse()">
+
+                            <option value="">
+                                -- اختر الدورة --
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>#</th>
+                                <th>المحاضرة</th>
+                                <th>الدورة</th>
+                                <th>الترتيب</th>
+                                <th>المدة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="lessonsTable">
+
+                            <tr>
+                                <td colspan="6" class="empty">
+                                    اختر دورة لعرض المحاضرات
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 USERS
+            ========================= -->
+
+            <section id="users" class="section">
+
+                <div class="section-header">
+
+                    <h2>
+                        الطلاب
+                    </h2>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>#</th>
+                                <th>الاسم</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>الدور</th>
+                                <th>تاريخ التسجيل</th>
+                                <th>الإجراء</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="usersTable">
+
+                            <tr>
+                                <td colspan="6" class="loading">
+                                    جاري تحميل الطلاب...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 CERTIFICATES
+            ========================= -->
+
+            <section id="certificates" class="section">
+
+                <div class="section-header">
+
+                    <h2>
+                        الشهادات
+                    </h2>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>#</th>
+                                <th>رقم الشهادة</th>
+                                <th>الطالب</th>
+                                <th>البريد</th>
+                                <th>الدورة</th>
+                                <th>تاريخ الإصدار</th>
+                                <th>الإجراء</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="certificatesTable">
+
+                            <tr>
+                                <td colspan="7" class="loading">
+                                    جاري تحميل الشهادات...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================
+         COURSE MODAL
+    ========================= -->
+
+    <div class="modal" id="courseModal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h3 id="courseModalTitle">
+                    إضافة دورة
+                </h3>
+
+                <button class="close" onclick="closeCourseModal()">
+                    ×
+                </button>
+
+            </div>
+
+            <form id="courseForm">
+
+                <input type="hidden" id="courseId">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label>
+                            اسم الدورة *
+                        </label>
+
+                        <input type="text" id="courseTitle" placeholder="مثال: مقدمة في البرمجة" required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            التصنيف
+                        </label>
+
+                        <select id="courseCategory">
+
+                            <option value="برمجة">
+                                برمجة
+                            </option>
+
+                            <option value="إنجليزي">
+                                إنجليزي
+                            </option>
+
+                            <option value="تصميم">
+                                تصميم
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            المدرب
+                        </label>
+
+                        <input type="text" id="courseInstructor" placeholder="اسم المدرب">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            مدة الدورة
+                        </label>
+
+                        <input type="text" id="courseDuration" placeholder="مثال: 12 ساعة">
+
+                    </div>
+
+                    <div class="form-group full">
+
+                        <label>
+                            رابط صورة الدورة
+                        </label>
+
+                        <input type="text" id="courseImage" placeholder="https://...">
+
+                    </div>
+
+                    <div class="form-group full">
+
+                        <label>
+                            وصف الدورة
+                        </label>
+
+                        <textarea id="courseDescription" placeholder="اكتب وصف الدورة..."></textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="form-buttons">
+
+                    <button type="submit" class="btn btn-primary" id="courseSubmitBtn">
+                        حفظ الدورة
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" onclick="closeCourseModal()">
+                        إلغاء
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         LESSON MODAL
+    ========================= -->
+
+    <div class="modal" id="lessonModal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h3 id="lessonModalTitle">
+                    إضافة محاضرة
+                </h3>
+
+                <button class="close" onclick="closeLessonModal()">
+                    ×
+                </button>
+
+            </div>
+
+            <form id="lessonForm">
+
+                <input type="hidden" id="lessonId">
+
+                <div class="form-grid">
+
+                    <div class="form-group full">
+
+                        <label>
+                            الدورة *
+                        </label>
+
+                        <select id="lessonCourse" required>
+
+                            <option value="">
+                                -- اختر الدورة --
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group full">
+
+                        <label>
+                            عنوان المحاضرة *
+                        </label>
+
+                        <input type="text" id="lessonTitle" placeholder="مثال: ماهي البرمجة؟" required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            رابط الفيديو
+                        </label>
+
+                        <input type="text" id="lessonVideo" placeholder="https://youtube.com/...">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            مدة المحاضرة
+                        </label>
+
+                        <input type="text" id="lessonDuration" placeholder="مثال: 20 دقيقة">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            ترتيب المحاضرة
+                        </label>
+
+                        <input type="number" id="lessonOrder" min="1" placeholder="1">
+
+                    </div>
+
+                    <div class="form-group full">
+
+                        <label>
+                            الوصف
+                        </label>
+
+                        <textarea id="lessonDescription" placeholder="وصف المحاضرة..."></textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="form-buttons">
+
+                    <button type="submit" class="btn btn-primary">
+                        حفظ المحاضرة
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" onclick="closeLessonModal()">
+                        إلغاء
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         TOAST
+    ========================= -->
+
+    <div class="toast" id="toast"></div>
+
+
+    <script>
+
+        const API = "/api/admin";
+
+        let adminToken = localStorage.getItem("zawamAdminToken");
+
+        let courses = [];
+        let editingCourseId = null;
+        let editingLessonId = null;
+
+
+        /* =====================================================
+           INITIALIZATION
+        ===================================================== */
+
+        document.addEventListener("DOMContentLoaded", async () => {
+
+            if (!adminToken) {
+
+                window.location.href = "/admin-login.html";
+
+                return;
+            }
+
+            await verifyAdmin();
+
+        });
+
+
+        /* =====================================================
+           AUTH
+        ===================================================== */
+
+        async function verifyAdmin() {
+
+            try {
+
+                const response = await fetch(`${API}/me`, {
+                    headers: {
+                        Authorization: `Bearer ${adminToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+
+                    localStorage.removeItem("zawamAdminToken");
+                    localStorage.removeItem("zawamAdmin");
+
+                    window.location.href = "/admin-login.html";
+
+                    return;
+                }
+
+                if (data.admin) {
+
+                    document.getElementById("adminName").textContent =
+                        data.admin.name || "الأدمن";
+
+                }
+
+                await loadDashboard();
+                await loadCourses();
+                await loadUsers();
+                await loadCertificates();
+
+            } catch (error) {
+
+                console.error(error);
+
+                showToast(
+                    "تعذر الاتصال بالسيرفر",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        async function adminFetch(url, options = {}) {
+
+            const headers = {
+                ...(options.headers || {}),
+                Authorization: `Bearer ${adminToken}`
+            };
+
+            if (
+                options.body &&
+                typeof options.body === "string"
+            ) {
+                headers["Content-Type"] = "application/json";
+            }
+
+            const response = await fetch(url, {
+                ...options,
+                headers
+            });
+
+            let data = {};
+
+            try {
+                data = await response.json();
+            } catch (error) {
+                data = {};
+            }
+
+            if (response.status === 401) {
+
+                localStorage.removeItem("zawamAdminToken");
+                localStorage.removeItem("zawamAdmin");
+
+                window.location.href = "/admin-login.html";
+
+                throw new Error("انتهت جلسة الأدمن");
+
+            }
+
+            return {
+                response,
+                data
+            };
+
+        }
+
+
+        async function logoutAdmin() {
+
+            try {
+
+                await adminFetch(`${API}/logout`, {
+                    method: "POST"
+                });
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+            localStorage.removeItem("zawamAdminToken");
+            localStorage.removeItem("zawamAdmin");
+
+            window.location.href = "/admin-login.html";
+
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        function showSection(sectionId, button) {
+
+            document.querySelectorAll(".section").forEach(section => {
+
+                section.classList.remove("active");
+
+            });
+
+            document.querySelectorAll(".menu button").forEach(btn => {
+
+                btn.classList.remove("active");
+
+            });
+
+            document.getElementById(sectionId).classList.add("active");
+
+            if (button) {
+                button.classList.add("active");
+            }
+
+            const titles = {
+                dashboard: "لوحة تحكم ZAWAM",
+                courses: "إدارة الدورات",
+                lessons: "إدارة المحاضرات",
+                users: "إدارة الطلاب",
+                certificates: "إدارة الشهادات"
+            };
+
+            document.getElementById("pageTitle").textContent =
+                titles[sectionId] || "لوحة تحكم ZAWAM";
+
+            if (sectionId === "lessons") {
+
+                loadCoursesIntoLessonSelects();
+
+            }
+
+        }
+
+
+        /* =====================================================
+           DASHBOARD
+        ===================================================== */
+
+        async function loadDashboard() {
+
+            try {
+
+                const { response, data } =
+                    await adminFetch(`${API}/dashboard`);
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message || "تعذر تحميل الإحصائيات"
+                    );
+
+                }
+
+                const stats = data.stats || {};
+
+                document.getElementById("statCourses").textContent =
+                    stats.courses || 0;
+
+                document.getElementById("statLessons").textContent =
+                    stats.lessons || 0;
+
+                document.getElementById("statUsers").textContent =
+                    stats.users || 0;
+
+                document.getElementById("statCertificates").textContent =
+                    stats.certificates || 0;
+
+            } catch (error) {
+
+                console.error(error);
+
+                showToast(
+                    error.message || "تعذر تحميل لوحة التحكم",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           COURSES - LOAD
+        ===================================================== */
+
+        async function loadCourses() {
+
+            try {
+
+                const { response, data } =
+                    await adminFetch(`${API}/courses`);
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message || "تعذر تحميل الدورات"
+                    );
+
+                }
+
+                courses = data.courses || [];
+
+                renderCourses();
+
+                loadCoursesIntoLessonSelects();
+
+            } catch (error) {
+
+                console.error(error);
+
+                document.getElementById("coursesTable").innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty">
+                            ${escapeHtml(error.message)}
+                        </td>
+                    </tr>
+                `;
+
+            }
+
+        }
+
+
+        function renderCourses() {
+
+            const table = document.getElementById("coursesTable");
+
+            if (!courses.length) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty">
+                            لا توجد دورات حاليًا
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+            table.innerHTML = courses.map(course => {
+
+                return `
+                    <tr>
+
+                        <td>
+                            ${course.id}
+                        </td>
+
+                        <td>
+                            <strong>
+                                ${escapeHtml(course.title)}
+                            </strong>
+                        </td>
+
+                        <td>
+                            ${escapeHtml(course.category || "-")}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(course.instructor || "-")}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(course.duration || "-")}
+                        </td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button
+                                    class="btn btn-secondary btn-small"
+                                    onclick="editCourse(${course.id})"
+                                >
+                                    تعديل
+                                </button>
+
+                                <button
+                                    class="btn btn-danger btn-small"
+                                    onclick="deleteCourse(${course.id})"
+                                >
+                                    حذف
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                `;
+
+            }).join("");
+
+        }
+
+
+        /* =====================================================
+           COURSE MODAL
+        ===================================================== */
+
+        function openCourseModal(course = null) {
+
+            document.getElementById("courseModal").classList.add("show");
+
+            if (course) {
+
+                editingCourseId = course.id;
+
+                document.getElementById("courseModalTitle").textContent =
+                    "تعديل الدورة";
+
+                document.getElementById("courseSubmitBtn").textContent =
+                    "حفظ التعديلات";
+
+                document.getElementById("courseId").value =
+                    course.id;
+
+                document.getElementById("courseTitle").value =
+                    course.title || "";
+
+                document.getElementById("courseCategory").value =
+                    course.category || "برمجة";
+
+                document.getElementById("courseInstructor").value =
+                    course.instructor || "";
+
+                document.getElementById("courseDuration").value =
+                    course.duration || "";
+
+                document.getElementById("courseImage").value =
+                    course.image || "";
+
+                document.getElementById("courseDescription").value =
+                    course.description || "";
+
+            } else {
+
+                editingCourseId = null;
+
+                document.getElementById("courseModalTitle").textContent =
+                    "إضافة دورة";
+
+                document.getElementById("courseSubmitBtn").textContent =
+                    "حفظ الدورة";
+
+                document.getElementById("courseForm").reset();
+
+            }
+
+        }
+
+
+        function closeCourseModal() {
+
+            document.getElementById("courseModal")
+                .classList.remove("show");
+
+            document.getElementById("courseForm").reset();
+
+            editingCourseId = null;
+
+        }
+
+
+        document.getElementById("courseForm")
+            .addEventListener("submit", async function (event) {
+
+                event.preventDefault();
+
+                const body = {
+
+                    title:
+                        document.getElementById("courseTitle").value.trim(),
+
+                    description:
+                        document.getElementById("courseDescription").value.trim(),
+
+                    category:
+                        document.getElementById("courseCategory").value,
+
+                    instructor:
+                        document.getElementById("courseInstructor").value.trim(),
+
+                    duration:
+                        document.getElementById("courseDuration").value.trim(),
+
+                    image:
+                        document.getElementById("courseImage").value.trim()
+
+                };
+
+                try {
+
+                    let result;
+
+                    if (editingCourseId) {
+
+                        result = await adminFetch(
+                            `${API}/courses/${editingCourseId}`,
+                            {
+                                method: "PUT",
+                                body: JSON.stringify(body)
+                            }
+                        );
+
+                    } else {
+
+                        result = await adminFetch(
+                            `${API}/courses`,
+                            {
+                                method: "POST",
+                                body: JSON.stringify(body)
+                            }
+                        );
+
+                    }
+
+                    if (!result.response.ok || !result.data.success) {
+
+                        throw new Error(
+                            result.data.message ||
+                            "تعذر حفظ الدورة"
+                        );
+
+                    }
+
+                    showToast(
+                        result.data.message ||
+                        "تم حفظ الدورة بنجاح",
+                        "success"
+                    );
+
+                    closeCourseModal();
+
+                    await loadCourses();
+                    await loadDashboard();
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showToast(
+                        error.message || "حدث خطأ",
+                        "error"
+                    );
+
+                }
+
+            });
+
+
+        function editCourse(id) {
+
+            const course = courses.find(
+                item => Number(item.id) === Number(id)
+            );
+
+            if (!course) {
+
+                showToast(
+                    "الدورة غير موجودة",
+                    "error"
+                );
+
+                return;
+            }
+
+            openCourseModal(course);
+
+        }
+
+
+        async function deleteCourse(id) {
+
+            const course = courses.find(
+                item => Number(item.id) === Number(id)
+            );
+
+            if (!course) {
+                return;
+            }
+
+            const confirmed = confirm(
+                `هل أنت متأكد من حذف الدورة:\n\n${course.title}\n\nسيتم حذف المحاضرات والتسجيلات والتقدم والشهادات المرتبطة بها أيضًا.`
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+
+                const { response, data } =
+                    await adminFetch(
+                        `${API}/courses/${id}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "تعذر حذف الدورة"
+                    );
+
+                }
+
+                showToast(
+                    data.message || "تم حذف الدورة",
+                    "success"
+                );
+
+                await loadCourses();
+                await loadDashboard();
+
+            } catch (error) {
+
+                console.error(error);
+
+                showToast(
+                    error.message || "حدث خطأ",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           COURSE SELECTS
+        ===================================================== */
+
+        function loadCoursesIntoLessonSelects() {
+
+            const filter =
+                document.getElementById("lessonCourseFilter");
+
+            const lessonCourse =
+                document.getElementById("lessonCourse");
+
+            const currentFilter = filter.value;
+            const currentLessonCourse = lessonCourse.value;
+
+            const options = courses.map(course => {
+
+                return `
+                    <option value="${course.id}">
+                        ${escapeHtml(course.title)}
+                    </option>
+                `;
+
+            }).join("");
+
+            filter.innerHTML = `
+                <option value="">
+                    -- اختر الدورة --
+                </option>
+                ${options}
+            `;
+
+            lessonCourse.innerHTML = `
+                <option value="">
+                    -- اختر الدورة --
+                </option>
+                ${options}
+            `;
+
+            if (
+                courses.some(
+                    course => String(course.id) === String(currentFilter)
+                )
+            ) {
+
+                filter.value = currentFilter;
+
+            }
+
+            if (
+                courses.some(
+                    course => String(course.id) === String(currentLessonCourse)
+                )
+            ) {
+
+                lessonCourse.value = currentLessonCourse;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           LESSONS
+        ===================================================== */
+
+        async function loadLessonsByCourse() {
+
+            const courseId =
+                document.getElementById("lessonCourseFilter").value;
+
+            const table =
+                document.getElementById("lessonsTable");
+
+            if (!courseId) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty">
+                            اختر دورة لعرض المحاضرات
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="6" class="loading">
+                        جاري تحميل المحاضرات...
+                    </td>
+                </tr>
+            `;
+
+            try {
+
+                const { response, data } =
+                    await adminFetch(
+                        `${API}/courses/${courseId}/lessons`
+                    );
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "تعذر تحميل المحاضرات"
+                    );
+
+                }
+
+                const lessons = data.lessons || [];
+
+                if (!lessons.length) {
+
+                    table.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="empty">
+                                لا توجد محاضرات لهذه الدورة
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+                table.innerHTML = lessons.map(lesson => {
+
+                    return `
+                        <tr>
+
+                            <td>
+                                ${lesson.id}
+                            </td>
+
+                            <td>
+                                <strong>
+                                    ${escapeHtml(lesson.title)}
+                                </strong>
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                        getCourseTitle(lesson.course_id)
+                    )}
+                            </td>
+
+                            <td>
+                                ${lesson.lesson_order || "-"}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                        lesson.duration || "-"
+                    )}
+                            </td>
+
+                            <td>
+
+                                <div class="actions">
+
+                                    <button
+                                        class="btn btn-secondary btn-small"
+                                        onclick='editLesson(${JSON.stringify(lesson)})'
+                                    >
+                                        تعديل
+                                    </button>
+
+                                    <button
+                                        class="btn btn-danger btn-small"
+                                        onclick="deleteLesson(${lesson.id})"
+                                    >
+                                        حذف
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    `;
+
+                }).join("");
+
+            } catch (error) {
+
+                console.error(error);
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty">
+                            ${escapeHtml(error.message)}
+                        </td>
+                    </tr>
+                `;
+
+            }
+
+        }
+
+
+        function openLessonModal(lesson = null) {
+
+            document.getElementById("lessonModal")
+                .classList.add("show");
+
+            loadCoursesIntoLessonSelects();
+
+            if (lesson) {
+
+                editingLessonId = lesson.id;
+
+                document.getElementById("lessonModalTitle").textContent =
+                    "تعديل المحاضرة";
+
+                document.getElementById("lessonId").value =
+                    lesson.id;
+
+                document.getElementById("lessonCourse").value =
+                    lesson.course_id;
+
+                document.getElementById("lessonTitle").value =
+                    lesson.title || "";
+
+                document.getElementById("lessonVideo").value =
+                    lesson.video_url || "";
+
+                document.getElementById("lessonDuration").value =
+                    lesson.duration || "";
+
+                document.getElementById("lessonOrder").value =
+                    lesson.lesson_order || "";
+
+                document.getElementById("lessonDescription").value =
+                    lesson.description || "";
+
+            } else {
+
+                editingLessonId = null;
+
+                document.getElementById("lessonModalTitle").textContent =
+                    "إضافة محاضرة";
+
+                document.getElementById("lessonForm").reset();
+
+            }
+
+        }
+
+
+        function closeLessonModal() {
+
+            document.getElementById("lessonModal")
+                .classList.remove("show");
+
+            document.getElementById("lessonForm").reset();
+
+            editingLessonId = null;
+
+        }
+
+
+        document.getElementById("lessonForm")
+            .addEventListener("submit", async function (event) {
+
+                event.preventDefault();
+
+                const body = {
+
+                    course_id:
+                        Number(
+                            document.getElementById("lessonCourse").value
+                        ),
+
+                    title:
+                        document.getElementById("lessonTitle").value.trim(),
+
+                    description:
+                        document.getElementById("lessonDescription").value.trim(),
+
+                    video_url:
+                        document.getElementById("lessonVideo").value.trim(),
+
+                    duration:
+                        document.getElementById("lessonDuration").value.trim(),
+
+                    lesson_order:
+                        Number(
+                            document.getElementById("lessonOrder").value
+                        ) || 0
+
+                };
+
+                if (!body.course_id) {
+
+                    showToast(
+                        "يجب اختيار الدورة",
+                        "error"
+                    );
+
+                    return;
+                }
+
+                try {
+
+                    let result;
+
+                    if (editingLessonId) {
+
+                        result = await adminFetch(
+                            `${API}/lessons/${editingLessonId}`,
+                            {
+                                method: "PUT",
+                                body: JSON.stringify(body)
+                            }
+                        );
+
+                    } else {
+
+                        result = await adminFetch(
+                            `${API}/lessons`,
+                            {
+                                method: "POST",
+                                body: JSON.stringify(body)
+                            }
+                        );
+
+                    }
+
+                    if (!result.response.ok || !result.data.success) {
+
+                        throw new Error(
+                            result.data.message ||
+                            "تعذر حفظ المحاضرة"
+                        );
+
+                    }
+
+                    showToast(
+                        result.data.message ||
+                        "تم حفظ المحاضرة بنجاح",
+                        "success"
+                    );
+
+                    const selectedCourse =
+                        body.course_id;
+
+                    closeLessonModal();
+
+                    await loadDashboard();
+
+                    document.getElementById("lessonCourseFilter").value =
+                        selectedCourse;
+
+                    await loadLessonsByCourse();
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showToast(
+                        error.message || "حدث خطأ",
+                        "error"
+                    );
+
+                }
+
+            });
+
+
+        function editLesson(lesson) {
+
+            openLessonModal(lesson);
+
+        }
+
+
+        async function deleteLesson(id) {
+
+            const confirmed = confirm(
+                "هل أنت متأكد من حذف هذه المحاضرة؟"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+
+                const { response, data } =
+                    await adminFetch(
+                        `${API}/lessons/${id}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "تعذر حذف المحاضرة"
+                    );
+
+                }
+
+                showToast(
+                    data.message || "تم حذف المحاضرة",
+                    "success"
+                );
+
+                await loadDashboard();
+                await loadLessonsByCourse();
+
+            } catch (error) {
+
+                console.error(error);
+
+                showToast(
+                    error.message || "حدث خطأ",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           USERS
+        ===================================================== */
+
+        async function loadUsers() {
+
+            const table =
+                document.getElementById("usersTable");
+
+            try {
+
+                const { response, data } =
+                    await adminFetch(`${API}/users`);
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "تعذر تحميل الطلاب"
+                    );
+
+                }
+
+                const users = data.users || [];
+
+                if (!users.length) {
+
+                    table.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="empty">
+                                لا يوجد مستخدمون
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+                table.innerHTML = users.map(user => {
+
+                    return `
+                        <tr>
+
+                            <td>
+                                ${user.id}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(user.name || "-")}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(user.email || "-")}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(user.role || "student")}
+                            </td>
+
+                            <td>
+                                ${formatDate(user.created_at)}
+                            </td>
+
+                            <td>
+
+                                ${user.role === "admin"
+                            ? "-"
+                            : `
+                                            <button
+                                                class="btn btn-danger btn-small"
+                                                onclick="deleteUser(${user.id})"
+                                            >
+                                                حذف
+                                            </button>
+                                        `
+                        }
+
+                            </td>
+
+                        </tr>
+                    `;
+
+                }).join("");
+
+            } catch (error) {
+
+                console.error(error);
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty">
+                            ${escapeHtml(error.message)}
+                        </td>
+                    </tr>
+                `;
+
+            }
+
+        }
+
+
+        async function deleteUser(id) {
+
+            const confirmed = confirm(
+                "هل أنت متأكد من حذف هذا الطالب؟ سيتم حذف تسجيلاته وتقدمه وشهاداته أيضًا."
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+
+                const { response, data } =
+                    await adminFetch(
+                        `${API}/users/${id}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "تعذر حذف الطالب"
+                    );
+
+                }
+
+                showToast(
+                    data.message || "تم حذف الطالب",
+                    "success"
+                );
+
+                await loadUsers();
+                await loadDashboard();
+
+            } catch (error) {
+
+                console.error(error);
+
+                showToast(
+                    error.message || "حدث خطأ",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           CERTIFICATES
+        ===================================================== */
+
+        async function loadCertificates() {
+
+            const table =
+                document.getElementById("certificatesTable");
+
+            try {
+
+                const { response, data } =
+                    await adminFetch(
+                        `${API}/certificates`
+                    );
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "تعذر تحميل الشهادات"
+                    );
+
+                }
+
+                const certificates =
+                    data.certificates || [];
+
+                if (!certificates.length) {
+
+                    table.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="empty">
+                                لا توجد شهادات حاليًا
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+                table.innerHTML =
+                    certificates.map(cert => {
+
+                        return `
+                            <tr>
+
+                                <td>
+                                    ${cert.id}
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        ${escapeHtml(
+                            cert.certificate_id || "-"
+                        )}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                            cert.user_name || "-"
+                        )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                            cert.user_email || "-"
+                        )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                            cert.course_title || "-"
+                        )}
+                                </td>
+
+                                <td>
+                                    ${formatDate(cert.issued_at)}
+                                </td>
+
+                                <td>
+
+                                    <button
+                                        class="btn btn-danger btn-small"
+                                        onclick="deleteCertificate(${cert.id})"
+                                    >
+                                        حذف
+                                    </button>
+
+                                </td>
+
+                            </tr>
+                        `;
+
+                    }).join("");
+
+            } catch (error) {
+
+                console.error(error);
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty">
+                            ${escapeHtml(error.message)}
+                        </td>
+                    </tr>
+                `;
+
+            }
+
+        }
+
+
+        async function deleteCertificate(id) {
+
+            const confirmed = confirm(
+                "هل أنت متأكد من حذف هذه الشهادة؟"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+
+                const { response, data } =
+                    await adminFetch(
+                        `${API}/certificates/${id}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "تعذر حذف الشهادة"
+                    );
+
+                }
+
+                showToast(
+                    data.message || "تم حذف الشهادة",
+                    "success"
+                );
+
+                await loadCertificates();
+                await loadDashboard();
+
+            } catch (error) {
+
+                console.error(error);
+
+                showToast(
+                    error.message || "حدث خطأ",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           HELPERS
+        ===================================================== */
+
+        function getCourseTitle(courseId) {
+
+            const course = courses.find(
+                item => Number(item.id) === Number(courseId)
+            );
+
+            return course
+                ? course.title
+                : `الدورة #${courseId}`;
+
+        }
+
+
+        function formatDate(date) {
+
+            if (!date) {
+                return "-";
+            }
+
+            try {
+
+                return new Date(date).toLocaleDateString(
+                    "ar",
+                    {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric"
+                    }
+                );
+
+            } catch (error) {
+
+                return date;
+
+            }
+
+        }
+
+
+        function escapeHtml(value) {
+
+            if (value === null || value === undefined) {
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        function showToast(message, type = "success") {
+
+            const toast =
+                document.getElementById("toast");
+
+            toast.textContent = message;
+
+            toast.className =
+                `toast show ${type}`;
+
+            setTimeout(() => {
+
+                toast.classList.remove("show");
+
+            }, 3500);
+
+        }
+
+
+        /* =====================================================
+           CLOSE MODALS WHEN CLICK OUTSIDE
+        ===================================================== */
+
+        document.getElementById("courseModal")
+            .addEventListener("click", function (event) {
+
+                if (event.target === this) {
+                    closeCourseModal();
+                }
+
+            });
+
+
+        document.getElementById("lessonModal")
+            .addEventListener("click", function (event) {
+
+                if (event.target === this) {
+                    closeLessonModal();
+                }
+
+            });
+
+    </script>
+
+</body>
+
+</html>
