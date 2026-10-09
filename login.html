@@ -1,12 +1,11 @@
-﻿<!DOCTYPE html>
+```html
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ | ZAWAM</title>
-
+    <title>تسجيل الدخول | ZAWAM</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -16,228 +15,185 @@
 
         <div class="auth-brand">
             <div class="logo">ZAWAM</div>
-
-            <h1>Ù…Ø±Ø­Ø¨Ø§Ù‹ Ø¨Ø¹ÙˆØ¯ØªÙƒ ðŸ‘‹</h1>
-
+            <h1>مرحباً بعودتك 👋</h1>
             <p>
-                Ø³Ø¬Ù„ Ø¯Ø®ÙˆÙ„Ùƒ Ù„Ù„ÙˆØµÙˆÙ„ Ø¥Ù„Ù‰ Ø¯ÙˆØ±Ø§ØªÙƒ Ø§Ù„ØªØ¹Ù„ÙŠÙ…ÙŠØ©
-                ÙˆÙ…ØªØ§Ø¨Ø¹Ø© Ø±Ø­Ù„Ø© Ø§Ù„ØªØ¹Ù„Ù….
+                سجل دخولك للوصول إلى دوراتك التعليمية
+                ومتابعة رحلة التعلم.
             </p>
-
-            <div class="auth-illustration">
-                ðŸŽ“
-            </div>
+            <div class="auth-illustration">🎓</div>
         </div>
-
 
         <div class="auth-box">
 
             <a href="index.html" class="back-home">
-                â† Ø§Ù„Ø¹ÙˆØ¯Ø© Ù„Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
+                ↩ العودة للرئيسية
             </a>
 
-            <h2>ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„</h2>
+            <h2>تسجيل الدخول</h2>
 
             <p class="auth-subtitle">
-                Ø£Ø¯Ø®Ù„ Ø¨ÙŠØ§Ù†Ø§Øª Ø­Ø³Ø§Ø¨Ùƒ Ù„Ù„Ù…ØªØ§Ø¨Ø¹Ø©
+                أدخل بيانات حسابك للمتابعة
             </p>
-
 
             <form id="loginForm">
 
                 <div class="form-group">
-
-                    <label for="loginEmail">
-                        Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ
-                    </label>
-
-                    <input type="email" id="loginEmail" placeholder="example@email.com" required>
-
+                    <label for="loginEmail">البريد الإلكتروني</label>
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="example@email.com"
+                        autocomplete="email"
+                        required
+                    >
                 </div>
-
 
                 <div class="form-group">
-
-                    <label for="loginPassword">
-                        ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±
-                    </label>
-
-                    <input type="password" id="loginPassword" placeholder="Ø£Ø¯Ø®Ù„ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±" required>
-
+                    <label for="loginPassword">كلمة المرور</label>
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="أدخل كلمة المرور"
+                        autocomplete="current-password"
+                        required
+                    >
                 </div>
-
 
                 <div class="form-options">
-
                     <label class="remember">
-
-                        <input type="checkbox">
-
-                        ØªØ°ÙƒØ±Ù†ÙŠ
-
+                        <input type="checkbox" id="rememberMe">
+                        تذكرني
                     </label>
 
-
-                    <a href="#" onclick="forgotPassword(); return false;">
-                        Ù†Ø³ÙŠØª ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±ØŸ
+                    <a href="#" id="forgotPasswordLink">
+                        نسيت كلمة المرور؟
                     </a>
-
                 </div>
 
-
-                <button type="submit" class="auth-btn">
-                    ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„
+                <button type="submit" class="auth-btn" id="loginButton">
+                    تسجيل الدخول
                 </button>
 
             </form>
 
-
             <div class="divider">
-                <span>Ø£Ùˆ</span>
+                <span>أو</span>
             </div>
 
-
-            <button class="google-btn" onclick="googleLogin()">
-                ðŸŒ Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø© Ø¨Ø§Ø³ØªØ®Ø¯Ø§Ù… Google
+            <button
+                type="button"
+                class="google-btn"
+                id="googleLoginButton"
+            >
+                🌐 المتابعة باستخدام Google
             </button>
 
-
             <p class="switch-auth">
-
-                Ù„ÙŠØ³ Ù„Ø¯ÙŠÙƒ Ø­Ø³Ø§Ø¨ØŸ
-
-                <a href="register.html">
-                    Ø¥Ù†Ø´Ø§Ø¡ Ø­Ø³Ø§Ø¨ Ø¬Ø¯ÙŠØ¯
-                </a>
-
+                ليس لديك حساب؟
+                <a href="register.html">إنشاء حساب جديد</a>
             </p>
 
         </div>
-
     </div>
 
-
     <script>
+        const loginForm = document.getElementById("loginForm");
+        const loginButton = document.getElementById("loginButton");
+
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const email = document
+                .getElementById("loginEmail")
+                .value.trim();
+
+            const password = document
+                .getElementById("loginPassword")
+                .value;
+
+            loginButton.disabled = true;
+            loginButton.textContent = "جارٍ تسجيل الدخول...";
+
+            try {
+                const response = await fetch("/api/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    alert(
+                        data.message ||
+                        "البريد الإلكتروني أو كلمة المرور غير صحيحة."
+                    );
+                    return;
+                }
+
+                if (!data.user || !data.user.id) {
+                    alert("تعذر الحصول على بيانات المستخدم.");
+                    return;
+                }
+
+                localStorage.setItem(
+                    "zawamUserId",
+                    data.user.id
+                );
+
+                localStorage.setItem(
+                    "zawamUserName",
+                    data.user.name || ""
+                );
+
+                localStorage.setItem(
+                    "zawamUserEmail",
+                    data.user.email || email
+                );
+
+                localStorage.setItem("zawamLoggedIn", "true");
+
+                alert("تم تسجيل الدخول بنجاح ✅");
+
+                window.location.href = "index.html";
+
+            } catch (error) {
+                console.error("Login error:", error);
+
+                alert(
+                    "تعذر الاتصال بالسيرفر. تحقق من اتصال الإنترنت وحاول مرة أخرى."
+                );
+
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = "تسجيل الدخول";
+            }
+        });
 
         document
-            .getElementById("loginForm")
-            .addEventListener("submit", async function (event) {
-
+            .getElementById("forgotPasswordLink")
+            .addEventListener("click", function (event) {
                 event.preventDefault();
 
-                const email =
-                    document.getElementById("loginEmail").value.trim();
-
-                const password =
-                    document.getElementById("loginPassword").value;
-
-
-                try {
-
-                    const response = await fetch(
-                        "/api/login",
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                email: email,
-                                password: password
-                            })
-                        }
-                    );
-
-
-                    const data = await response.json();
-
-
-                    if (!response.ok || !data.success) {
-
-                        alert(
-                            data.message ||
-                            "Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ Ø£Ùˆ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± ØºÙŠØ± ØµØ­ÙŠØ­Ø©"
-                        );
-
-                        return;
-                    }
-
-
-                    /* =========================
-                       Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…
-                       ========================= */
-
-                    localStorage.setItem(
-                        "zawamUserId",
-                        data.user.id
-                    );
-
-                    localStorage.setItem(
-                        "zawamUserName",
-                        data.user.name
-                    );
-
-                    localStorage.setItem(
-                        "zawamUserEmail",
-                        data.user.email
-                    );
-
-                    localStorage.setItem(
-                        "zawamLoggedIn",
-                        "true"
-                    );
-
-
-                    alert("ØªÙ… ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø¨Ù†Ø¬Ø§Ø­ âœ…");
-
-
-                    window.location.href = "index.html";
-
-                }
-
-
-                catch (error) {
-
-                    console.error(error);
-
-                    alert(
-                        "ØªØ¹Ø°Ø± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ±. ØªØ£ÙƒØ¯ Ù…Ù† ØªØ´ØºÙŠÙ„ Ø³ÙŠØ±ÙØ± ZAWAM."
-                    );
-
-                }
-
+                alert(
+                    "ميزة استعادة كلمة المرور ستتم إضافتها لاحقاً."
+                );
             });
 
-
-        /* =========================
-           Ù†Ø³ÙŠØª ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±
-           ========================= */
-
-        function forgotPassword() {
-
-            alert(
-                "Ù…ÙŠØ²Ø© Ø§Ø³ØªØ¹Ø§Ø¯Ø© ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ø³ÙŠØªÙ… Ø¥Ø¶Ø§ÙØªÙ‡Ø§ Ù„Ø§Ø­Ù‚Ø§Ù‹."
-            );
-
-        }
-
-
-        /* =========================
-           Google Login
-           ========================= */
-
-        function googleLogin() {
-
-            alert(
-                "ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø¨Ø§Ø³ØªØ®Ø¯Ø§Ù… Google Ø³ÙŠØªÙ… Ø¥Ø¶Ø§ÙØªÙ‡ Ù„Ø§Ø­Ù‚Ø§Ù‹."
-            );
-
-        }
-
+        document
+            .getElementById("googleLoginButton")
+            .addEventListener("click", function () {
+                alert(
+                    "تسجيل الدخول باستخدام Google غير مفعّل حالياً."
+                );
+            });
     </script>
 
 </body>
-
 </html>
+```
