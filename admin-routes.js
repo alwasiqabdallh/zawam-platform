@@ -978,5 +978,89 @@ router.delete("/certificates/:id", requireAdmin, async (req, res) => {
 /* =========================================================
    EXPORT
 ========================================================= */
+// ============================================================
+// SPECIALTIES MANAGEMENT
+// ============================================================
 
+// جلب التخصصات من لوحة الإدارة
+router.get("/specialties", requireAdmin, async (req, res) => {
+    try {
+        const [specialties] = await db.query(
+            `SELECT id, name, description, icon, created_at
+             FROM specialties
+             ORDER BY id ASC`
+        );
+
+        res.json({
+            success: true,
+            specialties
+        });
+    } catch (error) {
+        console.error("Load specialties error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "تعذر تحميل التخصصات."
+        });
+    }
+});
+
+// إضافة تخصص جديد
+router.post("/specialties", requireAdmin, async (req, res) => {
+    try {
+        const name = String(req.body.name || "").trim();
+        const description = String(req.body.description || "").trim();
+        const icon = String(req.body.icon || "📚").trim();
+
+        if (!name || !description || !icon) {
+            return res.status(400).json({
+                success: false,
+                message: "أدخل اسم التخصص ووصفه وأيقونته."
+            });
+        }
+
+        if (name.length > 100 || icon.length > 20) {
+            return res.status(400).json({
+                success: false,
+                message: "اسم التخصص أو الأيقونة أطول من المسموح."
+            });
+        }
+
+        const [existing] = await db.query(
+            "SELECT id FROM specialties WHERE name = ? LIMIT 1",
+            [name]
+        );
+
+        if (existing.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: "هذا التخصص موجود بالفعل."
+            });
+        }
+
+        const [result] = await db.query(
+            `INSERT INTO specialties (name, description, icon)
+             VALUES (?, ?, ?)`,
+            [name, description, icon]
+        );
+
+        res.status(201).json({
+            success: true,
+            message: "تمت إضافة التخصص بنجاح.",
+            specialty: {
+                id: result.insertId,
+                name,
+                description,
+                icon
+            }
+        });
+    } catch (error) {
+        console.error("Add specialty error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "تعذرت إضافة التخصص."
+        });
+    }
+});
 module.exports = router;
