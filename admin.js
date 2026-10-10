@@ -1,19 +1,16 @@
-// ============================================================
-// ZAWAM ADMIN DASHBOARD
-// ============================================================
+
+ // ============================================================
+ // ZAWAM ADMIN DASHBOARD
+ // PART 1 OF 3
+ // ============================================================
 
 const API = "/api/admin";
 
 let selectedCourseId = null;
 let adminCourses = [];
+let adminSpecialties = [];
 
-// ============================================================
-// START
-// ============================================================
-
-document.addEventListener("DOMContentLoaded", () => {
-    initializeAdmin();
-});
+document.addEventListener("DOMContentLoaded", initializeAdmin);
 
 // ============================================================
 // INITIALIZE
@@ -27,15 +24,14 @@ async function initializeAdmin() {
             loadDashboard(),
             loadCourses(),
             loadUsers(),
-            loadCertificates()
+            loadCertificates(),
+            loadSpecialties()
         ]);
 
         populateCourseSelects();
+        populateSpecialtySelect();
     } catch (error) {
-        console.error(
-            "Admin initialization error:",
-            error
-        );
+        console.error("Admin initialization error:", error);
     }
 }
 
@@ -44,58 +40,48 @@ async function initializeAdmin() {
 // ============================================================
 
 async function apiRequest(url, options = {}) {
+    const token = localStorage.getItem("zawamAdminToken");
+
+    const headers = {
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+    };
+
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+
     const response = await fetch(url, {
         ...options,
         credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json",
-            ...(options.headers || {})
-        }
+        headers
     });
 
     const text = await response.text();
-
     let data = {};
 
     try {
         data = text ? JSON.parse(text) : {};
     } catch {
         data = {
-            message:
-                text ||
-                "استجابة غير صالحة من الخادم."
+            message: text || "استجابة غير صالحة من الخادم."
         };
     }
 
     if (response.status === 401) {
-        localStorage.removeItem(
-            "zawamAdminLoggedIn"
-        );
+        localStorage.removeItem("zawamAdminLoggedIn");
+        localStorage.removeItem("zawamAdminToken");
+        localStorage.removeItem("zawamAdminName");
+        localStorage.removeItem("zawamAdminEmail");
 
-        localStorage.removeItem(
-            "zawamAdminName"
-        );
-
-        localStorage.removeItem(
-            "zawamAdminEmail"
-        );
-
-        if (
-            !window.location.pathname.includes(
-                "admin-login.html"
-            )
-        ) {
-            window.location.href =
-                "/admin-login.html";
+        if (!window.location.pathname.includes("admin-login.html")) {
+            window.location.href = "/admin-login.html";
         }
 
-        throw new Error(
-            data.message ||
-            "انتهت جلسة الأدمن."
-        );
+        throw new Error(data.message || "انتهت جلسة الأدمن.");
     }
 
-    if (!response.ok) {
+    if (!response.ok || data.success === false) {
         throw new Error(
             data.message ||
             data.error ||
@@ -111,63 +97,18 @@ async function apiRequest(url, options = {}) {
 // ============================================================
 
 async function loadAdminInfo() {
-    try {
-        const data =
-            await apiRequest(
-                `${API}/me`
-            );
+    const data = await apiRequest(`${API}/me`);
+    const admin = data.admin || {};
 
-        const admin =
-            data.admin || {};
+    const name = admin.name || "مدير المنصة";
+    const email = admin.email || "";
 
-        const name =
-            admin.name ||
-            "مدير المنصة";
+    localStorage.setItem("zawamAdminLoggedIn", "true");
+    localStorage.setItem("zawamAdminName", name);
+    localStorage.setItem("zawamAdminEmail", email);
 
-        const email =
-            admin.email ||
-            "";
-
-        localStorage.setItem(
-            "zawamAdminLoggedIn",
-            "true"
-        );
-
-        localStorage.setItem(
-            "zawamAdminName",
-            name
-        );
-
-        localStorage.setItem(
-            "zawamAdminEmail",
-            email
-        );
-
-        setText(
-            [
-                "adminName",
-                "admin-name",
-                "profileName"
-            ],
-            name
-        );
-
-        setText(
-            [
-                "adminEmail",
-                "admin-email",
-                "profileEmail"
-            ],
-            email
-        );
-    } catch (error) {
-        console.error(
-            "Load admin info error:",
-            error
-        );
-
-        throw error;
-    }
+    setText(["adminName", "admin-name", "profileName"], name);
+    setText(["adminEmail", "admin-email", "profileEmail"], email);
 }
 
 // ============================================================
@@ -176,60 +117,31 @@ async function loadAdminInfo() {
 
 async function loadDashboard() {
     try {
-        const data =
-            await apiRequest(
-                `${API}/dashboard`
-            );
-
-        const stats =
-            data.stats || {};
+        const data = await apiRequest(`${API}/dashboard`);
+        const stats = data.stats || {};
 
         setText(
-            [
-                "coursesCount",
-                "totalCourses",
-                "total-courses"
-            ],
+            ["coursesCount", "totalCourses", "total-courses"],
             stats.totalCourses ?? 0
         );
 
         setText(
-            [
-                "lessonsCount",
-                "totalLessons",
-                "total-lessons"
-            ],
+            ["lessonsCount", "totalLessons", "total-lessons"],
             stats.totalLessons ?? 0
         );
 
         setText(
-            [
-                "usersCount",
-                "totalUsers",
-                "total-users"
-            ],
+            ["usersCount", "totalUsers", "total-users"],
             stats.totalUsers ?? 0
         );
 
         setText(
-            [
-                "certificatesCount",
-                "totalCertificates",
-                "total-certificates"
-            ],
+            ["certificatesCount", "totalCertificates", "total-certificates"],
             stats.totalCertificates ?? 0
         );
     } catch (error) {
-        console.error(
-            "Dashboard error:",
-            error
-        );
-
-        showToast(
-            error.message ||
-            "تعذر تحميل لوحة التحكم",
-            "error"
-        );
+        console.error("Dashboard error:", error);
+        showToast(error.message || "تعذر تحميل لوحة التحكم", "error");
     }
 }
 
@@ -238,52 +150,31 @@ async function loadDashboard() {
 // ============================================================
 
 async function loadCourses() {
-    const tableBody =
-        document.getElementById(
-            "coursesTableBody"
-        );
+    const tableBody = document.getElementById("coursesTableBody");
 
     try {
-        const data =
-            await apiRequest(
-                `${API}/courses`
-            );
+        const data = await apiRequest(`${API}/courses`);
 
-        adminCourses =
-            Array.isArray(data.courses)
-                ? data.courses
-                : [];
+        adminCourses = Array.isArray(data.courses) ? data.courses : [];
+        window.zawamCourses = adminCourses;
 
-        window.zawamCourses =
-            adminCourses;
-
-        renderCourses(
-            adminCourses
-        );
-
+        renderCourses(adminCourses);
         populateCourseSelects();
+        populateSpecialtySelect();
     } catch (error) {
-        console.error(
-            "Courses error:",
-            error
-        );
+        console.error("Courses error:", error);
 
         if (tableBody) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="10"
-                        class="empty-row">
+                    <td colspan="10" class="empty-row">
                         تعذر تحميل الدورات
                     </td>
                 </tr>
             `;
         }
 
-        showToast(
-            error.message ||
-            "تعذر تحميل الدورات",
-            "error"
-        );
+        showToast(error.message || "تعذر تحميل الدورات", "error");
     }
 }
 
@@ -292,89 +183,51 @@ async function loadCourses() {
 // ============================================================
 
 function renderCourses(courses) {
-    const tableBody =
-        document.getElementById(
-            "coursesTableBody"
-        );
-
-    if (!tableBody) {
-        return;
-    }
+    const tableBody = document.getElementById("coursesTableBody");
+    if (!tableBody) return;
 
     if (!courses.length) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="10"
-                    class="empty-row">
+                <td colspan="10" class="empty-row">
                     لا توجد دورات حاليًا
                 </td>
             </tr>
         `;
-
         return;
     }
 
-    tableBody.innerHTML =
-        courses.map(course => {
-            return `
-                <tr>
-                    <td>
-                        ${escapeHTML(course.id)}
-                    </td>
+    tableBody.innerHTML = courses.map(course => `
+        <tr>
+            <td>${escapeHTML(course.id)}</td>
+            <td>${escapeHTML(course.title || "بدون عنوان")}</td>
+            <td>${escapeHTML(course.category || "غير محدد")}</td>
+            <td>${escapeHTML(course.instructor || "غير محدد")}</td>
+            <td>${escapeHTML(course.duration || "-")}</td>
+            <td>
+                <button
+                    type="button"
+                    class="table-action edit-action"
+                    onclick="openLessonModal(${Number(course.id)})">
+                    الدروس
+                </button>
 
-                    <td>
-                        ${escapeHTML(
-                course.title ||
-                "بدون عنوان"
-            )}
-                    </td>
+                <button
+                    type="button"
+                    class="table-action edit-action"
+                    onclick="editCourse(${Number(course.id)})">
+                    تعديل
+                </button>
 
-                    <td>
-                        ${escapeHTML(
-                course.category ||
-                "غير محدد"
-            )}
-                    </td>
-
-                    <td>
-                        ${escapeHTML(
-                course.instructor ||
-                "غير محدد"
-            )}
-                    </td>
-
-                    <td>
-                        ${escapeHTML(
-                course.duration ||
-                "-"
-            )}
-                    </td>
-
-                    <td>
-                        <button
-                            type="button"
-                            class="table-action edit-action"
-                            onclick="openLessonModal(${Number(course.id)})">
-                            الدروس
-                        </button>
-
-                        <button
-                            type="button"
-                            class="table-action edit-action"
-                            onclick="editCourse(${Number(course.id)})">
-                            تعديل
-                        </button>
-
-                        <button
-                            type="button"
-                            class="table-action delete-action"
-                            onclick="deleteCourse(${Number(course.id)})">
-                            حذف
-                        </button>
-                    </td>
-                </tr>
-            `;
-        }).join("");
+                <button
+                    type="button"
+                    class="table-action delete-action"
+                    onclick="deleteCourse(${Number(course.id)})">
+                    حذف
+                </button>
+            </td>
+        </tr>
+    `).join("");
 }
 
 // ============================================================
@@ -382,135 +235,69 @@ function renderCourses(courses) {
 // ============================================================
 
 function filterCourses() {
-    const input =
-        document.getElementById(
-            "courseSearch"
-        );
-
-    const search =
-        String(
-            input?.value || ""
-        )
-            .trim()
-            .toLowerCase();
+    const input = document.getElementById("courseSearch");
+    const search = String(input?.value || "").trim().toLowerCase();
 
     if (!search) {
         renderCourses(adminCourses);
         return;
     }
 
-    const filtered =
-        adminCourses.filter(course => {
-            const text =
-                [
-                    course.id,
-                    course.title,
-                    course.category,
-                    course.instructor,
-                    course.duration
-                ]
-                    .join(" ")
-                    .toLowerCase();
+    const filtered = adminCourses.filter(course => {
+        const text = [
+            course.id,
+            course.title,
+            course.category,
+            course.instructor,
+            course.duration
+        ].join(" ").toLowerCase();
 
-            return text.includes(search);
-        });
+        return text.includes(search);
+    });
 
     renderCourses(filtered);
 }
 
 // ============================================================
-// OPEN COURSE MODAL
+// COURSE MODAL
 // ============================================================
 
 function openCourseModal(course = null) {
-    const modal =
-        document.getElementById(
-            "courseModal"
-        );
+    const modal = document.getElementById("courseModal");
+    if (!modal) return;
 
-    if (!modal) {
-        return;
-    }
+    const form = document.getElementById("courseForm");
+    if (form) form.reset();
 
-    const form =
-        document.getElementById(
-            "courseForm"
-        );
+    // تأكد من تجهيز خيارات التصنيف قبل اختيار التصنيف الحالي.
+    populateSpecialtySelect();
 
-    if (form) {
-        form.reset();
-    }
-
-    setValue(
-        "courseId",
-        course?.id || ""
-    );
-
-    setValue(
-        "courseTitle",
-        course?.title || ""
-    );
-
-    setValue(
-        "courseDescription",
-        course?.description || ""
-    );
-
-    setValue(
-        "courseCategory",
-        course?.category || ""
-    );
-
-    setValue(
-        "courseInstructor",
-        course?.instructor || ""
-    );
-
-    setValue(
-        "courseDuration",
-        course?.duration || ""
-    );
+    setValue("courseId", course?.id || "");
+    setValue("courseTitle", course?.title || "");
+    setValue("courseDescription", course?.description || "");
+    setValue("courseCategory", course?.category || "");
+    setValue("courseInstructor", course?.instructor || "");
+    setValue("courseDuration", course?.duration || "");
 
     modal.classList.add("show");
     modal.style.display = "flex";
 }
 
-// ============================================================
-// CLOSE COURSE MODAL
-// ============================================================
-
 function closeCourseModal() {
-    const modal =
-        document.getElementById(
-            "courseModal"
-        );
-
-    if (!modal) {
-        return;
-    }
+    const modal = document.getElementById("courseModal");
+    if (!modal) return;
 
     modal.classList.remove("show");
     modal.style.display = "none";
 }
 
-// ============================================================
-// EDIT COURSE
-// ============================================================
-
 function editCourse(id) {
-    const course =
-        adminCourses.find(
-            item =>
-                Number(item.id) ===
-                Number(id)
-        );
+    const course = adminCourses.find(
+        item => Number(item.id) === Number(id)
+    );
 
     if (!course) {
-        showToast(
-            "لم يتم العثور على الدورة",
-            "error"
-        );
-
+        showToast("لم يتم العثور على الدورة", "error");
         return;
     }
 
@@ -522,49 +309,22 @@ function editCourse(id) {
 // ============================================================
 
 async function saveCourse(event) {
-    if (event) {
-        event.preventDefault();
-    }
+    if (event) event.preventDefault();
 
-    const id =
-        getValue("courseId");
-
-    const title =
-        getValue("courseTitle");
-
-    const description =
-        getValue(
-            "courseDescription"
-        );
-
-    const category =
-        getValue("courseCategory");
-
-    const instructor =
-        getValue(
-            "courseInstructor"
-        );
-
-    const duration =
-        getValue(
-            "courseDuration"
-        );
+    const id = getValue("courseId");
+    const title = getValue("courseTitle");
+    const description = getValue("courseDescription");
+    const category = getValue("courseCategory");
+    const instructor = getValue("courseInstructor");
+    const duration = getValue("courseDuration");
 
     if (!title) {
-        showToast(
-            "اكتب اسم الدورة",
-            "error"
-        );
-
+        showToast("اكتب اسم الدورة", "error");
         return;
     }
 
     if (!category) {
-        showToast(
-            "اختر تصنيف الدورة",
-            "error"
-        );
-
+        showToast("اختر تصنيف الدورة", "error");
         return;
     }
 
@@ -578,54 +338,27 @@ async function saveCourse(event) {
 
     try {
         if (id) {
-            await apiRequest(
-                `${API}/courses/${id}`,
-                {
-                    method: "PUT",
-                    body:
-                        JSON.stringify(
-                            courseData
-                        )
-                }
-            );
+            await apiRequest(`${API}/courses/${id}`, {
+                method: "PUT",
+                body: JSON.stringify(courseData)
+            });
 
-            showToast(
-                "تم تعديل الدورة بنجاح",
-                "success"
-            );
+            showToast("تم تعديل الدورة بنجاح", "success");
         } else {
-            await apiRequest(
-                `${API}/courses`,
-                {
-                    method: "POST",
-                    body:
-                        JSON.stringify(
-                            courseData
-                        )
-                }
-            );
+            await apiRequest(`${API}/courses`, {
+                method: "POST",
+                body: JSON.stringify(courseData)
+            });
 
-            showToast(
-                "تمت إضافة الدورة بنجاح",
-                "success"
-            );
+            showToast("تمت إضافة الدورة بنجاح", "success");
         }
 
         closeCourseModal();
-
         await loadCourses();
         await loadDashboard();
     } catch (error) {
-        console.error(
-            "Save course error:",
-            error
-        );
-
-        showToast(
-            error.message ||
-            "تعذر حفظ الدورة",
-            "error"
-        );
+        console.error("Save course error:", error);
+        showToast(error.message || "تعذر حفظ الدورة", "error");
     }
 }
 
@@ -634,41 +367,23 @@ async function saveCourse(event) {
 // ============================================================
 
 async function deleteCourse(id) {
-    const confirmed =
-        confirm(
-            "هل أنت متأكد من حذف هذه الدورة؟\n\nسيتم حذف الدروس والتسجيلات والتقدم والشهادات المرتبطة بها."
-        );
+    const confirmed = confirm(
+        "هل أنت متأكد من حذف هذه الدورة؟\n\nسيتم حذف الدروس والتسجيلات والتقدم والشهادات المرتبطة بها."
+    );
 
-    if (!confirmed) {
-        return;
-    }
+    if (!confirmed) return;
 
     try {
-        await apiRequest(
-            `${API}/courses/${id}`,
-            {
-                method: "DELETE"
-            }
-        );
+        await apiRequest(`${API}/courses/${id}`, {
+            method: "DELETE"
+        });
 
-        showToast(
-            "تم حذف الدورة بنجاح",
-            "success"
-        );
-
+        showToast("تم حذف الدورة بنجاح", "success");
         await loadCourses();
         await loadDashboard();
     } catch (error) {
-        console.error(
-            "Delete course error:",
-            error
-        );
-
-        showToast(
-            error.message ||
-            "تعذر حذف الدورة",
-            "error"
-        );
+        console.error("Delete course error:", error);
+        showToast(error.message || "تعذر حذف الدورة", "error");
     }
 }
 
@@ -678,51 +393,28 @@ async function deleteCourse(id) {
 
 function populateCourseSelects() {
     const selects = [
-        document.getElementById(
-            "lessonCourseSelect"
-        ),
-        document.getElementById(
-            "lessonCourse"
-        )
+        document.getElementById("lessonCourseSelect"),
+        document.getElementById("lessonCourse")
     ].filter(Boolean);
 
     selects.forEach(select => {
-        const current =
-            select.value;
+        const current = select.value;
 
         select.innerHTML = `
-            <option value="">
-                اختر الدورة
-            </option>
+            <option value="">اختر الدورة</option>
         `;
 
         adminCourses.forEach(course => {
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value =
-                course.id;
-
-            option.textContent =
-                course.title;
-
-            select.appendChild(
-                option
-            );
+            const option = document.createElement("option");
+            option.value = course.id;
+            option.textContent = course.title;
+            select.appendChild(option);
         });
 
-        if (
-            current &&
-            adminCourses.some(
-                course =>
-                    String(course.id) ===
-                    String(current)
-            )
-        ) {
-            select.value =
-                current;
+        if (current && adminCourses.some(
+            course => String(course.id) === String(current)
+        )) {
+            select.value = current;
         }
     });
 }
@@ -732,182 +424,84 @@ function populateCourseSelects() {
 // ============================================================
 
 async function loadAdminLessons() {
-    const select =
-        document.getElementById(
-            "lessonCourseSelect"
-        );
+    const select = document.getElementById("lessonCourseSelect");
+    if (!select) return;
 
-    if (!select) {
-        return;
-    }
+    const courseId = Number(select.value);
 
-    const courseId =
-        Number(select.value);
-
-    if (
-        !Number.isInteger(courseId) ||
-        courseId <= 0
-    ) {
-        const body =
-            document.getElementById(
-                "lessonsTableBody"
-            );
+    if (!Number.isInteger(courseId) || courseId <= 0) {
+        const body = document.getElementById("lessonsTableBody");
 
         if (body) {
             body.innerHTML = `
                 <tr>
-                    <td colspan="10"
-                        class="empty-row">
+                    <td colspan="10" class="empty-row">
                         اختر دورة لعرض محاضراتها
                     </td>
                 </tr>
             `;
         }
-
         return;
     }
 
-    selectedCourseId =
-        courseId;
-
-    await loadLessons(
-        courseId
-    );
+    selectedCourseId = courseId;
+    await loadLessons(courseId);
 }
 
 // ============================================================
-// OPEN LESSON MODAL
+// LESSON MODAL
 // ============================================================
 
 async function openLessonModal(courseId = null) {
-    let id =
-        Number(courseId);
+    let id = Number(courseId);
 
-    if (
-        !Number.isInteger(id) ||
-        id <= 0
-    ) {
-        const select =
-            document.getElementById(
-                "lessonCourseSelect"
-            );
-
-        id =
-            Number(
-                select?.value
-            );
+    if (!Number.isInteger(id) || id <= 0) {
+        id = Number(document.getElementById("lessonCourseSelect")?.value);
     }
 
-    if (
-        !Number.isInteger(id) ||
-        id <= 0
-    ) {
-        const modalSelect =
-            document.getElementById(
-                "lessonCourse"
-            );
-
-        id =
-            Number(
-                modalSelect?.value
-            );
+    if (!Number.isInteger(id) || id <= 0) {
+        id = Number(document.getElementById("lessonCourse")?.value);
     }
 
-    if (
-        !Number.isInteger(id) ||
-        id <= 0
-    ) {
-        showSectionByName(
-            "lessons"
-        );
-
+    if (!Number.isInteger(id) || id <= 0) {
+        showSectionByName("lessons");
         populateCourseSelects();
-
-        showToast(
-            "اختر دورة أولًا لإضافة محاضرة",
-            "error"
-        );
-
+        showToast("اختر دورة أولًا لإضافة محاضرة", "error");
         return;
     }
 
-    selectedCourseId =
-        id;
-
+    selectedCourseId = id;
     populateCourseSelects();
+    setValue("lessonCourse", id);
 
-    setValue(
-        "lessonCourse",
-        id
+    const select = document.getElementById("lessonCourseSelect");
+    if (select) select.value = id;
+
+    const course = adminCourses.find(
+        item => Number(item.id) === id
     );
 
-    const select =
-        document.getElementById(
-            "lessonCourseSelect"
-        );
-
-    if (select) {
-        select.value =
-            id;
-    }
-
-    const course =
-        adminCourses.find(
-            item =>
-                Number(item.id) === id
-        );
-
-    const titleElement =
-        document.getElementById(
-            "lessonCourseTitle"
-        );
-
+    const titleElement = document.getElementById("lessonCourseTitle");
     if (titleElement) {
-        titleElement.textContent =
-            course?.title ||
-            `الدورة رقم ${id}`;
+        titleElement.textContent = course?.title || `الدورة رقم ${id}`;
     }
 
-    const modal =
-        document.getElementById(
-            "lessonModal"
-        );
-
+    const modal = document.getElementById("lessonModal");
     if (modal) {
-        modal.classList.add(
-            "show"
-        );
-
-        modal.style.display =
-            "flex";
+        modal.classList.add("show");
+        modal.style.display = "flex";
     }
 
     await loadLessons(id);
 }
 
-// ============================================================
-// CLOSE LESSON MODAL
-// ============================================================
-
 function closeLessonModal() {
-    const modal =
-        document.getElementById(
-            "lessonModal"
-        );
+    const modal = document.getElementById("lessonModal");
+    if (!modal) return;
 
-    if (!modal) {
-        return;
-    }
-
-    modal.classList.remove(
-        "show"
-    );
-
-    modal.style.display =
-        "none";
-
-    selectedCourseId =
-        null;
+    modal.classList.remove("show");
+    modal.style.display = "none";
+    selectedCourseId = null;
 }
 
 // ============================================================
@@ -915,114 +509,66 @@ function closeLessonModal() {
 // ============================================================
 
 async function loadLessons(courseId) {
-    const tableBody =
-        document.getElementById(
-            "lessonsTableBody"
-        );
-
-    if (!tableBody) {
-        return;
-    }
+    const tableBody = document.getElementById("lessonsTableBody");
+    if (!tableBody) return;
 
     try {
-        const data =
-            await apiRequest(
-                `${API}/courses/${courseId}/lessons`
-            );
+        const data = await apiRequest(
+            `${API}/courses/${courseId}/lessons`
+        );
 
-        const lessons =
-            Array.isArray(
-                data.lessons
-            )
-                ? data.lessons
-                : [];
+        const lessons = Array.isArray(data.lessons) ? data.lessons : [];
 
         if (!lessons.length) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="10"
-                        class="empty-row">
+                    <td colspan="10" class="empty-row">
                         لا توجد محاضرات لهذه الدورة حاليًا
                     </td>
                 </tr>
             `;
-
             return;
         }
 
-        tableBody.innerHTML =
-            lessons.map(lesson => {
-                const videoUrl =
-                    lesson.video_url ||
-                    "";
+        tableBody.innerHTML = lessons.map(lesson => {
+            const videoUrl = lesson.video_url || "";
 
-                return `
-                    <tr>
-                        <td>
-                            ${escapeHTML(
-                    lesson.id
-                )}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                    lesson.title ||
-                    "-"
-                )}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                    lesson.duration ||
-                    "-"
-                )}
-                        </td>
-
-                        <td>
-                            ${videoUrl
-                        ? `
-                                    <a
-                                        href="${escapeAttribute(videoUrl)}"
-                                        target="_blank"
-                                        rel="noopener noreferrer">
-                                        فتح الفيديو
-                                    </a>
-                                    `
-                        : "-"
-                    }
-                        </td>
-
-                        <td>
-                            <button
-                                type="button"
-                                class="table-action delete-action"
-                                onclick="deleteLesson(${Number(lesson.id)}, ${Number(courseId)})">
-                                حذف
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join("");
+            return `
+                <tr>
+                    <td>${escapeHTML(lesson.id)}</td>
+                    <td>${escapeHTML(lesson.title || "-")}</td>
+                    <td>${escapeHTML(lesson.duration || "-")}</td>
+                    <td>
+                        ${videoUrl
+                            ? `<a href="${escapeAttribute(videoUrl)}"
+                                  target="_blank"
+                                  rel="noopener noreferrer">فتح الفيديو</a>`
+                            : "-"
+                        }
+                    </td>
+                    <td>
+                        <button
+                            type="button"
+                            class="table-action delete-action"
+                            onclick="deleteLesson(${Number(lesson.id)}, ${Number(courseId)})">
+                            حذف
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join("");
     } catch (error) {
-        console.error(
-            "Load lessons error:",
-            error
-        );
+        console.error("Load lessons error:", error);
 
         tableBody.innerHTML = `
             <tr>
-                <td colspan="10"
-                    class="empty-row">
+                <td colspan="10" class="empty-row">
                     تعذر تحميل المحاضرات
                 </td>
             </tr>
         `;
 
-        showToast(
-            error.message ||
-            "تعذر تحميل المحاضرات",
-            "error"
-        );
+        showToast(error.message || "تعذر تحميل المحاضرات", "error");
     }
 }
 
@@ -1031,114 +577,53 @@ async function loadLessons(courseId) {
 // ============================================================
 
 async function saveLesson(event) {
-    if (event) {
-        event.preventDefault();
+    if (event) event.preventDefault();
+
+    let courseId = Number(getValue("lessonCourse"));
+
+    if (!Number.isInteger(courseId) || courseId <= 0) {
+        courseId = Number(selectedCourseId);
     }
 
-    let courseId =
-        Number(
-            getValue("lessonCourse")
-        );
+    const title = getValue("lessonTitle");
+    const videoUrl = getValue("lessonUrl");
 
-    if (
-        !Number.isInteger(courseId) ||
-        courseId <= 0
-    ) {
-        courseId =
-            Number(
-                selectedCourseId
-            );
-    }
-
-    const title =
-        getValue("lessonTitle");
-
-    const videoUrl =
-        getValue("lessonUrl");
-
-    if (
-        !Number.isInteger(courseId) ||
-        courseId <= 0
-    ) {
-        showToast(
-            "اختر الدورة",
-            "error"
-        );
-
+    if (!Number.isInteger(courseId) || courseId <= 0) {
+        showToast("اختر الدورة", "error");
         return;
     }
 
     if (!title) {
-        showToast(
-            "اكتب عنوان المحاضرة",
-            "error"
-        );
-
+        showToast("اكتب عنوان المحاضرة", "error");
         return;
     }
 
     if (!videoUrl) {
-        showToast(
-            "ضع رابط الفيديو",
-            "error"
-        );
-
+        showToast("ضع رابط الفيديو", "error");
         return;
     }
 
     try {
-        await apiRequest(
-            `${API}/lessons`,
-            {
-                method: "POST",
-                body:
-                    JSON.stringify({
-                        course_id:
-                            courseId,
+        await apiRequest(`${API}/lessons`, {
+            method: "POST",
+            body: JSON.stringify({
+                course_id: courseId,
+                title,
+                video_url: videoUrl
+            })
+        });
 
-                        title:
-                            title,
+        selectedCourseId = courseId;
+        showToast("تمت إضافة المحاضرة بنجاح", "success");
 
-                        video_url:
-                            videoUrl
-                    })
-            }
-        );
+        setValue("lessonTitle", "");
+        setValue("lessonUrl", "");
 
-        selectedCourseId =
-            courseId;
-
-        showToast(
-            "تمت إضافة المحاضرة بنجاح",
-            "success"
-        );
-
-        setValue(
-            "lessonTitle",
-            ""
-        );
-
-        setValue(
-            "lessonUrl",
-            ""
-        );
-
-        await loadLessons(
-            courseId
-        );
-
+        await loadLessons(courseId);
         await loadDashboard();
     } catch (error) {
-        console.error(
-            "Save lesson error:",
-            error
-        );
-
-        showToast(
-            error.message ||
-            "تعذر إضافة المحاضرة",
-            "error"
-        );
+        console.error("Save lesson error:", error);
+        showToast(error.message || "تعذر إضافة المحاضرة", "error");
     }
 }
 
@@ -1146,53 +631,26 @@ async function saveLesson(event) {
 // DELETE LESSON
 // ============================================================
 
-async function deleteLesson(
-    lessonId,
-    courseId = selectedCourseId
-) {
-    const confirmed =
-        confirm(
-            "هل أنت متأكد من حذف هذه المحاضرة؟"
-        );
-
-    if (!confirmed) {
-        return;
-    }
+async function deleteLesson(lessonId, courseId = selectedCourseId) {
+    const confirmed = confirm("هل أنت متأكد من حذف هذه المحاضرة؟");
+    if (!confirmed) return;
 
     try {
-        await apiRequest(
-            `${API}/lessons/${lessonId}`,
-            {
-                method: "DELETE"
-            }
-        );
+        await apiRequest(`${API}/lessons/${lessonId}`, {
+            method: "DELETE"
+        });
 
-        showToast(
-            "تم حذف المحاضرة بنجاح",
-            "success"
-        );
+        showToast("تم حذف المحاضرة بنجاح", "success");
 
         if (courseId) {
-            selectedCourseId =
-                Number(courseId);
-
-            await loadLessons(
-                Number(courseId)
-            );
+            selectedCourseId = Number(courseId);
+            await loadLessons(Number(courseId));
         }
 
         await loadDashboard();
     } catch (error) {
-        console.error(
-            "Delete lesson error:",
-            error
-        );
-
-        showToast(
-            error.message ||
-            "تعذر حذف المحاضرة",
-            "error"
-        );
+        console.error("Delete lesson error:", error);
+        showToast(error.message || "تعذر حذف المحاضرة", "error");
     }
 }
 
@@ -1201,93 +659,44 @@ async function deleteLesson(
 // ============================================================
 
 async function loadUsers() {
-    const tableBody =
-        document.getElementById(
-            "usersTableBody"
-        );
-
-    if (!tableBody) {
-        return;
-    }
+    const tableBody = document.getElementById("usersTableBody");
+    if (!tableBody) return;
 
     try {
-        const data =
-            await apiRequest(
-                `${API}/users`
-            );
-
-        const users =
-            Array.isArray(
-                data.users
-            )
-                ? data.users
-                : [];
+        const data = await apiRequest(`${API}/users`);
+        const users = Array.isArray(data.users) ? data.users : [];
 
         if (!users.length) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="10"
-                        class="empty-row">
+                    <td colspan="10" class="empty-row">
                         لا يوجد مستخدمون حاليًا
                     </td>
                 </tr>
             `;
-
             return;
         }
 
-        tableBody.innerHTML =
-            users.map(user => {
-                return `
-                    <tr>
-                        <td>
-                            ${escapeHTML(
-                    user.id
-                )}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                    user.name ||
-                    "-"
-                )}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                    user.email ||
-                    "-"
-                )}
-                        </td>
-
-                        <td>
-                            ${formatDate(
-                    user.created_at
-                )}
-                        </td>
-                    </tr>
-                `;
-            }).join("");
+        tableBody.innerHTML = users.map(user => `
+            <tr>
+                <td>${escapeHTML(user.id)}</td>
+                <td>${escapeHTML(user.name || "-")}</td>
+                <td>${escapeHTML(user.email || "-")}</td>
+                <td>${formatDate(user.created_at)}</td>
+            </tr>
+        `).join("");
     } catch (error) {
-        console.error(
-            "Users error:",
-            error
-        );
+        console.error("Users error:", error);
 
         tableBody.innerHTML = `
             <tr>
-                <td colspan="10"
-                    class="empty-row">
+                <td colspan="10" class="empty-row">
                     تعذر تحميل المستخدمين
                 </td>
             </tr>
         `;
 
-        showToast(
-            error.message ||
-            "تعذر تحميل المستخدمين",
-            "error"
-        );
+        showToast(error.message || "تعذر تحميل المستخدمين", "error");
     }
 }
 
@@ -1296,94 +705,220 @@ async function loadUsers() {
 // ============================================================
 
 async function loadCertificates() {
-    const tableBody =
-        document.getElementById(
-            "certificatesTableBody"
-        );
-
-    if (!tableBody) {
-        return;
-    }
+    const tableBody = document.getElementById("certificatesTableBody");
+    if (!tableBody) return;
 
     try {
-        const data =
-            await apiRequest(
-                `${API}/certificates`
-            );
-
-        const certificates =
-            Array.isArray(
-                data.certificates
-            )
-                ? data.certificates
-                : [];
+        const data = await apiRequest(`${API}/certificates`);
+        const certificates = Array.isArray(data.certificates)
+            ? data.certificates
+            : [];
 
         if (!certificates.length) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="4"
-                        class="empty-row">
+                    <td colspan="4" class="empty-row">
                         لا توجد شهادات حاليًا
                     </td>
                 </tr>
             `;
-
             return;
         }
 
-        tableBody.innerHTML =
-            certificates.map(cert => {
-                return `
-                    <tr>
-                        <td>
-                            ${escapeHTML(
-                    cert.certificate_id ||
-                    "-"
-                )}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                    cert.user_name ||
-                    "-"
-                )}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                    cert.course_title ||
-                    "-"
-                )}
-                        </td>
-
-                        <td>
-                            ${formatDate(
-                    cert.issued_at
-                )}
-                        </td>
-                    </tr>
-                `;
-            }).join("");
+        tableBody.innerHTML = certificates.map(cert => `
+            <tr>
+                <td>${escapeHTML(cert.certificate_id || "-")}</td>
+                <td>${escapeHTML(cert.user_name || "-")}</td>
+                <td>${escapeHTML(cert.course_title || "-")}</td>
+                <td>${formatDate(cert.issued_at)}</td>
+            </tr>
+        `).join("");
     } catch (error) {
-        console.error(
-            "Certificates error:",
-            error
-        );
+        console.error("Certificates error:", error);
 
         tableBody.innerHTML = `
             <tr>
-                <td colspan="4"
-                    class="empty-row">
+                <td colspan="4" class="empty-row">
                     تعذر تحميل الشهادات
                 </td>
             </tr>
         `;
 
-        showToast(
-            error.message ||
-            "تعذر تحميل الشهادات",
-            "error"
-        );
+        showToast(error.message || "تعذر تحميل الشهادات", "error");
+    }
+}
+
+// ============================================================
+// SPECIALTIES
+// ============================================================
+
+async function loadSpecialties() {
+    const tableBody = document.getElementById("specialtiesTableBody");
+
+    try {
+        const data = await apiRequest(`${API}/specialties`);
+
+        adminSpecialties = Array.isArray(data.specialties)
+            ? data.specialties
+            : [];
+
+        renderSpecialties();
+        populateSpecialtySelect();
+    } catch (error) {
+        console.error("Specialties error:", error);
+
+        if (tableBody) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty-row">
+                        تعذر تحميل التخصصات
+                    </td>
+                </tr>
+            `;
+        }
+
+        // لا نوقف لوحة الإدارة إذا لم يكن مسار التخصصات جاهزًا بعد.
+        populateSpecialtySelect();
+        console.warn("Specialties could not be loaded:", error.message);
+    }
+}
+
+function renderSpecialties() {
+    const tableBody = document.getElementById("specialtiesTableBody");
+    if (!tableBody) return;
+
+    if (!adminSpecialties.length) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty-row">
+                    لا توجد تخصصات
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tableBody.innerHTML = adminSpecialties.map(specialty => `
+        <tr>
+            <td>${escapeHTML(specialty.id)}</td>
+            <td>${escapeHTML(specialty.icon || "📚")}</td>
+            <td>${escapeHTML(specialty.name)}</td>
+            <td>${escapeHTML(specialty.description || "-")}</td>
+            <td>—</td>
+        </tr>
+    `).join("");
+}
+
+function openSpecialtyModal() {
+    const form = document.getElementById("specialtyForm");
+    const modal = document.getElementById("specialtyModal");
+
+    if (!form || !modal) {
+        showToast("لم يتم العثور على نافذة إضافة التخصص في الصفحة.", "error");
+        return;
+    }
+
+    form.reset();
+    setValue("specialtyIcon", "📚");
+
+    modal.classList.add("show");
+    modal.style.display = "flex";
+}
+
+function closeSpecialtyModal() {
+    const modal = document.getElementById("specialtyModal");
+    if (!modal) return;
+
+    modal.classList.remove("show");
+    modal.style.display = "none";
+}
+
+async function saveSpecialty(event) {
+    if (event) event.preventDefault();
+
+    const name = getValue("specialtyName");
+    const icon = getValue("specialtyIcon") || "📚";
+    const description = getValue("specialtyDescription");
+
+    if (!name || !description) {
+        showToast("أدخل اسم التخصص ووصفه.", "error");
+        return;
+    }
+
+    const submitButton = document.querySelector(
+        "#specialtyForm button[type='submit']"
+    );
+
+    if (submitButton) submitButton.disabled = true;
+
+    try {
+        const data = await apiRequest(`${API}/specialties`, {
+            method: "POST",
+            body: JSON.stringify({ name, icon, description })
+        });
+
+        showToast(data.message || "تمت إضافة التخصص بنجاح.", "success");
+        closeSpecialtyModal();
+
+        await loadSpecialties();
+        await loadCourses();
+    } catch (error) {
+        console.error("Save specialty error:", error);
+        showToast(error.message || "تعذرت إضافة التخصص.", "error");
+    } finally {
+        if (submitButton) submitButton.disabled = false;
+    }
+}
+
+// ============================================================
+// DYNAMIC COURSE CATEGORY OPTIONS
+// ============================================================
+
+function populateSpecialtySelect() {
+    const select = document.getElementById("courseCategory");
+    if (!select) return;
+
+    const currentValue = select.value;
+
+    const defaults = [
+        { name: "برمجة", icon: "💻" },
+        { name: "إنجليزي", icon: "🇬🇧" },
+        { name: "تصميم", icon: "🎨" }
+    ];
+
+    const names = new Set();
+    const options = [];
+
+    [...defaults, ...adminSpecialties].forEach(item => {
+        const name = String(item.name || "").trim();
+        if (!name || names.has(name)) return;
+
+        names.add(name);
+        options.push({
+            name,
+            icon: item.icon || "📚"
+        });
+    });
+
+    // المحافظة على تصنيف أي دورة قديمة حتى لو لم يكن ضمن القائمة الحالية.
+    if (currentValue && !names.has(currentValue)) {
+        options.push({
+            name: currentValue,
+            icon: "📚"
+        });
+    }
+
+    select.innerHTML = `
+        <option value="">اختر التصنيف</option>
+        ${options.map(item => `
+            <option value="${escapeHTML(item.name)}">
+                ${escapeHTML(item.icon)} ${escapeHTML(item.name)}
+            </option>
+        `).join("")}
+    `;
+
+    if (currentValue) {
+        select.value = currentValue;
     }
 }
 
@@ -1391,100 +926,51 @@ async function loadCertificates() {
 // NAVIGATION
 // ============================================================
 
-function showSection(
-    sectionName,
-    clickedButton = null
-) {
+function showSection(sectionName, clickedButton = null) {
     const sectionMap = {
-        dashboard:
-            "dashboardSection",
-
-        courses:
-            "coursesSection",
-
-        lessons:
-            "lessonsSection",
-
-        users:
-            "usersSection",
-
-        certificates:
-            "certificatesSection"
+        dashboard: "dashboardSection",
+        courses: "coursesSection",
+        lessons: "lessonsSection",
+        users: "usersSection",
+        certificates: "certificatesSection",
+        specialties: "specialtiesSection"
     };
-
-    const targetId =
-        sectionMap[sectionName] ||
-        sectionName;
-
-    document
-        .querySelectorAll(
-            ".page-section"
-        )
-        .forEach(section => {
-            section.classList.remove(
-                "active"
-            );
-
-            section.style.display =
-                "none";
-        });
-
-    const target =
-        document.getElementById(
-            targetId
-        );
-
-    if (target) {
-        target.classList.add(
-            "active"
-        );
-
-        target.style.display =
-            "block";
-    }
-
-    document
-        .querySelectorAll(
-            ".menu-item"
-        )
-        .forEach(item => {
-            item.classList.remove(
-                "active"
-            );
-        });
-
-    if (clickedButton) {
-        clickedButton.classList.add(
-            "active"
-        );
-    }
 
     const titleMap = {
-        dashboard:
-            "لوحة التحكم",
-
-        courses:
-            "الدورات",
-
-        lessons:
-            "المحاضرات",
-
-        users:
-            "المستخدمون",
-
-        certificates:
-            "الشهادات"
+        dashboard: "لوحة التحكم",
+        courses: "الدورات",
+        lessons: "المحاضرات",
+        users: "المستخدمون",
+        certificates: "الشهادات",
+        specialties: "التخصصات"
     };
 
-    const pageTitle =
-        document.getElementById(
-            "pageTitle"
-        );
+    const targetId = sectionMap[sectionName] || sectionName;
+
+    document.querySelectorAll(".page-section").forEach(section => {
+        section.classList.remove("active");
+        section.style.display = "none";
+    });
+
+    const target = document.getElementById(targetId);
+
+    if (target) {
+        target.classList.add("active");
+        target.style.display = "block";
+    }
+
+    document.querySelectorAll(".menu-item").forEach(item => {
+        item.classList.remove("active");
+    });
+
+    if (clickedButton) {
+        clickedButton.classList.add("active");
+    }
+
+    const pageTitle = document.getElementById("pageTitle");
 
     if (pageTitle) {
-        pageTitle.textContent =
-            titleMap[sectionName] ||
-            "لوحة التحكم";
+        pageTitle.textContent = titleMap[sectionName] || "لوحة التحكم";
     }
 
     if (sectionName === "courses") {
@@ -1506,62 +992,38 @@ function showSection(
     if (sectionName === "dashboard") {
         loadDashboard();
     }
+
+    if (sectionName === "specialties") {
+        loadSpecialties();
+    }
 }
 
-function showSectionByName(
-    sectionName
-) {
+function showSectionByName(sectionName) {
     const sectionMap = {
-        dashboard:
-            "dashboardSection",
-
-        courses:
-            "coursesSection",
-
-        lessons:
-            "lessonsSection",
-
-        users:
-            "usersSection",
-
-        certificates:
-            "certificatesSection"
+        dashboard: "dashboardSection",
+        courses: "coursesSection",
+        lessons: "lessonsSection",
+        users: "usersSection",
+        certificates: "certificatesSection",
+        specialties: "specialtiesSection"
     };
 
-    const targetId =
-        sectionMap[sectionName];
-
-    const target =
-        document.getElementById(
-            targetId
-        );
-
-    const buttons =
-        document.querySelectorAll(
-            ".menu-item"
-        );
+    const targetId = sectionMap[sectionName];
+    const target = targetId
+        ? document.getElementById(targetId)
+        : null;
 
     let button = null;
 
-    buttons.forEach(item => {
-        const onclick =
-            item.getAttribute(
-                "onclick"
-            ) || "";
+    document.querySelectorAll(".menu-item").forEach(item => {
+        const onclick = item.getAttribute("onclick") || "";
 
-        if (
-            onclick.includes(
-                `showSection('${sectionName}'`
-            )
-        ) {
+        if (onclick.includes(`showSection('${sectionName}'`)) {
             button = item;
         }
     });
 
-    showSection(
-        sectionName,
-        button
-    );
+    showSection(sectionName, button);
 
     if (target) {
         target.scrollIntoView({
@@ -1577,159 +1039,93 @@ function showSectionByName(
 
 async function adminLogout() {
     try {
-        await fetch(
-            `${API}/logout`,
-            {
-                method: "POST",
-                credentials:
-                    "same-origin"
-            }
-        );
+        await apiRequest(`${API}/logout`, {
+            method: "POST"
+        });
     } catch (error) {
-        console.error(
-            "Logout error:",
-            error
-        );
+        console.error("Logout error:", error);
     }
 
-    localStorage.removeItem(
-        "zawamAdminLoggedIn"
-    );
+    localStorage.removeItem("zawamAdminLoggedIn");
+    localStorage.removeItem("zawamAdminToken");
+    localStorage.removeItem("zawamAdminName");
+    localStorage.removeItem("zawamAdminEmail");
+    localStorage.removeItem("zawamAdminId");
 
-    localStorage.removeItem(
-        "zawamAdminName"
-    );
-
-    localStorage.removeItem(
-        "zawamAdminEmail"
-    );
-
-    window.location.href =
-        "/admin-login.html";
+    window.location.href = "/admin-login.html";
 }
 
 // ============================================================
 // CLOSE MODALS
 // ============================================================
 
-document.addEventListener(
-    "click",
-    event => {
-        const courseModal =
-            document.getElementById(
-                "courseModal"
-            );
+document.addEventListener("click", event => {
+    const courseModal = document.getElementById("courseModal");
+    const lessonModal = document.getElementById("lessonModal");
+    const specialtyModal = document.getElementById("specialtyModal");
 
-        const lessonModal =
-            document.getElementById(
-                "lessonModal"
-            );
-
-        if (
-            courseModal &&
-            event.target ===
-            courseModal
-        ) {
-            closeCourseModal();
-        }
-
-        if (
-            lessonModal &&
-            event.target ===
-            lessonModal
-        ) {
-            closeLessonModal();
-        }
+    if (courseModal && event.target === courseModal) {
+        closeCourseModal();
     }
-);
 
-document.addEventListener(
-    "keydown",
-    event => {
-        if (
-            event.key ===
-            "Escape"
-        ) {
-            closeCourseModal();
-            closeLessonModal();
-        }
+    if (lessonModal && event.target === lessonModal) {
+        closeLessonModal();
     }
-);
+
+    if (specialtyModal && event.target === specialtyModal) {
+        closeSpecialtyModal();
+    }
+});
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        closeCourseModal();
+        closeLessonModal();
+        closeSpecialtyModal();
+    }
+});
 
 // ============================================================
 // HELPERS
 // ============================================================
 
 function getValue(id) {
-    const element =
-        document.getElementById(id);
+    const element = document.getElementById(id);
 
-    if (!element) {
-        return "";
-    }
+    if (!element) return "";
 
-    return String(
-        element.value || ""
-    ).trim();
+    return String(element.value || "").trim();
 }
 
-function setValue(
-    id,
-    value
-) {
-    const element =
-        document.getElementById(id);
+function setValue(id, value) {
+    const element = document.getElementById(id);
 
     if (element) {
-        element.value =
-            value ?? "";
+        element.value = value ?? "";
     }
 }
 
-function setText(
-    ids,
-    value
-) {
+function setText(ids, value) {
     ids.forEach(id => {
-        const element =
-            document.getElementById(id);
+        const element = document.getElementById(id);
 
         if (element) {
-            element.textContent =
-                value ?? "";
+            element.textContent = value ?? "";
         }
     });
 }
 
 function escapeHTML(value) {
-    if (
-        value === null ||
-        value === undefined
-    ) {
+    if (value === null || value === undefined) {
         return "";
     }
 
     return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 function escapeAttribute(value) {
@@ -1737,137 +1133,75 @@ function escapeAttribute(value) {
 }
 
 function formatDate(value) {
-    if (!value) {
-        return "-";
+    if (!value) return "-";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return escapeHTML(value);
     }
 
-    const date =
-        new Date(value);
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-        return escapeHTML(
-            value
-        );
-    }
-
-    return date.toLocaleDateString(
-        "ar-RW",
-        {
-            year: "numeric",
-            month: "long",
-            day: "numeric"
-        }
-    );
+    return date.toLocaleDateString("ar-RW", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
 }
 
 // ============================================================
 // TOAST
 // ============================================================
 
-function showToast(
-    message,
-    type = "success"
-) {
-    let toast =
-        document.getElementById(
-            "toast"
-        );
+function showToast(message, type = "success") {
+    let toast = document.getElementById("toast");
 
     if (!toast) {
-        toast =
-            document.createElement(
-                "div"
-            );
-
+        toast = document.createElement("div");
         toast.id = "toast";
-
-        document.body.appendChild(
-            toast
-        );
+        document.body.appendChild(toast);
     }
 
-    toast.textContent =
-        message;
+    toast.textContent = message;
+    toast.className = `toast ${type} show`;
 
-    toast.className =
-        `toast ${type} show`;
+    clearTimeout(window.zawamToastTimer);
 
-    clearTimeout(
-        window.zawamToastTimer
-    );
-
-    window.zawamToastTimer =
-        setTimeout(() => {
-            toast.classList.remove(
-                "show"
-            );
-        }, 3500);
+    window.zawamToastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3500);
 }
 
 // ============================================================
 // GLOBAL FUNCTIONS
 // ============================================================
 
-window.loadDashboard =
-    loadDashboard;
+window.loadDashboard = loadDashboard;
+window.loadCourses = loadCourses;
+window.loadUsers = loadUsers;
+window.loadCertificates = loadCertificates;
 
-window.loadCourses =
-    loadCourses;
+window.filterCourses = filterCourses;
+window.openCourseModal = openCourseModal;
+window.closeCourseModal = closeCourseModal;
+window.editCourse = editCourse;
+window.saveCourse = saveCourse;
+window.deleteCourse = deleteCourse;
 
-window.loadUsers =
-    loadUsers;
+window.openLessonModal = openLessonModal;
+window.closeLessonModal = closeLessonModal;
+window.loadLessons = loadLessons;
+window.loadAdminLessons = loadAdminLessons;
+window.saveLesson = saveLesson;
+window.addLesson = saveLesson;
+window.deleteLesson = deleteLesson;
 
-window.loadCertificates =
-    loadCertificates;
+window.loadSpecialties = loadSpecialties;
+window.renderSpecialties = renderSpecialties;
+window.openSpecialtyModal = openSpecialtyModal;
+window.closeSpecialtyModal = closeSpecialtyModal;
+window.saveSpecialty = saveSpecialty;
+window.populateSpecialtySelect = populateSpecialtySelect;
 
-window.filterCourses =
-    filterCourses;
-
-window.openCourseModal =
-    openCourseModal;
-
-window.closeCourseModal =
-    closeCourseModal;
-
-window.editCourse =
-    editCourse;
-
-window.saveCourse =
-    saveCourse;
-
-window.deleteCourse =
-    deleteCourse;
-
-window.openLessonModal =
-    openLessonModal;
-
-window.closeLessonModal =
-    closeLessonModal;
-
-window.loadLessons =
-    loadLessons;
-
-window.loadAdminLessons =
-    loadAdminLessons;
-
-window.saveLesson =
-    saveLesson;
-
-window.addLesson =
-    saveLesson;
-
-window.deleteLesson =
-    deleteLesson;
-
-window.showSection =
-    showSection;
-
-window.showSectionByName =
-    showSectionByName;
-
-window.adminLogout =
-    adminLogout;
+window.showSection = showSection;
+window.showSectionByName = showSectionByName;
+window.adminLogout = adminLogout;
