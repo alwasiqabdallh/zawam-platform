@@ -1,19 +1,13 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>الملف الشخصي | ZAWAM</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
@@ -30,10 +24,7 @@
             min-height: 100vh;
         }
 
-        /* ================================
-           NAVBAR
-        ================================ */
-
+        /* NAVBAR */
         .navbar {
             background: #102a43;
             color: white;
@@ -106,20 +97,14 @@
             transform: translateY(-1px);
         }
 
-        /* ================================
-           MAIN
-        ================================ */
-
+        /* MAIN */
         .container {
             width: 90%;
             max-width: 1200px;
             margin: 35px auto 60px;
         }
 
-        /* ================================
-           PROFILE HEADER
-        ================================ */
-
+        /* PROFILE HEADER */
         .profile-header {
             background: white;
             border-radius: 18px;
@@ -158,10 +143,7 @@
             margin-top: 3px;
         }
 
-        /* ================================
-           STATISTICS
-        ================================ */
-
+        /* STATISTICS */
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -202,10 +184,7 @@
             font-size: 13px;
         }
 
-        /* ================================
-           SECTION
-        ================================ */
-
+        /* SECTION */
         .section {
             margin-bottom: 40px;
         }
@@ -223,10 +202,7 @@
             color: #102a43;
         }
 
-        /* ================================
-           COURSES
-        ================================ */
-
+        /* COURSES */
         .courses-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -286,10 +262,7 @@
             margin-bottom: 15px;
         }
 
-        /* ================================
-           PROGRESS
-        ================================ */
-
+        /* PROGRESS */
         .progress-area {
             margin-bottom: 16px;
         }
@@ -323,10 +296,7 @@
             transition: width 0.5s ease;
         }
 
-        /* ================================
-           BUTTONS
-        ================================ */
-
+        /* BUTTONS */
         .course-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -381,10 +351,7 @@
             background: #ffefb5;
         }
 
-        /* ================================
-           CERTIFICATES
-        ================================ */
-
+        /* CERTIFICATES */
         .certificates-list {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -417,10 +384,7 @@
             margin-bottom: 15px;
         }
 
-        /* ================================
-           EMPTY STATE
-        ================================ */
-
+        /* EMPTY STATE */
         .empty {
             background: white;
             border: 1px dashed #cbd5e0;
@@ -452,10 +416,7 @@
             font-weight: 700;
         }
 
-        /* ================================
-           LOADING
-        ================================ */
-
+        /* LOADING */
         .loading {
             text-align: center;
             padding: 80px 20px;
@@ -479,10 +440,7 @@
             }
         }
 
-        /* ================================
-           ERROR
-        ================================ */
-
+        /* ERROR */
         .error-box {
             background: #fff0f0;
             color: #c0392b;
@@ -492,10 +450,7 @@
             margin-bottom: 20px;
         }
 
-        /* ================================
-           MODAL
-        ================================ */
-
+        /* MODAL */
         .modal {
             position: fixed;
             inset: 0;
@@ -563,20 +518,14 @@
             color: white;
         }
 
-        /* ================================
-           MOBILE
-        ================================ */
-
+        /* MOBILE */
         @media (max-width: 900px) {
-
             .courses-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-
         }
 
         @media (max-width: 700px) {
-
             .navbar {
                 padding: 10px 5%;
             }
@@ -623,1327 +572,515 @@
             .section-title {
                 font-size: 20px;
             }
-
         }
     </style>
-
 </head>
-
 
 <body>
 
-
-    <!-- ================================
-         NAVBAR
-    ================================ -->
-
+    <!-- NAVBAR -->
     <nav class="navbar">
-
         <a href="index.html" class="logo">
-
-            <span class="logo-icon">
-                Z
-            </span>
-
-            <span>
-                ZAWAM
-            </span>
-
+            <span class="logo-icon">Z</span>
+            <span>ZAWAM</span>
         </a>
-
+                </a>
 
         <div class="nav-links">
-
-            <a href="index.html">
-                الرئيسية
-            </a>
-
-            <a href="courses.html">
-                الدورات
-            </a>
-
-            <a href="profile.html" class="profile-link">
-                الملف الشخصي
-            </a>
-
-            <button class="logout-btn" onclick="logout()">
-                تسجيل الخروج
-            </button>
-
+            <a href="index.html">الرئيسية</a>
+            <a href="courses.html">الدورات</a>
+            <a href="profile.html" class="profile-link">الملف الشخصي</a>
+            <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
         </div>
-
     </nav>
-
-
-    <!-- ================================
-         MAIN
-    ================================ -->
 
     <main class="container">
 
         <div id="loading" class="loading">
-
             <div class="spinner"></div>
-
             جاري تحميل الملف الشخصي...
-
         </div>
-
 
         <div id="errorBox" class="error-box" style="display:none;"></div>
 
-
         <div id="dashboard" style="display:none;">
 
-
-            <!-- PROFILE HEADER -->
-
             <section class="profile-header">
-
-                <div class="avatar" id="avatar">
-                    Z
-                </div>
-
+                <div class="avatar" id="avatar">Z</div>
 
                 <div class="profile-info">
-
-                    <h1 id="studentName">
-                        الطالب
-                    </h1>
-
-                    <p id="studentEmail">
-                        email@example.com
-                    </p>
-
-                    <p>
-                        🎓 طالب في منصة زوام التعليمية
-                    </p>
-
+                    <h1 id="studentName">الطالب</h1>
+                    <p id="studentEmail">email@example.com</p>
+                    <p>🎓 طالب في منصة زوام التعليمية</p>
                 </div>
-
             </section>
-
-
-            <!-- STATISTICS -->
 
             <section class="stats">
 
                 <div class="stat-card">
-
-                    <div class="stat-icon">
-                        📚
-                    </div>
-
+                    <div class="stat-icon">📚</div>
                     <div>
-
-                        <div class="stat-number" id="totalCourses">
-                            0
-                        </div>
-
-                        <div class="stat-title">
-                            الدورات المسجل فيها
-                        </div>
-
+                        <div class="stat-number" id="totalCourses">0</div>
+                        <div class="stat-title">الدورات المسجل فيها</div>
                     </div>
-
                 </div>
 
-
                 <div class="stat-card">
-
-                    <div class="stat-icon">
-                        ✅
-                    </div>
-
+                    <div class="stat-icon">✅</div>
                     <div>
-
-                        <div class="stat-number" id="completedCourses">
-                            0
-                        </div>
-
-                        <div class="stat-title">
-                            الدورات المكتملة
-                        </div>
-
+                        <div class="stat-number" id="completedCourses">0</div>
+                        <div class="stat-title">الدورات المكتملة</div>
                     </div>
-
                 </div>
 
-
                 <div class="stat-card">
-
-                    <div class="stat-icon">
-                        🏆
-                    </div>
-
+                    <div class="stat-icon">🏆</div>
                     <div>
-
-                        <div class="stat-number" id="totalCertificates">
-                            0
-                        </div>
-
-                        <div class="stat-title">
-                            الشهادات
-                        </div>
-
+                        <div class="stat-number" id="totalCertificates">0</div>
+                        <div class="stat-title">الشهادات</div>
                     </div>
-
                 </div>
 
             </section>
 
-
-            <!-- COURSES -->
-
             <section class="section">
-
                 <div class="section-header">
-
-                    <h2 class="section-title">
-                        📚 دوراتي
-                    </h2>
-
+                    <h2 class="section-title">📚 دوراتي</h2>
                 </div>
-
 
                 <div class="courses-grid" id="coursesContainer"></div>
-
             </section>
-
-
-            <!-- CERTIFICATES -->
 
             <section class="section">
-
                 <div class="section-header">
-
-                    <h2 class="section-title">
-                        🏆 شهاداتي
-                    </h2>
-
+                    <h2 class="section-title">🏆 شهاداتي</h2>
                 </div>
 
-
                 <div class="certificates-list" id="certificatesContainer"></div>
-
             </section>
 
-
         </div>
-
     </main>
 
-
-    <!-- DELETE MODAL -->
-
     <div class="modal" id="deleteModal">
-
         <div class="modal-box">
-
-            <div class="modal-icon">
-                🗑️
-            </div>
-
-            <h2>
-                حذف الدورة؟
-            </h2>
-
-            <p>
-                هل أنت متأكد أنك تريد حذف هذه الدورة من حسابك؟
-                سيتم حذف تقدمك في الدورة أيضًا.
-            </p>
+            <div class="modal-icon">🗑️</div>
+            <h2>حذف الدورة؟</h2>
+            <p>هل أنت متأكد من رغبتك في إزالة هذه الدورة من قائمة دوراتك؟</p>
 
             <div class="modal-buttons">
-
-                <button class="cancel-btn" onclick="closeDeleteModal()">
-                    إلغاء
-                </button>
-
-                <button class="confirm-delete-btn" onclick="confirmDelete()">
-                    نعم، احذف الدورة
-                </button>
-
+                <button class="cancel-btn" onclick="closeDeleteModal()">إلغاء</button>
+                <button class="confirm-delete-btn" id="confirmDeleteBtn">نعم، احذف</button>
             </div>
-
         </div>
-
     </div>
 
-
     <script>
-
-        // =========================================
-        // API
-        // =========================================
-
-        const API = "http://localhost:5000";
-
-
-        // =========================================
-        // CURRENT USER
-        // =========================================
+        // استخدام نفس عنوان الموقع حتى يعمل محلياً وعلى Render
+        const API = "";
 
         let currentUserId = null;
-
         let courseToDelete = null;
 
-
-        // =========================================
-        // PAGE START
-        // =========================================
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-                checkLogin();
-            }
-        );
-
-
-        // =========================================
-        // CHECK LOGIN
-        // =========================================
-
-        function checkLogin() {
-
-            const loggedIn =
-                localStorage.getItem("zawamLoggedIn");
-
-            const userId =
-                localStorage.getItem("zawamUserId");
-
-
-            if (
-                loggedIn !== "true" ||
-                !userId
-            ) {
-
-                window.location.href = "login.html";
-
-                return;
-            }
-
-
-            currentUserId = userId;
-
-            loadDashboard();
-
+        function getUserId() {
+            return localStorage.getItem("zawamUserId") ||
+                   localStorage.getItem("userId");
         }
-
-
-        // =========================================
-        // LOAD DASHBOARD
-        // =========================================
-
-        async function loadDashboard() {
-
-            try {
-
-                const response =
-                    await fetch(
-                        `${API}/api/dashboard/${currentUserId}`
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (
-                    !response.ok ||
-                    !data.success
-                ) {
-
-                    throw new Error(
-                        data.message ||
-                        "Failed to load dashboard"
-                    );
-
-                }
-
-
-                displayDashboard(data);
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Dashboard error:",
-                    error
-                );
-
-
-                showError(
-                    "تعذر تحميل الملف الشخصي. تأكد من تشغيل السيرفر."
-                );
-
-            }
-
-        }
-
-
-        // =========================================
-        // DISPLAY DASHBOARD
-        // FIXED: API USES stats
-        // =========================================
-
-        function displayDashboard(data) {
-
-            const user =
-                data.user || {};
-
-            const stats =
-                data.stats || {};
-
-
-            // =========================================
-            // PROFILE
-            // =========================================
-
-            document.getElementById(
-                "studentName"
-            ).textContent =
-                user.name || "الطالب";
-
-
-            document.getElementById(
-                "studentEmail"
-            ).textContent =
-                user.email || "";
-
-
-            // =========================================
-            // AVATAR
-            // =========================================
-
-            const firstLetter =
-                user.name
-                    ? user.name
-                        .trim()
-                        .charAt(0)
-                        .toUpperCase()
-                    : "Z";
-
-
-            document.getElementById(
-                "avatar"
-            ).textContent =
-                firstLetter;
-
-
-            // =========================================
-            // STATISTICS
-            // =========================================
-
-            document.getElementById(
-                "totalCourses"
-            ).textContent =
-                Number(
-                    stats.total_courses
-                ) || 0;
-
-
-            document.getElementById(
-                "completedCourses"
-            ).textContent =
-                Number(
-                    stats.completed_courses
-                ) || 0;
-
-
-            document.getElementById(
-                "totalCertificates"
-            ).textContent =
-                Number(
-                    stats.certificates
-                ) || 0;
-
-
-            // =========================================
-            // COURSES
-            // =========================================
-
-            displayCourses(
-                Array.isArray(data.courses)
-                    ? data.courses
-                    : []
-            );
-
-
-            // =========================================
-            // CERTIFICATES
-            // =========================================
-
-            displayCertificates(
-                Array.isArray(data.certificates)
-                    ? data.certificates
-                    : []
-            );
-
-
-            // =========================================
-            // SHOW DASHBOARD
-            // =========================================
-
-            document.getElementById(
-                "loading"
-            ).style.display =
-                "none";
-
-
-            document.getElementById(
-                "errorBox"
-            ).style.display =
-                "none";
-
-
-            document.getElementById(
-                "dashboard"
-            ).style.display =
-                "block";
-
-        }
-
-
-        // =========================================
-        // DISPLAY COURSES
-        // =========================================
-
-        function displayCourses(courses) {
-
-            const container =
-                document.getElementById(
-                    "coursesContainer"
-                );
-
-
-            container.innerHTML = "";
-
-
-            if (
-                !courses ||
-                courses.length === 0
-            ) {
-
-                container.innerHTML = `
-
-                    <div class="empty">
-
-                        <div class="empty-icon">
-                            📚
-                        </div>
-
-                        <h3>
-                            لم تسجل في أي دورة بعد
-                        </h3>
-
-                        <p>
-                            ابدأ رحلة التعلم الآن واختر الدورة المناسبة لك.
-                        </p>
-
-                        <a href="courses.html">
-                            استعرض الدورات
-                        </a>
-
-                    </div>
-
-                `;
-
-                return;
-
-            }
-
-
-            courses.forEach(
-                function (course) {
-
-                    const progress =
-                        Number(
-                            course.progress
-                        ) || 0;
-
-
-                    const initial =
-                        getCourseInitial(
-                            course.title
-                        );
-
-
-                    const isCompleted =
-                        progress >= 100;
-
-
-                    const card =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    card.className =
-                        "course-card";
-
-
-                    card.innerHTML = `
-
-                        <div class="course-image">
-                            ${escapeHTML(initial)}
-                        </div>
-
-
-                        <div class="course-content">
-
-                            <span class="course-category">
-                                ${escapeHTML(
-                        course.category ||
-                        "دورة"
-                    )}
-                            </span>
-
-
-                            <div class="course-title">
-                                ${escapeHTML(
-                        course.title ||
-                        "دورة تعليمية"
-                    )}
-                            </div>
-
-
-                            <div class="course-instructor">
-                                👨‍🏫
-                                ${escapeHTML(
-                        course.instructor ||
-                        "ZAWAM"
-                    )}
-                            </div>
-
-
-                            <div class="progress-area">
-
-                                <div class="progress-info">
-
-                                    <span>
-                                        التقدم
-                                    </span>
-
-                                    <span class="progress-percent">
-                                        ${progress}%
-                                    </span>
-
-                                </div>
-
-
-                                <div class="progress-bar">
-
-                                    <div
-                                        class="progress-fill"
-                                        style="width:${Math.min(
-                        Math.max(progress, 0),
-                        100
-                    )}%"
-                                    ></div>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="course-buttons">
-
-                                <button
-                                    class="btn btn-primary"
-                                    onclick="continueCourse(${Number(course.course_id)}, this)"
-                                >
-                                    ${isCompleted
-                            ? "🔄 مراجعة الدورة"
-                            : "▶️ متابعة الدورة"
-                        }
-                                </button>
-
-
-                                <button
-                                    class="btn btn-danger"
-                                    onclick="openDeleteModal(${Number(course.course_id)})"
-                                >
-                                    🗑️ حذف
-                                </button>
-
-                            </div>
-
-
-                            ${isCompleted
-                            ?
-                            `
-                                        <button
-                                            class="btn certificate-btn"
-                                            onclick="openCertificate(${Number(course.course_id)})"
-                                        >
-                                            🏆 الحصول على الشهادة
-                                        </button>
-                                    `
-                            :
-                            ""
-                        }
-
-                        </div>
-
-                    `;
-
-
-                    container.appendChild(
-                        card
-                    );
-
-                }
-            );
-
-        }
-
-
-        // =========================================
-        // CONTINUE COURSE
-        // =========================================
-
-        async function continueCourse(
-            courseId,
-            button
-        ) {
-
-            if (!courseId) {
-
-                alert(
-                    "تعذر تحديد الدورة."
-                );
-
-                return;
-            }
-
-
-            if (button) {
-
-                button.disabled = true;
-
-                button.textContent =
-                    "جاري فتح الدورة...";
-
-            }
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        `${API}/api/lessons/${courseId}`
-                    );
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "تعذر تحميل محاضرات الدورة."
-                    );
-
-                }
-
-
-                const data =
-                    await response.json();
-
-
-                const lessons =
-                    Array.isArray(data)
-                        ? data
-                        : data.lessons;
-
-
-                if (
-                    !Array.isArray(lessons) ||
-                    lessons.length === 0
-                ) {
-
-                    alert(
-                        "لا توجد محاضرات متاحة لهذه الدورة حالياً."
-                    );
-
-
-                    if (button) {
-
-                        button.disabled = false;
-
-                        button.textContent =
-                            "▶️ متابعة الدورة";
-
-                    }
-
-                    return;
-
-                }
-
-
-                const firstLesson =
-                    lessons[0];
-
-
-                if (!firstLesson.id) {
-
-                    throw new Error(
-                        "رقم المحاضرة غير موجود."
-                    );
-
-                }
-
-
-                window.location.href =
-                    `lesson.html?id=${encodeURIComponent(
-                        firstLesson.id
-                    )}`;
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Continue course error:",
-                    error
-                );
-
-
-                alert(
-                    "حدث خطأ أثناء فتح الدورة."
-                );
-
-
-                if (button) {
-
-                    button.disabled = false;
-
-                    button.textContent =
-                        "▶️ متابعة الدورة";
-
-                }
-
-            }
-
-        }
-
-
-        // =========================================
-        // DISPLAY CERTIFICATES
-        // =========================================
-
-        function displayCertificates(
-            certificates
-        ) {
-
-            const container =
-                document.getElementById(
-                    "certificatesContainer"
-                );
-
-
-            container.innerHTML = "";
-
-
-            if (
-                !certificates ||
-                certificates.length === 0
-            ) {
-
-                container.innerHTML = `
-
-                    <div class="empty">
-
-                        <div class="empty-icon">
-                            🏆
-                        </div>
-
-                        <h3>
-                            لا توجد شهادات بعد
-                        </h3>
-
-                        <p>
-                            أكمل إحدى دوراتك بالكامل للحصول على الشهادة.
-                        </p>
-
-                    </div>
-
-                `;
-
-                return;
-
-            }
-
-
-            certificates.forEach(
-                function (certificate) {
-
-                    const date =
-                        formatDate(
-                            certificate.issued_at
-                        );
-
-
-                    const card =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    card.className =
-                        "certificate-card";
-
-
-                    card.innerHTML = `
-
-                        <h3>
-                            🏆
-                            ${escapeHTML(
-                        certificate.course_title
-                    )}
-                        </h3>
-
-
-                        <div class="certificate-id">
-                            رقم الشهادة:
-                            ${escapeHTML(
-                        certificate.certificate_id
-                    )}
-                        </div>
-
-
-                        <div class="certificate-date">
-                            تاريخ الإصدار:
-                            ${date}
-                        </div>
-
-
-                        <button
-                            class="btn btn-primary"
-                            style="width:100%;"
-                            onclick="openCertificatePDF(
-                                '${encodeURIComponent(
-                        certificate.certificate_id
-                    )}'
-                            )"
-                        >
-                            📄 عرض الشهادة
-                        </button>
-
-                    `;
-
-
-                    container.appendChild(
-                        card
-                    );
-
-                }
-            );
-
-        }
-
-
-        // =========================================
-        // OPEN CERTIFICATE
-        // =========================================
-
-        async function openCertificate(
-            courseId
-        ) {
-
-            try {
-
-                const response =
-                    await fetch(
-                        `${API}/api/certificate`,
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-
-                                user_id:
-                                    currentUserId,
-
-                                course_id:
-                                    courseId
-
-                            })
-
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (
-                    !response.ok ||
-                    !data.success
-                ) {
-
-                    alert(
-                        data.message ||
-                        "لا يمكن الحصول على الشهادة الآن."
-                    );
-
-                    return;
-
-                }
-
-
-                const certificateId =
-                    encodeURIComponent(
-                        data.certificate_id
-                    );
-
-
-                const chooseLanguage =
-                    confirm(
-                        "اختر لغة الشهادة:\n\nاضغط موافق للعربية\nأو إلغاء للـ English"
-                    );
-
-
-                const language =
-                    chooseLanguage
-                        ? "ar"
-                        : "en";
-
-
-                window.open(
-                    `${API}/api/certificate/${certificateId}/pdf?lang=${language}`,
-                    "_blank"
-                );
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Certificate error:",
-                    error
-                );
-
-
-                alert(
-                    "حدث خطأ أثناء تجهيز الشهادة."
-                );
-
-            }
-
-        }
-
-
-        // =========================================
-        // OPEN EXISTING CERTIFICATE
-        // =========================================
-
-        function openCertificatePDF(
-            certificateId
-        ) {
-
-            const chooseLanguage =
-                confirm(
-                    "اختر لغة الشهادة:\n\nاضغط موافق للعربية\nأو إلغاء للـ English"
-                );
-
-
-            const language =
-                chooseLanguage
-                    ? "ar"
-                    : "en";
-
-
-            window.open(
-                `${API}/api/certificate/${certificateId}/pdf?lang=${language}`,
-                "_blank"
-            );
-
-        }
-
-
-        // =========================================
-        // DELETE MODAL
-        // =========================================
-
-        function openDeleteModal(
-            courseId
-        ) {
-
-            courseToDelete =
-                courseId;
-
-
-            document.getElementById(
-                "deleteModal"
-            ).classList.add(
-                "active"
-            );
-
-        }
-
-
-        function closeDeleteModal() {
-
-            courseToDelete =
-                null;
-
-
-            document.getElementById(
-                "deleteModal"
-            ).classList.remove(
-                "active"
-            );
-
-        }
-
-
-        // =========================================
-        // CONFIRM DELETE
-        // =========================================
-
-        async function confirmDelete() {
-
-            if (!courseToDelete) {
-
-                return;
-
-            }
-
-
-            const courseId =
-                courseToDelete;
-
-
-            closeDeleteModal();
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        `${API}/api/enrollment/${currentUserId}/${courseId}`,
-                        {
-                            method: "DELETE"
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (
-                    !response.ok ||
-                    !data.success
-                ) {
-
-                    alert(
-                        data.message ||
-                        "تعذر حذف الدورة."
-                    );
-
-                    return;
-
-                }
-
-
-                alert(
-                    "تم حذف الدورة من حسابك بنجاح ✅"
-                );
-
-
-                loadDashboard();
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Delete course error:",
-                    error
-                );
-
-
-                alert(
-                    "حدث خطأ أثناء حذف الدورة."
-                );
-
-            }
-
-        }
-
-
-        // =========================================
-        // LOGOUT
-        // =========================================
 
         function logout() {
-
-            localStorage.removeItem(
-                "zawamLoggedIn"
-            );
-
-            localStorage.removeItem(
-                "zawamUserId"
-            );
-
-            localStorage.removeItem(
-                "zawamUserName"
-            );
-
-            localStorage.removeItem(
-                "zawamUserEmail"
-            );
-
-
-            window.location.href =
-                "login.html";
-
+            localStorage.removeItem("zawamUserId");
+            localStorage.removeItem("userId");
+            localStorage.removeItem("zawamUser");
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
         }
 
+        function showError(message) {
+            document.getElementById("loading").style.display = "none";
 
-        // =========================================
-        // ERROR
-        // =========================================
-
-        function showError(
-            message
-        ) {
-
-            document.getElementById(
-                "loading"
-            ).style.display =
-                "none";
-
-
-            const errorBox =
-                document.getElementById(
-                    "errorBox"
-                );
-
-
-            errorBox.textContent =
-                message;
-
-
-            errorBox.style.display =
-                "block";
-
+            const errorBox = document.getElementById("errorBox");
+            errorBox.textContent = message;
+            errorBox.style.display = "block";
         }
 
-
-        // =========================================
-        // COURSE INITIAL
-        // =========================================
-
-        function getCourseInitial(
-            title
-        ) {
-
-            if (!title) {
-
-                return "Z";
-
-            }
-
-
-            const words =
-                title
-                    .trim()
-                    .split(/\s+/);
-
-
-            if (words.length >= 2) {
-
-                return (
-                    words[0].charAt(0) +
-                    words[1].charAt(0)
-                );
-
-            }
-
-
-            return title.charAt(0);
-
+        function hideError() {
+            document.getElementById("errorBox").style.display = "none";
         }
 
+        function formatDate(dateValue) {
+            if (!dateValue) return "غير محدد";
 
-        // =========================================
-        // DATE
-        // =========================================
+            const date = new Date(dateValue);
 
-        function formatDate(
-            value
-        ) {
-
-            if (!value) {
-
-                return "-";
-
+            if (Number.isNaN(date.getTime())) {
+                return "غير محدد";
             }
 
+            return date.toLocaleDateString("ar");
+        }
 
-            const date =
-                new Date(value);
+        function safeNumber(value) {
+            const number = Number(value);
+            return Number.isFinite(number) ? number : 0;
+        }
 
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, function (char) {
+                const entities = {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                };
 
-            return date.toLocaleDateString(
-                "ar-EG",
-                {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric"
+                return entities[char];
+            });
+        }
+
+        async function fetchJSON(url, options = {}) {
+            const response = await fetch(API + url, {
+                ...options,
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(options.headers || {})
                 }
-            );
+            });
 
+            const contentType = response.headers.get("content-type") || "";
+
+            if (!contentType.includes("application/json")) {
+                throw new Error(
+                    "السيرفر لم يُرجع بيانات JSON. تأكد من مسار API وأن آخر نسخة من المشروع تم نشرها."
+                );
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || data.error || "حدث خطأ أثناء الاتصال بالسيرفر."
+                );
+            }
+
+            return data;
         }
 
+        async function loadDashboard() {
+            currentUserId = getUserId();
 
-        // =========================================
-        // HTML SECURITY
-        // =========================================
+            if (!currentUserId) {
+                showError("لم يتم العثور على حسابك. سجّل الدخول أولاً.");
+                return;
+            }
 
-        function escapeHTML(
-            value
-        ) {
+            try {
+                hideError();
 
-            return String(value)
-
-                .replace(
-                    /&/g,
-                    "&amp;"
-                )
-
-                .replace(
-                    /</g,
-                    "&lt;"
-                )
-
-                .replace(
-                    />/g,
-                    "&gt;"
-                )
-
-                .replace(
-                    /"/g,
-                    "&quot;"
-                )
-
-                .replace(
-                    /'/g,
-                    "&#039;"
+                const data = await fetchJSON(
+                    `/api/dashboard/${encodeURIComponent(currentUserId)}`
                 );
 
+                if (data.success === false) {
+                    throw new Error(data.message || "تعذر تحميل الملف الشخصي.");
+                }
+
+                renderDashboard(data);
+
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("dashboard").style.display = "block";
+
+            } catch (error) {
+                console.error("Dashboard error:", error);
+
+                showError(
+                    error.message || "تعذر فتح الملف الشخصي. تأكد من السيرفر."
+                );
+            }
         }
 
+        function renderDashboard(data) {
+            const user = data.user || {};
+            const stats = data.statistics || data.stats || {};
+            const courses = Array.isArray(data.courses) ? data.courses : [];
+            const certificates = Array.isArray(data.certificates)
+                ? data.certificates
+                : [];
+
+            const name = user.name || user.full_name || "الطالب";
+            const email = user.email || "";
+
+            document.getElementById("studentName").textContent = name;
+            document.getElementById("studentEmail").textContent = email;
+            document.getElementById("avatar").textContent =
+                name.trim().charAt(0) || "Z";
+
+            document.getElementById("totalCourses").textContent =
+                safeNumber(stats.total_courses);
+
+            document.getElementById("completedCourses").textContent =
+                safeNumber(stats.completed_courses);
+
+            document.getElementById("totalCertificates").textContent =
+                safeNumber(stats.certificates ?? certificates.length);
+
+            renderCourses(courses);
+            renderCertificates(certificates);
+        }
+
+        function renderCourses(courses) {
+            const container = document.getElementById("coursesContainer");
+
+            if (!courses.length) {
+                container.innerHTML = `
+                    <div class="empty" style="grid-column:1/-1;">
+                        <div class="empty-icon">📚</div>
+                        <h3>لم تسجل في أي دورة حتى الآن</h3>
+                        <p>ابدأ رحلتك التعليمية مع زوام اليوم.</p>
+                        <a href="courses.html">استكشف الدورات</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = courses.map(course => {
+                const courseId = safeNumber(course.id ?? course.course_id);
+                const title = escapeHTML(course.title || course.course_title || "دورة تعليمية");
+                const category = escapeHTML(course.category || "تعليم");
+                const instructor = escapeHTML(course.instructor || course.instructor_name || "فريق زوام");
+
+                const progress = Math.max(
+                    0,
+                    Math.min(100, safeNumber(
+                        course.progress ?? course.progress_percent
+                    ))
+                );
+
+                const completed = progress >= 100 ||
+                    course.completed === true ||
+                    course.is_completed === 1;
+
+                return `
+                    <article class="course-card">
+                        <div class="course-image">Z</div>
+
+                        <div class="course-content">
+                            <span class="course-category">${category}</span>
+                            <h3 class="course-title">${title}</h3>
+                            <p class="course-instructor">👨‍🏫 ${instructor}</p>
+
+                            <div class="progress-area">
+                                <div class="progress-info">
+                                    <span>التقدم في الدورة</span>
+                                    <span class="progress-percent">${progress}%</span>
+                                </div>
+
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width:${progress}%"></div>
+                                </div>
+                            </div>
+
+                            <div class="course-buttons">
+                                <a class="btn btn-primary"
+                                   href="course-details.html?id=${courseId}">
+                                   ${completed ? "عرض الدورة" : "متابعة التعلم"}
+                                </a>
+
+                                <button class="btn btn-danger"
+                                        onclick="openDeleteModal(${courseId})">
+                                    إزالة الدورة
+                                </button>
+                            </div>
+
+                            ${
+                                completed
+                                ? `<button class="btn certificate-btn"
+                                           onclick="getCertificate(${courseId})">
+                                       🏆 الحصول على الشهادة
+                                   </button>`
+                                : ""
+                            }
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+                function renderCertificates(certificates) {
+            const container = document.getElementById("certificatesContainer");
+
+            if (!certificates.length) {
+                container.innerHTML = `
+                    <div class="empty" style="grid-column:1/-1;">
+                        <div class="empty-icon">🏆</div>
+                        <h3>لا توجد شهادات حتى الآن</h3>
+                        <p>أكمل إحدى الدورات لتحصل على شهادتك من زوام.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = certificates.map(certificate => {
+                const title = escapeHTML(
+                    certificate.course_title ||
+                    certificate.title ||
+                    "دورة تعليمية"
+                );
+
+                const certificateNumber = escapeHTML(
+                    certificate.certificate_number ||
+                    certificate.certificate_id ||
+                    certificate.id ||
+                    "غير محدد"
+                );
+
+                const date = escapeHTML(
+                    formatDate(
+                        certificate.issue_date ||
+                        certificate.created_at
+                    )
+                );
+
+                return `
+                    <div class="certificate-card">
+                        <h3>🏆 ${title}</h3>
+                        <div class="certificate-id">
+                            رقم الشهادة: ${certificateNumber}
+                        </div>
+                        <div class="certificate-date">
+                            تاريخ الإصدار: ${date}
+                        </div>
+                        <button class="btn btn-primary"
+                                style="width:100%;"
+                                onclick="getCertificate(${safeNumber(certificate.course_id || certificate.id)})">
+                            عرض الشهادة
+                        </button>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        async function getCertificate(courseId) {
+            if (!currentUserId || !courseId) {
+                alert("تعذر تحديد الدورة أو حساب المستخدم.");
+                return;
+            }
+
+            const language = confirm(
+                "اضغط موافق للحصول على الشهادة باللغة العربية.\n" +
+                "اضغط إلغاء للحصول عليها باللغة الإنجليزية."
+            ) ? "ar" : "en";
+
+            try {
+                const url =
+                    `${API}/api/certificates/${encodeURIComponent(currentUserId)}/${encodeURIComponent(courseId)}?language=${language}`;
+
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    const contentType =
+                        response.headers.get("content-type") || "";
+
+                    if (contentType.includes("application/json")) {
+                        const errorData = await response.json();
+                        throw new Error(
+                            errorData.message || "تعذر إنشاء الشهادة."
+                        );
+                    }
+
+                    throw new Error(
+                        "تعذر إنشاء الشهادة. تأكد من إعداد مسار الشهادات في السيرفر."
+                    );
+                }
+
+                const blob = await response.blob();
+                const fileUrl = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+
+                link.href = fileUrl;
+                link.download = `ZAWAM-Certificate-${courseId}.pdf`;
+
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+
+                URL.revokeObjectURL(fileUrl);
+
+            } catch (error) {
+                console.error("Certificate error:", error);
+                alert(error.message || "حدث خطأ أثناء تحميل الشهادة.");
+            }
+        }
+
+        function openDeleteModal(courseId) {
+            courseToDelete = courseId;
+            document.getElementById("deleteModal").classList.add("active");
+        }
+
+        function closeDeleteModal() {
+            courseToDelete = null;
+            document.getElementById("deleteModal").classList.remove("active");
+        }
+
+        async function confirmDelete() {
+            if (!courseToDelete || !currentUserId) {
+                closeDeleteModal();
+                return;
+            }
+
+            const button = document.getElementById("confirmDeleteBtn");
+            if (button) {
+                button.disabled = true;
+                button.textContent = "جارٍ الحذف...";
+            }
+
+            try {
+                await fetchJSON(
+                    `/api/enrollments/${encodeURIComponent(currentUserId)}/${encodeURIComponent(courseToDelete)}`,
+                    { method: "DELETE" }
+                );
+
+                closeDeleteModal();
+                await loadDashboard();
+
+            } catch (error) {
+                console.error("Delete course error:", error);
+                alert(
+                    error.message ||
+                    "تعذر حذف الدورة. قد يحتاج مسار الحذف إلى التحقق من السيرفر."
+                );
+
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = "نعم، احذف";
+                }
+            }
+        }
+
+        function getCourseInitial(title) {
+            if (!title) return "Z";
+            return String(title).trim().charAt(0).toUpperCase() || "Z";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const userId = getUserId();
+            const loggedIn = localStorage.getItem("zawamLoggedIn");
+
+            if (!userId || loggedIn !== "true") {
+                window.location.href = "login.html";
+                return;
+            }
+
+            currentUserId = userId;
+            loadDashboard();
+        });
+
+        document.getElementById("deleteModal").addEventListener("click", function (event) {
+            if (event.target === this) {
+                closeDeleteModal();
+            }
+        });
     </script>
 
 </body>
-
 </html>
-```
