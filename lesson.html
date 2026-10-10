@@ -316,6 +316,44 @@
         #lessonVideo {
             direction: ltr;
         }
+        ```css
+/* إصلاح عرض فيديو المحاضرة */
+.video-player {
+    width: 100%;
+    min-width: 0;
+}
+
+.video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+#lessonVideo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    direction: ltr;
+}
+
+#lessonVideo iframe {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    border: 0;
+}
+
+@media (max-width: 768px) {
+    .video-frame {
+        border-radius: 8px;
+    }
+}
+```
     </style>
 
 </head>
