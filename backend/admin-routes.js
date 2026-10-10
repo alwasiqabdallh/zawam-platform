@@ -902,5 +902,84 @@ router.get(
         }
     }
 );
+// ========================================
+// SPECIALTIES - GET
+// ========================================
 
+router.get("/specialties", requireAdmin, async (req, res) => {
+    try {
+        const [specialties] = await db.query(`
+            SELECT id, name, description, icon, created_at
+            FROM specialties
+            ORDER BY id ASC
+        `);
+
+        res.json({
+            success: true,
+            specialties
+        });
+    } catch (error) {
+        console.error("Load specialties error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "تعذر تحميل التخصصات."
+        });
+    }
+});
+
+// ========================================
+// SPECIALTIES - CREATE
+// ========================================
+
+router.post("/specialties", requireAdmin, async (req, res) => {
+    try {
+        const name = String(req.body.name || "").trim();
+        const description = String(req.body.description || "").trim();
+        const icon = String(req.body.icon || "📚").trim();
+
+        if (!name || !description) {
+            return res.status(400).json({
+                success: false,
+                message: "اسم التخصص والوصف مطلوبان."
+            });
+        }
+
+        const [existing] = await db.query(
+            "SELECT id FROM specialties WHERE name = ? LIMIT 1",
+            [name]
+        );
+
+        if (existing.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: "التخصص موجود بالفعل."
+            });
+        }
+
+        const [result] = await db.query(
+            `INSERT INTO specialties (name, description, icon)
+             VALUES (?, ?, ?)`,
+            [name, description, icon]
+        );
+
+        res.status(201).json({
+            success: true,
+            message: "تمت إضافة التخصص بنجاح.",
+            specialty: {
+                id: result.insertId,
+                name,
+                description,
+                icon
+            }
+        });
+    } catch (error) {
+        console.error("Add specialty error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "تعذرت إضافة التخصص."
+        });
+    }
+});
 module.exports = router;
