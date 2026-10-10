@@ -3,21 +3,15 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>الدورات | زوام التعليمية</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -25,163 +19,80 @@
     <!-- ================= NAVBAR ================= -->
 
     <header class="navbar">
-
         <div class="logo">
-
-            <div class="logo-icon">
-                Z
-            </div>
-
+            <div class="logo-icon">Z</div>
             <div>
                 <h2>زوام</h2>
                 <span>ZAWAM</span>
             </div>
-
         </div>
 
         <nav>
-
-            <a href="index.html">
-                الرئيسية
-            </a>
-
-            <a href="index.html#categories">
-                التخصصات
-            </a>
-
-            <a href="index.html#courses">
-                الدورات
-            </a>
-
-            <a href="index.html#about">
-                من نحن
-            </a>
-
+            <a href="index.html">الرئيسية</a>
+            <a href="index.html#categories">التخصصات</a>
+            <a href="index.html#courses">الدورات</a>
+            <a href="index.html#about">من نحن</a>
         </nav>
 
         <div class="nav-buttons">
-
-            <button class="language-btn">
-                English
-            </button>
-
+            <button class="language-btn" type="button">English</button>
             <div id="authButtons">
-
-                <a href="login.html" class="login-btn">
-                    تسجيل الدخول
-                </a>
-
+                <a href="login.html" class="login-btn">تسجيل الدخول</a>
             </div>
-
         </div>
-
     </header>
-
 
     <!-- ================= HEADER ================= -->
 
     <section class="courses-header">
-
         <div>
-
-            <span>
-                ZAWAM LEARNING
-            </span>
-
-            <h1 id="pageTitle">
-                استكشف جميع الدورات
-            </h1>
-
+            <span>ZAWAM LEARNING</span>
+            <h1 id="pageTitle">استكشف جميع الدورات</h1>
             <p id="pageDescription">
                 اختر الدورة المناسبة لك وابدأ رحلة التعلم وتطوير مهاراتك.
             </p>
-
         </div>
-
     </section>
-
 
     <!-- ================= SEARCH ================= -->
 
     <section class="course-search">
-
-        <input type="text" id="searchInput" placeholder="🔍 ابحث عن دورة...">
-
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="🔍 ابحث عن دورة..."
+            aria-label="البحث عن دورة">
     </section>
-
 
     <!-- ================= COURSES ================= -->
 
     <section class="course-page">
 
-        <!-- FILTERS -->
-
-        <div class="course-filters">
-
-            <button class="filter active" data-category="all">
-
+        <div class="course-filters" id="courseFilters">
+            <button class="filter active" type="button" data-category="all">
                 الكل
-
             </button>
-
-            <button class="filter" data-category="برمجة">
-
-                💻 البرمجة
-
-            </button>
-
-            <button class="filter" data-category="إنجليزي">
-
-                🇬🇧 الإنجليزية
-
-            </button>
-
-            <button class="filter" data-category="تصميم">
-
-                🎨 التصميم الجرافيكي
-
-            </button>
-
         </div>
 
-
-        <!-- COURSES CONTAINER -->
-
         <div class="all-courses" id="coursesContainer">
-
-            <p style="text-align:center;">
-                جاري تحميل الدورات...
+            <p style="text-align:center; padding:40px;">
+                جاري تحميل التخصصات والدورات...
             </p>
-
         </div>
 
     </section>
 
-
     <!-- ================= FOOTER ================= -->
 
     <footer>
-
         <div class="footer-content">
 
             <div class="footer-logo">
-
-                <div class="logo-icon">
-                    Z
-                </div>
-
+                <div class="logo-icon">Z</div>
                 <div>
-
-                    <h2>
-                        زوام
-                    </h2>
-
-                    <span>
-                        ZAWAM
-                    </span>
-
+                    <h2>زوام</h2>
+                    <span>ZAWAM</span>
                 </div>
-
             </div>
 
             <p>
@@ -200,734 +111,529 @@
         <div class="copyright">
             © 2026 ZAWAM Educational Platform
         </div>
-
     </footer>
-
 
     <!-- ================= SCRIPT ================= -->
 
     <script>
+        "use strict";
 
         let allCourses = [];
-
+        let allSpecialties = [];
         let selectedCategory = "all";
 
-
-        // ==============================
-        // التخصصات المسموح بها
-        // ==============================
-
-        const allowedCategories = [
-            "برمجة",
-            "إنجليزي",
-            "تصميم"
+        const defaultSpecialties = [
+            {
+                id: "default-programming",
+                name: "برمجة",
+                description: "تعلم البرمجة من الصفر وطوّر مهاراتك في تطوير المواقع والتطبيقات.",
+                icon: "💻"
+            },
+            {
+                id: "default-english",
+                name: "إنجليزي",
+                description: "طوّر مهاراتك في اللغة الإنجليزية بطريقة سهلة ومناسبة لمختلف المستويات.",
+                icon: "🇬🇧"
+            },
+            {
+                id: "default-design",
+                name: "تصميم",
+                description: "تعلم أساسيات التصميم الجرافيكي وتصميم واجهات المواقع والتطبيقات.",
+                icon: "🎨"
+            }
         ];
 
-
-        // ==============================
-        // تحويل الرابط إلى اسم التخصص
-        // ==============================
-
-        const categoryMap = {
-
+        // دعم الروابط القديمة، مثل ?category=programming
+        const legacyCategoryMap = {
             programming: "برمجة",
-
             english: "إنجليزي",
-
             design: "تصميم"
-
         };
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryFromURL = urlParams.get("category");
 
         // ==============================
-        // قراءة category من الرابط
+        // أدوات مساعدة
         // ==============================
 
-        const urlParams =
-            new URLSearchParams(
-                window.location.search
-            );
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, character => {
+                const entities = {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+                };
 
-        const categoryFromURL =
-            urlParams.get("category");
-
-
-        if (categoryFromURL) {
-
-            selectedCategory =
-                categoryMap[categoryFromURL] || "all";
-
+                return entities[character];
+            });
         }
 
+        function normalizeCategory(value) {
+            const category = String(value ?? "").trim();
+
+            const aliases = {
+                "البرمجة": "برمجة",
+                "اللغة الإنجليزية": "إنجليزي",
+                "الإنجليزية": "إنجليزي",
+                "English": "إنجليزي",
+                "Programming": "برمجة",
+                "Graphic Design": "تصميم",
+                "التصميم الجرافيكي": "تصميم"
+            };
+
+            return aliases[category] || category;
+        }
+
+        function getSpecialty(category) {
+            const normalized = normalizeCategory(category);
+
+            return allSpecialties.find(
+                specialty => normalizeCategory(specialty.name) === normalized
+            );
+        }
+
+        function getSpecialtyIcon(category) {
+            const specialty = getSpecialty(category);
+
+            if (specialty && specialty.icon) {
+                return specialty.icon;
+            }
+
+            return "📚";
+        }
+
+        function getImageClass(category) {
+            const normalized = normalizeCategory(category);
+
+            if (normalized === "برمجة") {
+                return "programming-bg";
+            }
+
+            if (normalized === "إنجليزي") {
+                return "english-bg";
+            }
+
+            if (normalized === "تصميم") {
+                return "design-bg";
+            }
+
+            return "programming-bg";
+        }
 
         // ==============================
-        // عناوين التخصصات
+        // قراءة التخصص من الرابط
         // ==============================
 
-        const categoryTitles = {
+        function resolveCategoryFromURL(value) {
+            if (!value || value === "all") {
+                return "all";
+            }
 
-            "برمجة":
-                "دورات البرمجة",
+            // الروابط القديمة
+            if (legacyCategoryMap[value]) {
+                return legacyCategoryMap[value];
+            }
 
-            "إنجليزي":
-                "دورات اللغة الإنجليزية",
+            // الروابط التي تحتوي اسم التخصص مباشرة
+            const matchedSpecialty = allSpecialties.find(
+                specialty =>
+                    normalizeCategory(specialty.name) === normalizeCategory(value)
+            );
 
-            "تصميم":
-                "دورات التصميم الجرافيكي"
-
-        };
-
-
-        // ==============================
-        // وصف التخصصات
-        // ==============================
-
-        const categoryDescriptions = {
-
-            "برمجة":
-                "تعلم البرمجة من الصفر وطوّر مهاراتك في تطوير المواقع والتطبيقات.",
-
-            "إنجليزي":
-                "طوّر مهاراتك في اللغة الإنجليزية بطريقة سهلة ومناسبة لمختلف المستويات.",
-
-            "تصميم":
-                "تعلم أساسيات التصميم الجرافيكي وتصميم واجهات المواقع والتطبيقات."
-
-        };
-
+            return matchedSpecialty ? matchedSpecialty.name : "all";
+        }
 
         // ==============================
-        // تحديث عنوان الصفحة
+        // تحميل التخصصات من قاعدة البيانات
+        // ==============================
+
+        async function loadSpecialties() {
+            try {
+                const response = await fetch("/api/specialties");
+
+                if (!response.ok) {
+                    throw new Error("فشل تحميل التخصصات");
+                }
+
+                const data = await response.json();
+
+                if (!data.success || !Array.isArray(data.specialties)) {
+                    throw new Error("بيانات التخصصات غير صحيحة");
+                }
+
+                allSpecialties = data.specialties
+                    .filter(specialty => specialty && specialty.name)
+                    .map(specialty => ({
+                        ...specialty,
+                        name: String(specialty.name).trim(),
+                        description: String(specialty.description || "").trim(),
+                        icon: String(specialty.icon || "📚").trim()
+                    }));
+
+                // إزالة الأسماء المكررة دون حذف أي تخصص مختلف
+                const uniqueSpecialties = [];
+                const seenNames = new Set();
+
+                for (const specialty of allSpecialties) {
+                    const key = normalizeCategory(specialty.name);
+
+                    if (!key || seenNames.has(key)) {
+                        continue;
+                    }
+
+                    seenNames.add(key);
+                    uniqueSpecialties.push(specialty);
+                }
+
+                allSpecialties = uniqueSpecialties;
+
+                // في حال كان الجدول فارغًا، نحافظ على الفلاتر الأساسية
+                if (allSpecialties.length === 0) {
+                    allSpecialties = [...defaultSpecialties];
+                }
+
+            } catch (error) {
+                console.error("SPECIALTIES ERROR:", error);
+
+                // عرض التخصصات الأساسية إذا تعذر الوصول إلى API
+                allSpecialties = [...defaultSpecialties];
+            }
+
+            selectedCategory = resolveCategoryFromURL(categoryFromURL);
+
+            renderSpecialtyFilters();
+            updatePageHeader();
+        }
+
+        // ==============================
+        // إنشاء أزرار التخصصات تلقائيًا
+        // ==============================
+
+        function renderSpecialtyFilters() {
+            const filtersContainer = document.getElementById("courseFilters");
+
+            const allButton = `
+                <button
+                    class="filter"
+                    type="button"
+                    data-category="all">
+                    الكل
+                </button>
+            `;
+
+            const specialtyButtons = allSpecialties.map(specialty => `
+                <button
+                    class="filter"
+                    type="button"
+                    data-category="${escapeHTML(specialty.name)}">
+                    ${escapeHTML(specialty.icon)} ${escapeHTML(specialty.name)}
+                </button>
+            `).join("");
+
+            filtersContainer.innerHTML = allButton + specialtyButtons;
+
+            filtersContainer.querySelectorAll(".filter").forEach(button => {
+                button.addEventListener("click", () => {
+                    selectedCategory = button.dataset.category;
+
+                    updateURL();
+                    updatePageHeader();
+                    updateActiveFilter();
+                    applyFilters();
+                });
+            });
+
+            updateActiveFilter();
+        }
+
+        function updateActiveFilter() {
+            document.querySelectorAll("#courseFilters .filter").forEach(button => {
+                button.classList.toggle(
+                    "active",
+                    button.dataset.category === selectedCategory
+                );
+            });
+        }
+
+        // ==============================
+        // عنوان ووصف الصفحة
         // ==============================
 
         function updatePageHeader() {
-
-            const title =
-                document.getElementById("pageTitle");
-
-            const description =
-                document.getElementById("pageDescription");
-
+            const title = document.getElementById("pageTitle");
+            const description = document.getElementById("pageDescription");
 
             if (selectedCategory === "all") {
-
-                title.textContent =
-                    "استكشف جميع الدورات";
-
+                title.textContent = "استكشف جميع الدورات";
                 description.textContent =
                     "اختر الدورة المناسبة لك وابدأ رحلة التعلم وتطوير مهاراتك.";
-
-            } else {
-
-                title.textContent =
-                    categoryTitles[selectedCategory];
-
-                description.textContent =
-                    categoryDescriptions[selectedCategory];
-
+                return;
             }
 
+            const specialty = getSpecialty(selectedCategory);
+
+            if (specialty) {
+                title.textContent = "دورات " + specialty.name;
+                description.textContent =
+                    specialty.description ||
+                    "استكشف الدورات المتاحة في تخصص " + specialty.name + ".";
+            } else {
+                title.textContent = "استكشف جميع الدورات";
+                description.textContent =
+                    "اختر الدورة المناسبة لك وابدأ رحلة التعلم وتطوير مهاراتك.";
+            }
         }
 
+        // ==============================
+        // تحديث الرابط
+        // ==============================
 
-        updatePageHeader();
+        function updateURL() {
+            const newURL = new URL(window.location.href);
 
+            if (selectedCategory === "all") {
+                newURL.searchParams.delete("category");
+            } else {
+                // نخزن اسم التخصص نفسه لدعم التخصصات الجديدة
+                newURL.searchParams.set("category", selectedCategory);
+            }
+
+            window.history.pushState({}, "", newURL);
+        }
+
+        window.addEventListener("popstate", () => {
+            const params = new URLSearchParams(window.location.search);
+
+            selectedCategory = resolveCategoryFromURL(params.get("category"));
+
+            updatePageHeader();
+            updateActiveFilter();
+            applyFilters();
+        });
 
         // ==============================
         // تحميل الدورات من السيرفر
         // ==============================
 
         async function loadCourses() {
-
-            const container =
-                document.getElementById(
-                    "coursesContainer"
-                );
-
+            const container = document.getElementById("coursesContainer");
 
             try {
-
-                const response =
-                    await fetch("/api/courses");
-
+                const response = await fetch("/api/courses");
 
                 if (!response.ok) {
-
-                    throw new Error(
-                        "فشل تحميل الدورات"
-                    );
-
+                    throw new Error("فشل تحميل الدورات");
                 }
 
+                const data = await response.json();
 
-                const data =
-                    await response.json();
-
-
-                if (
-                    !data.success ||
-                    !Array.isArray(data.courses)
-                ) {
-
-                    throw new Error(
-                        "بيانات الدورات غير صحيحة"
-                    );
-
+                if (!data.success || !Array.isArray(data.courses)) {
+                    throw new Error("بيانات الدورات غير صحيحة");
                 }
 
-
-                // نعرض فقط التخصصات الثلاثة
-      
-function normalizeCategory(category) {
-    const value = String(category || "")
-        .trim()
-        .toLowerCase();
-
-    if (["برمجة", "البرمجة", "programming", "programming language"].includes(value)) {
-        return "برمجة";
-    }
-
-    if (["إنجليزي", "انجليزي", "الإنجليزية", "الانجليزية", "english"].includes(value)) {
-        return "إنجليزي";
-    }
-
-    if (["تصميم", "التصميم", "التصميم الجرافيكي", "design", "graphic design"].includes(value)) {
-        return "تصميم";
-    }
-
-    return value;
-}
-
-allCourses = data.courses.map(course => ({
-    ...course,
-    category: normalizeCategory(course.category)
-}));
-
-
-
-                // تفعيل الفلتر الصحيح
-
-                document
-                    .querySelectorAll(".filter")
-                    .forEach(button => {
-
-                        button.classList.remove(
-                            "active"
-                        );
-
-
-                        if (
-                            button.dataset.category ===
-                            selectedCategory
-                        ) {
-
-                            button.classList.add(
-                                "active"
-                            );
-
-                        }
-
-                    });
-
+                // لا نستبعد التخصصات الجديدة
+                allCourses = data.courses;
 
                 applyFilters();
 
-            }
-
-
-            catch (error) {
-
-                console.error(
-                    "COURSES ERROR:",
-                    error
-                );
-
+            } catch (error) {
+                console.error("COURSES ERROR:", error);
 
                 container.innerHTML = `
-
-                    <p
-                        style="
-                            text-align:center;
-                            color:red;
-                            padding:40px;
-                        ">
-
-                        تعذر تحميل الدورات.
-                        تأكد من تشغيل سيرفر زوام.
-
+                    <p style="text-align:center; color:red; padding:40px;">
+                        تعذر تحميل الدورات. تأكد من اتصال الموقع بالخادم.
                     </p>
-
                 `;
-
             }
-
         }
-
 
         // ==============================
         // البحث + التخصص
         // ==============================
 
         function applyFilters() {
+            const searchText = document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase()
+                .trim();
 
-            const searchInput =
-                document.getElementById(
-                    "searchInput"
-                );
+            const filteredCourses = allCourses.filter(course => {
+                const title = String(course.title || "").toLowerCase();
+                const description = String(course.description || "").toLowerCase();
+                const category = normalizeCategory(course.category);
 
+                const matchesSearch =
+                    title.includes(searchText) ||
+                    description.includes(searchText) ||
+                    category.toLowerCase().includes(searchText);
 
-            const searchText =
-                searchInput.value
-                    .toLowerCase()
-                    .trim();
+                const matchesCategory =
+                    selectedCategory === "all" ||
+                    category === normalizeCategory(selectedCategory);
 
-
-            const filteredCourses =
-                allCourses.filter(course => {
-
-
-                    const title =
-                        (course.title || "")
-                            .toLowerCase();
-
-
-                    const description =
-                        (course.description || "")
-                            .toLowerCase();
-
-
-                    const category =
-                        (course.category || "")
-                            .toLowerCase();
-
-
-                    const matchesSearch =
-
-                        title.includes(searchText) ||
-
-                        description.includes(searchText) ||
-
-                        category.includes(searchText);
-
-
-                    const matchesCategory =
-
-                        selectedCategory === "all" ||
-
-                        course.category ===
-                        selectedCategory;
-
-
-                    return (
-                        matchesSearch &&
-                        matchesCategory
-                    );
-
-                });
-
+                return matchesSearch && matchesCategory;
+            });
 
             displayCourses(filteredCourses);
-
         }
 
-
         // ==============================
-        // عرض الكورسات
+        // عرض الدورات
         // ==============================
 
         function displayCourses(courses) {
-
-            const container =
-                document.getElementById(
-                    "coursesContainer"
-                );
-
+            const container = document.getElementById("coursesContainer");
 
             if (courses.length === 0) {
-
                 container.innerHTML = `
-
-                    <p
-                        style="
-                            text-align:center;
-                            padding:40px;
-                        ">
-
+                    <p style="text-align:center; padding:40px;">
                         لا توجد دورات في هذا التخصص حالياً.
-
                     </p>
-
                 `;
-
                 return;
-
             }
 
+            container.innerHTML = courses.map(course => {
+                const category = normalizeCategory(course.category);
+                const icon = getSpecialtyIcon(category);
+                const imageClass = getImageClass(category);
 
-            container.innerHTML =
+                const courseId = Number(course.id);
 
-                courses.map(course => {
+                // تجاهل أي سجل لا يحتوي معرف دورة صالحًا
+                if (!Number.isInteger(courseId) || courseId <= 0) {
+                    return "";
+                }
 
+                return `
+                    <div class="course-card">
 
-                    let icon = "📚";
-
-                    let imageClass =
-                        "programming-bg";
-
-
-                    // البرمجة
-
-                    if (
-                        course.category === "برمجة"
-                    ) {
-
-                        icon = "💻";
-
-                        imageClass =
-                            "programming-bg";
-
-                    }
-
-
-                    // الإنجليزية
-
-                    else if (
-                        course.category === "إنجليزي"
-                    ) {
-
-                        icon = "🇬🇧";
-
-                        imageClass =
-                            "english-bg";
-
-                    }
-
-
-                    // التصميم
-
-                    else if (
-                        course.category === "تصميم"
-                    ) {
-
-                        icon = "🎨";
-
-                        imageClass =
-                            "design-bg";
-
-                    }
-
-
-                    return `
-
-                        <div class="course-card">
-
-                            <div
-                                class="course-image ${imageClass}">
-
-                                <div
-                                    class="course-image-icon">
-
-                                    ${icon}
-
-                                </div>
-
+                        <div class="course-image ${imageClass}">
+                            <div class="course-image-icon">
+                                ${escapeHTML(icon)}
                             </div>
-
-
-                            <div class="course-body">
-
-                                <span
-                                    class="course-category">
-
-                                    ${course.category || "عام"}
-
-                                </span>
-
-
-                                <h3>
-
-                                    ${course.title || "دورة تعليمية"}
-
-                                </h3>
-
-
-                                <p>
-
-                                    ${course.description ||
-                        "دورة تعليمية مميزة من منصة زوام."
-                        }
-
-                                </p>
-
-
-                                <div class="course-info">
-
-                                    <span>
-
-                                        👨‍🏫
-                                        ${course.instructor ||
-                        "زوام أكاديمي"
-                        }
-
-                                    </span>
-
-
-                                    <span>
-
-                                        ⏱
-                                        ${course.duration ||
-                        "غير محدد"
-                        }
-
-                                    </span>
-
-                                </div>
-
-
-                                <button
-                                    class="course-btn"
-                                    onclick="openCourse(${course.id})">
-
-                                    مشاهدة الدورة
-
-                                </button>
-
-                            </div>
-
                         </div>
 
-                    `;
+                        <div class="course-body">
 
-                }).join("");
+                            <span class="course-category">
+                                ${escapeHTML(category || "عام")}
+                            </span>
 
+                            <h3>
+                                ${escapeHTML(course.title || "دورة تعليمية")}
+                            </h3>
+
+                            <p>
+                                ${escapeHTML(
+                                    course.description ||
+                                    "دورة تعليمية مميزة من منصة زوام."
+                                )}
+                            </p>
+
+                            <div class="course-info">
+                                <span>
+                                    👨‍🏫 ${escapeHTML(course.instructor || "زوام أكاديمي")}
+                                </span>
+
+                                <span>
+                                    ⏱ ${escapeHTML(course.duration || "غير محدد")}
+                                </span>
+                            </div>
+
+                            <button
+                                class="course-btn"
+                                type="button"
+                                onclick="openCourse(${courseId})">
+                                مشاهدة الدورة
+                            </button>
+
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            if (!container.innerHTML.trim()) {
+                container.innerHTML = `
+                    <p style="text-align:center; padding:40px;">
+                        لا توجد دورات متاحة للعرض حاليًا.
+                    </p>
+                `;
+            }
         }
-
 
         // ==============================
         // البحث أثناء الكتابة
         // ==============================
 
-        document
-            .getElementById("searchInput")
-            .addEventListener(
-                "input",
-                applyFilters
-            );
-
-
-        // ==============================
-        // أزرار التخصصات
-        // ==============================
-
-        document
-            .querySelectorAll(".filter")
-            .forEach(button => {
-
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-
-                        document
-                            .querySelectorAll(".filter")
-                            .forEach(btn => {
-
-                                btn.classList.remove(
-                                    "active"
-                                );
-
-                            });
-
-
-                        this.classList.add(
-                            "active"
-                        );
-
-
-                        selectedCategory =
-                            this.dataset.category;
-
-
-                        // تحديث الرابط
-
-                        const newURL =
-                            new URL(
-                                window.location.href
-                            );
-
-
-                        if (
-                            selectedCategory === "all"
-                        ) {
-
-                            newURL.searchParams.delete(
-                                "category"
-                            );
-
-                        }
-
-                        else {
-
-                            let categoryKey = "";
-
-
-                            if (
-                                selectedCategory === "برمجة"
-                            ) {
-
-                                categoryKey =
-                                    "programming";
-
-                            }
-
-
-                            else if (
-                                selectedCategory === "إنجليزي"
-                            ) {
-
-                                categoryKey =
-                                    "english";
-
-                            }
-
-
-                            else if (
-                                selectedCategory === "تصميم"
-                            ) {
-
-                                categoryKey =
-                                    "design";
-
-                            }
-
-
-                            newURL.searchParams.set(
-                                "category",
-                                categoryKey
-                            );
-
-                        }
-
-
-                        window.history.pushState(
-                            {},
-                            "",
-                            newURL
-                        );
-
-
-                        updatePageHeader();
-
-                        applyFilters();
-
-                    }
-                );
-
-            });
-
+        document.getElementById("searchInput").addEventListener(
+            "input",
+            applyFilters
+        );
 
         // ==============================
         // فتح تفاصيل الدورة
         // ==============================
 
         function openCourse(id) {
-
-            window.location.href =
-                `course-details.html?id=${id}`;
-
+            window.location.href = `course-details.html?id=${id}`;
         }
-
 
         // ==============================
         // تسجيل الدخول
         // ==============================
 
-        const authButtons =
-            document.getElementById(
-                "authButtons"
-            );
+        function updateAuthButtons() {
+            const authButtons = document.getElementById("authButtons");
 
+            const loggedIn = localStorage.getItem("zawamLoggedIn");
+            const userName = localStorage.getItem("zawamUserName");
 
-        if (authButtons) {
-
-            const loggedIn =
-                localStorage.getItem(
-                    "zawamLoggedIn"
-                );
-
-
-            const userName =
-                localStorage.getItem(
-                    "zawamUserName"
-                );
-
-
-            if (
-                loggedIn === "true" &&
-                userName
-            ) {
-
+            if (loggedIn === "true" && userName) {
                 authButtons.innerHTML = `
-
                     <span style="margin-left:10px;">
-
-                        مرحباً، ${userName}
-
+                        مرحباً، ${escapeHTML(userName)}
                     </span>
-
 
                     <button
                         class="login-btn"
+                        type="button"
                         onclick="logout()">
-
                         تسجيل الخروج
-
                     </button>
-
                 `;
-
             }
-
         }
-
 
         // ==============================
         // تسجيل الخروج
         // ==============================
 
         function logout() {
+            localStorage.removeItem("zawamLoggedIn");
+            localStorage.removeItem("zawamUserName");
+            localStorage.removeItem("zawamUserEmail");
 
-            localStorage.removeItem(
-                "zawamLoggedIn"
-            );
-
-
-            localStorage.removeItem(
-                "zawamUserName"
-            );
-
-
-            localStorage.removeItem(
-                "zawamUserEmail"
-            );
-
-
-            window.location.href =
-                "index.html";
-
+            window.location.href = "index.html";
         }
-
 
         // ==============================
         // تشغيل الصفحة
         // ==============================
 
-        loadCourses();
+        async function initializeCoursesPage() {
+            await loadSpecialties();
+            await loadCourses();
+            updateAuthButtons();
+        }
 
+        initializeCoursesPage();
     </script>
 
 </body>
-
 </html>
 ```
