@@ -377,12 +377,11 @@
 
 
                 // نعرض فقط التخصصات الثلاثة
-                allCourses =
-                    data.courses.filter(course =>
-                        allowedCategories.includes(
-                            course.category
-                        )
-                    );
+                allCourses = data.courses.filter(course =>
+    allowedCategories.includes(
+        String(course.category || "").trim()
+    )
+);
 
 
                 // تفعيل الفلتر الصحيح
