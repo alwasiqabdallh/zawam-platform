@@ -377,11 +377,36 @@
 
 
                 // نعرض فقط التخصصات الثلاثة
-                allCourses = data.courses.filter(course =>
-    allowedCategories.includes(
-        String(course.category || "").trim()
-    )
-);
+      
+function normalizeCategory(category) {
+    const value = String(category || "")
+        .trim()
+        .toLowerCase();
+
+    if (["برمجة", "البرمجة", "programming", "programming language"].includes(value)) {
+        return "برمجة";
+    }
+
+    if (["إنجليزي", "انجليزي", "الإنجليزية", "الانجليزية", "english"].includes(value)) {
+        return "إنجليزي";
+    }
+
+    if (["تصميم", "التصميم", "التصميم الجرافيكي", "design", "graphic design"].includes(value)) {
+        return "تصميم";
+    }
+
+    return value;
+}
+
+allCourses = data.courses
+    .map(course => ({
+        ...course,
+        category: normalizeCategory(course.category)
+    }))
+    .filter(course =>
+        allowedCategories.includes(course.category)
+    );
+
 
 
                 // تفعيل الفلتر الصحيح
