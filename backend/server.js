@@ -3441,7 +3441,31 @@ app.use(
 // ============================================================
 // START SERVER
 // ============================================================
+// ============================================================
+// PUBLIC SPECIALTIES
+// ============================================================
 
+app.get("/api/specialties", async (req, res) => {
+    try {
+        const [specialties] = await db.query(
+            `SELECT id, name, description, icon
+             FROM specialties
+             ORDER BY id ASC`
+        );
+
+        res.json({
+            success: true,
+            specialties
+        });
+    } catch (error) {
+        console.error("Public specialties error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "تعذر تحميل التخصصات."
+        });
+    }
+});
 app.listen(
     PORT,
     () => {
