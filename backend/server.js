@@ -3247,16 +3247,9 @@ body {
             // ====================================================
             // LOAD HTML
             // ====================================================
-
-
-
-            await page.setContent(certificateHtml, {
-                waitUntil: "load",
-                timeout: 60000
-            });
-
-
-
+            
+await page.setContent(certificateHtml, { waitUntil: "networkidle0" });
+        
             // ====================================================
             // WAIT FOR FONTS
             // ====================================================
