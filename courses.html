@@ -398,14 +398,10 @@ function normalizeCategory(category) {
     return value;
 }
 
-allCourses = data.courses
-    .map(course => ({
-        ...course,
-        category: normalizeCategory(course.category)
-    }))
-    .filter(course =>
-        allowedCategories.includes(course.category)
-    );
+allCourses = data.courses.map(course => ({
+    ...course,
+    category: normalizeCategory(course.category)
+}));
 
 
 
