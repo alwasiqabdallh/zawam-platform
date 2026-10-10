@@ -318,6 +318,8 @@
         }
         ```css
 /* إصلاح عرض فيديو المحاضرة */
+```css
+/* تكبير مساحة عرض الفيديو */
 .video-player {
     width: 100%;
     min-width: 0;
@@ -327,6 +329,7 @@
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
+    min-height: 300px;
     background: #000;
     overflow: hidden;
     border-radius: 12px;
@@ -334,7 +337,8 @@
 
 #lessonVideo {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     direction: ltr;
@@ -342,14 +346,18 @@
 
 #lessonVideo iframe {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
     width: 100% !important;
     height: 100% !important;
     border: 0;
 }
 
+/* ضبط الفيديو على الهاتف */
 @media (max-width: 768px) {
     .video-frame {
+        min-height: 0;
+        aspect-ratio: 16 / 9;
         border-radius: 8px;
     }
 }
