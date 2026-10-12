@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -40,9 +41,7 @@
             display: flex;
         }
 
-        /* =========================
-           SIDEBAR
-        ========================= */
+        /* SIDEBAR */
 
         .sidebar {
             width: 260px;
@@ -55,8 +54,6 @@
             bottom: 0;
             z-index: 100;
             padding: 25px 15px;
-
-            /* التعديل: جعل محتوى القائمة مرتبًا عموديًا */
             display: flex;
             flex-direction: column;
         }
@@ -116,11 +113,8 @@
 
         .logout-btn {
             width: 100%;
-
-            /* التعديل الأساسي */
             position: static;
             margin-top: auto;
-
             border: 1px solid #394666;
             background: transparent;
             color: #ffb4b4;
@@ -133,9 +127,7 @@
             background: #3a1e2a;
         }
 
-        /* =========================
-           MAIN
-        ========================= */
+        /* MAIN */
 
         .main {
             width: calc(100% - 260px);
@@ -180,9 +172,7 @@
             color: #7b8498;
         }
 
-        /* =========================
-           SECTIONS
-        ========================= */
+        /* SECTIONS */
 
         .section {
             display: none;
@@ -203,9 +193,7 @@
             font-size: 21px;
         }
 
-        /* =========================
-           STATS
-        ========================= */
+        /* STATS */
 
         .stats {
             display: grid;
@@ -233,9 +221,7 @@
             color: #101a33;
         }
 
-        /* =========================
-           BUTTONS
-        ========================= */
+        /* BUTTONS */
 
         .btn {
             border: 0;
@@ -274,9 +260,7 @@
             font-size: 12px;
         }
 
-        /* =========================
-           TABLE
-        ========================= */
+        /* TABLE */
 
         .table-container {
             background: white;
@@ -319,9 +303,7 @@
             flex-wrap: wrap;
         }
 
-        /* =========================
-           FORMS
-        ========================= */
+        /* FORMS */
 
         .form-card {
             background: white;
@@ -382,9 +364,7 @@
             gap: 10px;
         }
 
-        /* =========================
-           MODAL
-        ========================= */
+        /* MODAL */
 
         .modal {
             position: fixed;
@@ -430,9 +410,7 @@
             font-size: 20px;
         }
 
-        /* =========================
-           TOAST
-        ========================= */
+        /* TOAST */
 
         .toast {
             position: fixed;
@@ -460,9 +438,7 @@
             border-right: 5px solid #d64545;
         }
 
-        /* =========================
-           LOADING
-        ========================= */
+        /* LOADING */
 
         .loading {
             text-align: center;
@@ -476,9 +452,7 @@
             color: #7b8498;
         }
 
-        /* =========================
-           RESPONSIVE
-        ========================= */
+        /* RESPONSIVE */
 
         @media (max-width: 1000px) {
             .stats {
@@ -540,10 +514,6 @@
 
     <div class="layout">
 
-        <!-- =========================
-             SIDEBAR
-        ========================= -->
-
         <aside class="sidebar">
 
             <div class="logo">
@@ -582,18 +552,11 @@
 
         </aside>
 
-
-        <!-- =========================
-             MAIN
-        ========================= -->
-
         <main class="main">
 
             <div class="topbar">
 
-                <h1 id="pageTitle">
-                    لوحة تحكم ZAWAM
-                </h1>
+                <h1 id="pageTitle">لوحة تحكم ZAWAM</h1>
 
                 <div class="admin-info">
 
@@ -603,18 +566,13 @@
                         <small>مدير المنصة</small>
                     </div>
 
-                    <div class="admin-avatar">
-                        Z
-                    </div>
+                    <div class="admin-avatar">Z</div>
 
                 </div>
 
             </div>
 
-
-            <!-- =========================
-                 DASHBOARD
-            ========================= -->
+            <!-- DASHBOARD -->
 
             <section id="dashboard" class="section active">
 
@@ -625,43 +583,23 @@
                 <div class="stats">
 
                     <div class="stat-card">
-                        <div class="stat-title">
-                            إجمالي الدورات
-                        </div>
-
-                        <div class="stat-number" id="statCourses">
-                            0
-                        </div>
+                        <div class="stat-title">إجمالي الدورات</div>
+                        <div class="stat-number" id="statCourses">0</div>
                     </div>
 
                     <div class="stat-card">
-                        <div class="stat-title">
-                            إجمالي المحاضرات
-                        </div>
-
-                        <div class="stat-number" id="statLessons">
-                            0
-                        </div>
+                        <div class="stat-title">إجمالي المحاضرات</div>
+                        <div class="stat-number" id="statLessons">0</div>
                     </div>
 
                     <div class="stat-card">
-                        <div class="stat-title">
-                            إجمالي الطلاب
-                        </div>
-
-                        <div class="stat-number" id="statUsers">
-                            0
-                        </div>
+                        <div class="stat-title">إجمالي الطلاب</div>
+                        <div class="stat-number" id="statUsers">0</div>
                     </div>
 
                     <div class="stat-card">
-                        <div class="stat-title">
-                            الشهادات
-                        </div>
-
-                        <div class="stat-number" id="statCertificates">
-                            0
-                        </div>
+                        <div class="stat-title">الشهادات</div>
+                        <div class="stat-number" id="statCertificates">0</div>
                     </div>
 
                 </div>
@@ -680,23 +618,16 @@
 
             </section>
 
-
-            <!-- =========================
-                 COURSES
-            ========================= -->
+            <!-- COURSES -->
 
             <section id="courses" class="section">
 
                 <div class="section-header">
-
-                    <h2>
-                        إدارة الدورات
-                    </h2>
+                    <h2>إدارة الدورات</h2>
 
                     <button class="btn btn-gold" onclick="openCourseModal()">
                         + إضافة دورة
                     </button>
-
                 </div>
 
                 <div class="table-container">
@@ -704,7 +635,6 @@
                     <table>
 
                         <thead>
-
                             <tr>
                                 <th>#</th>
                                 <th>اسم الدورة</th>
@@ -713,17 +643,14 @@
                                 <th>المدة</th>
                                 <th>الإجراءات</th>
                             </tr>
-
                         </thead>
 
                         <tbody id="coursesTable">
-
                             <tr>
                                 <td colspan="6" class="loading">
                                     جاري تحميل الدورات...
                                 </td>
                             </tr>
-
                         </tbody>
 
                     </table>
@@ -732,39 +659,26 @@
 
             </section>
 
-
-            <!-- =========================
-                 LESSONS
-            ========================= -->
+            <!-- LESSONS -->
 
             <section id="lessons" class="section">
 
                 <div class="section-header">
-
-                    <h2>
-                        إدارة المحاضرات
-                    </h2>
+                    <h2>إدارة المحاضرات</h2>
 
                     <button class="btn btn-gold" onclick="openLessonModal()">
                         + إضافة محاضرة
                     </button>
-
                 </div>
 
                 <div class="form-card">
 
                     <div class="form-group">
 
-                        <label>
-                            اختر الدورة لعرض محاضراتها
-                        </label>
+                        <label>اختر الدورة لعرض محاضراتها</label>
 
                         <select id="lessonCourseFilter" onchange="loadLessonsByCourse()">
-
-                            <option value="">
-                                -- اختر الدورة --
-                            </option>
-
+                            <option value="">-- اختر الدورة --</option>
                         </select>
 
                     </div>
@@ -776,7 +690,6 @@
                     <table>
 
                         <thead>
-
                             <tr>
                                 <th>#</th>
                                 <th>المحاضرة</th>
@@ -785,17 +698,14 @@
                                 <th>المدة</th>
                                 <th>الإجراءات</th>
                             </tr>
-
                         </thead>
 
                         <tbody id="lessonsTable">
-
                             <tr>
                                 <td colspan="6" class="empty">
                                     اختر دورة لعرض المحاضرات
                                 </td>
                             </tr>
-
                         </tbody>
 
                     </table>
@@ -804,19 +714,12 @@
 
             </section>
 
-
-            <!-- =========================
-                 USERS
-            ========================= -->
+            <!-- USERS -->
 
             <section id="users" class="section">
 
                 <div class="section-header">
-
-                    <h2>
-                        الطلاب
-                    </h2>
-
+                    <h2>الطلاب</h2>
                 </div>
 
                 <div class="table-container">
@@ -824,7 +727,6 @@
                     <table>
 
                         <thead>
-
                             <tr>
                                 <th>#</th>
                                 <th>الاسم</th>
@@ -833,17 +735,14 @@
                                 <th>تاريخ التسجيل</th>
                                 <th>الإجراء</th>
                             </tr>
-
                         </thead>
 
                         <tbody id="usersTable">
-
                             <tr>
                                 <td colspan="6" class="loading">
                                     جاري تحميل الطلاب...
                                 </td>
                             </tr>
-
                         </tbody>
 
                     </table>
@@ -852,19 +751,12 @@
 
             </section>
 
-
-            <!-- =========================
-                 CERTIFICATES
-            ========================= -->
+            <!-- CERTIFICATES -->
 
             <section id="certificates" class="section">
 
                 <div class="section-header">
-
-                    <h2>
-                        الشهادات
-                    </h2>
-
+                    <h2>الشهادات</h2>
                 </div>
 
                 <div class="table-container">
@@ -872,7 +764,6 @@
                     <table>
 
                         <thead>
-
                             <tr>
                                 <th>#</th>
                                 <th>رقم الشهادة</th>
@@ -882,17 +773,14 @@
                                 <th>تاريخ الإصدار</th>
                                 <th>الإجراء</th>
                             </tr>
-
                         </thead>
 
                         <tbody id="certificatesTable">
-
                             <tr>
                                 <td colspan="7" class="loading">
                                     جاري تحميل الشهادات...
                                 </td>
                             </tr>
-
                         </tbody>
 
                     </table>
@@ -905,10 +793,7 @@
 
     </div>
 
-
-    <!-- =========================
-         COURSE MODAL
-    ========================= -->
+    <!-- COURSE MODAL -->
 
     <div class="modal" id="courseModal">
 
@@ -916,13 +801,9 @@
 
             <div class="modal-header">
 
-                <h3 id="courseModalTitle">
-                    إضافة دورة
-                </h3>
+                <h3 id="courseModalTitle">إضافة دورة</h3>
 
-                <button class="close" onclick="closeCourseModal()">
-                    ×
-                </button>
+                <button class="close" onclick="closeCourseModal()">×</button>
 
             </div>
 
@@ -934,33 +815,29 @@
 
                     <div class="form-group">
 
-                        <label>
-                            اسم الدورة *
-                        </label>
+                        <label>اسم الدورة *</label>
 
-                        <input type="text" id="courseTitle" placeholder="مثال: مقدمة في البرمجة" required>
+                        <input
+                            type="text"
+                            id="courseTitle"
+                            placeholder="مثال: مقدمة في البرمجة"
+                            required>
 
                     </div>
 
                     <div class="form-group">
 
-                        <label>
-                            التصنيف
-                        </label>
+                        <label>التصنيف</label>
 
                         <select id="courseCategory">
 
-                            <option value="برمجة">
-                                برمجة
-                            </option>
+                            <option value="برمجة">💻 برمجة</option>
 
-                            <option value="إنجليزي">
-                                إنجليزي
-                            </option>
+                            <option value="إنجليزي">🇬🇧 إنجليزي</option>
 
-                            <option value="تصميم">
-                                تصميم
-                            </option>
+                            <option value="تصميم">🎨 تصميم</option>
+
+                            <option value="الأمن السيبراني">🛡️ الأمن السيبراني</option>
 
                         </select>
 
@@ -968,41 +845,44 @@
 
                     <div class="form-group">
 
-                        <label>
-                            المدرب
-                        </label>
+                        <label>المدرب</label>
 
-                        <input type="text" id="courseInstructor" placeholder="اسم المدرب">
+                        <input
+                            type="text"
+                            id="courseInstructor"
+                            placeholder="اسم المدرب">
 
                     </div>
 
                     <div class="form-group">
 
-                        <label>
-                            مدة الدورة
-                        </label>
+                        <label>مدة الدورة</label>
 
-                        <input type="text" id="courseDuration" placeholder="مثال: 12 ساعة">
-
-                    </div>
-
-                    <div class="form-group full">
-
-                        <label>
-                            رابط صورة الدورة
-                        </label>
-
-                        <input type="text" id="courseImage" placeholder="https://...">
+                        <input
+                            type="text"
+                            id="courseDuration"
+                            placeholder="مثال: 12 ساعة">
 
                     </div>
 
                     <div class="form-group full">
 
-                        <label>
-                            وصف الدورة
-                        </label>
+                        <label>رابط صورة الدورة</label>
 
-                        <textarea id="courseDescription" placeholder="اكتب وصف الدورة..."></textarea>
+                        <input
+                            type="text"
+                            id="courseImage"
+                            placeholder="https://...">
+
+                    </div>
+
+                    <div class="form-group full">
+
+                        <label>وصف الدورة</label>
+
+                        <textarea
+                            id="courseDescription"
+                            placeholder="اكتب وصف الدورة..."></textarea>
 
                     </div>
 
@@ -1026,10 +906,7 @@
 
     </div>
 
-
-    <!-- =========================
-         LESSON MODAL
-    ========================= -->
+    <!-- LESSON MODAL -->
 
     <div class="modal" id="lessonModal">
 
@@ -1037,13 +914,9 @@
 
             <div class="modal-header">
 
-                <h3 id="lessonModalTitle">
-                    إضافة محاضرة
-                </h3>
+                <h3 id="lessonModalTitle">إضافة محاضرة</h3>
 
-                <button class="close" onclick="closeLessonModal()">
-                    ×
-                </button>
+                <button class="close" onclick="closeLessonModal()">×</button>
 
             </div>
 
@@ -1055,67 +928,67 @@
 
                     <div class="form-group full">
 
-                        <label>
-                            الدورة *
-                        </label>
+                        <label>الدورة *</label>
 
                         <select id="lessonCourse" required>
-
-                            <option value="">
-                                -- اختر الدورة --
-                            </option>
-
+                            <option value="">-- اختر الدورة --</option>
                         </select>
 
                     </div>
 
                     <div class="form-group full">
 
-                        <label>
-                            عنوان المحاضرة *
-                        </label>
+                        <label>عنوان المحاضرة *</label>
 
-                        <input type="text" id="lessonTitle" placeholder="مثال: ماهي البرمجة؟" required>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            رابط الفيديو
-                        </label>
-
-                        <input type="text" id="lessonVideo" placeholder="https://youtube.com/...">
+                        <input
+                            type="text"
+                            id="lessonTitle"
+                            placeholder="مثال: ماهي البرمجة؟"
+                            required>
 
                     </div>
 
                     <div class="form-group">
 
-                        <label>
-                            مدة المحاضرة
-                        </label>
+                        <label>رابط الفيديو</label>
 
-                        <input type="text" id="lessonDuration" placeholder="مثال: 20 دقيقة">
+                        <input
+                            type="text"
+                            id="lessonVideo"
+                            placeholder="https://youtube.com/...">
 
                     </div>
 
                     <div class="form-group">
 
-                        <label>
-                            ترتيب المحاضرة
-                        </label>
+                        <label>مدة المحاضرة</label>
 
-                        <input type="number" id="lessonOrder" min="1" placeholder="1">
+                        <input
+                            type="text"
+                            id="lessonDuration"
+                            placeholder="مثال: 20 دقيقة">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>ترتيب المحاضرة</label>
+
+                        <input
+                            type="number"
+                            id="lessonOrder"
+                            min="1"
+                            placeholder="1">
 
                     </div>
 
                     <div class="form-group full">
 
-                        <label>
-                            الوصف
-                        </label>
+                        <label>الوصف</label>
 
-                        <textarea id="lessonDescription" placeholder="وصف المحاضرة..."></textarea>
+                        <textarea
+                            id="lessonDescription"
+                            placeholder="وصف المحاضرة..."></textarea>
 
                     </div>
 
@@ -1139,16 +1012,11 @@
 
     </div>
 
-
-    <!-- =========================
-         TOAST
-    ========================= -->
+    <!-- TOAST -->
 
     <div class="toast" id="toast"></div>
 
-
     <script>
-
         const API = "/api/admin";
 
         let adminToken = localStorage.getItem("zawamAdminToken");
@@ -1157,33 +1025,21 @@
         let editingCourseId = null;
         let editingLessonId = null;
 
-
-        /* =====================================================
-           INITIALIZATION
-        ===================================================== */
+        /* INITIALIZATION */
 
         document.addEventListener("DOMContentLoaded", async () => {
-
             if (!adminToken) {
-
                 window.location.href = "/admin-login.html";
-
                 return;
             }
 
             await verifyAdmin();
-
         });
 
-
-        /* =====================================================
-           AUTH
-        ===================================================== */
+        /* AUTH */
 
         async function verifyAdmin() {
-
             try {
-
                 const response = await fetch(`${API}/me`, {
                     headers: {
                         Authorization: `Bearer ${adminToken}`
@@ -1193,20 +1049,15 @@
                 const data = await response.json();
 
                 if (!response.ok || !data.success) {
-
                     localStorage.removeItem("zawamAdminToken");
                     localStorage.removeItem("zawamAdmin");
-
                     window.location.href = "/admin-login.html";
-
                     return;
                 }
 
                 if (data.admin) {
-
                     document.getElementById("adminName").textContent =
                         data.admin.name || "الأدمن";
-
                 }
 
                 await loadDashboard();
@@ -1215,30 +1066,18 @@
                 await loadCertificates();
 
             } catch (error) {
-
                 console.error(error);
-
-                showToast(
-                    "تعذر الاتصال بالسيرفر",
-                    "error"
-                );
-
+                showToast("تعذر الاتصال بالسيرفر", "error");
             }
-
         }
 
-
         async function adminFetch(url, options = {}) {
-
             const headers = {
                 ...(options.headers || {}),
                 Authorization: `Bearer ${adminToken}`
             };
 
-            if (
-                options.body &&
-                typeof options.body === "string"
-            ) {
+            if (options.body && typeof options.body === "string") {
                 headers["Content-Type"] = "application/json";
             }
 
@@ -1256,62 +1095,39 @@
             }
 
             if (response.status === 401) {
-
                 localStorage.removeItem("zawamAdminToken");
                 localStorage.removeItem("zawamAdmin");
-
                 window.location.href = "/admin-login.html";
-
                 throw new Error("انتهت جلسة الأدمن");
-
             }
 
-            return {
-                response,
-                data
-            };
-
+            return { response, data };
         }
 
-
         async function logoutAdmin() {
-
             try {
-
                 await adminFetch(`${API}/logout`, {
                     method: "POST"
                 });
-
             } catch (error) {
-
                 console.error(error);
-
             }
 
             localStorage.removeItem("zawamAdminToken");
             localStorage.removeItem("zawamAdmin");
 
             window.location.href = "/admin-login.html";
-
         }
 
-
-        /* =====================================================
-           NAVIGATION
-        ===================================================== */
+        /* NAVIGATION */
 
         function showSection(sectionId, button) {
-
             document.querySelectorAll(".section").forEach(section => {
-
                 section.classList.remove("active");
-
             });
 
             document.querySelectorAll(".menu button").forEach(btn => {
-
                 btn.classList.remove("active");
-
             });
 
             document.getElementById(sectionId).classList.add("active");
@@ -1332,31 +1148,19 @@
                 titles[sectionId] || "لوحة تحكم ZAWAM";
 
             if (sectionId === "lessons") {
-
                 loadCoursesIntoLessonSelects();
-
             }
-
         }
 
-
-        /* =====================================================
-           DASHBOARD
-        ===================================================== */
+        /* DASHBOARD */
 
         async function loadDashboard() {
-
             try {
-
                 const { response, data } =
                     await adminFetch(`${API}/dashboard`);
 
                 if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.message || "تعذر تحميل الإحصائيات"
-                    );
-
+                    throw new Error(data.message || "تعذر تحميل الإحصائيات");
                 }
 
                 const stats = data.stats || {};
@@ -1374,46 +1178,28 @@
                     stats.certificates || 0;
 
             } catch (error) {
-
                 console.error(error);
-
-                showToast(
-                    error.message || "تعذر تحميل لوحة التحكم",
-                    "error"
-                );
-
+                showToast(error.message || "تعذر تحميل لوحة التحكم", "error");
             }
-
         }
 
-
-        /* =====================================================
-           COURSES - LOAD
-        ===================================================== */
+        /* COURSES */
 
         async function loadCourses() {
-
             try {
-
                 const { response, data } =
                     await adminFetch(`${API}/courses`);
 
                 if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.message || "تعذر تحميل الدورات"
-                    );
-
+                    throw new Error(data.message || "تعذر تحميل الدورات");
                 }
 
                 courses = data.courses || [];
 
                 renderCourses();
-
                 loadCoursesIntoLessonSelects();
 
             } catch (error) {
-
                 console.error(error);
 
                 document.getElementById("coursesTable").innerHTML = `
@@ -1423,18 +1209,13 @@
                         </td>
                     </tr>
                 `;
-
             }
-
         }
 
-
         function renderCourses() {
-
             const table = document.getElementById("coursesTable");
 
             if (!courses.length) {
-
                 table.innerHTML = `
                     <tr>
                         <td colspan="6" class="empty">
@@ -1442,77 +1223,48 @@
                         </td>
                     </tr>
                 `;
-
                 return;
             }
 
-            table.innerHTML = courses.map(course => {
+            table.innerHTML = courses.map(course => `
+                <tr>
+                    <td>${course.id}</td>
 
-                return `
-                    <tr>
+                    <td>
+                        <strong>${escapeHtml(course.title)}</strong>
+                    </td>
 
-                        <td>
-                            ${course.id}
-                        </td>
+                    <td>${escapeHtml(course.category || "-")}</td>
 
-                        <td>
-                            <strong>
-                                ${escapeHtml(course.title)}
-                            </strong>
-                        </td>
+                    <td>${escapeHtml(course.instructor || "-")}</td>
 
-                        <td>
-                            ${escapeHtml(course.category || "-")}
-                        </td>
+                    <td>${escapeHtml(course.duration || "-")}</td>
 
-                        <td>
-                            ${escapeHtml(course.instructor || "-")}
-                        </td>
+                    <td>
+                        <div class="actions">
+                            <button
+                                class="btn btn-secondary btn-small"
+                                onclick="editCourse(${course.id})">
+                                تعديل
+                            </button>
 
-                        <td>
-                            ${escapeHtml(course.duration || "-")}
-                        </td>
-
-                        <td>
-
-                            <div class="actions">
-
-                                <button
-                                    class="btn btn-secondary btn-small"
-                                    onclick="editCourse(${course.id})"
-                                >
-                                    تعديل
-                                </button>
-
-                                <button
-                                    class="btn btn-danger btn-small"
-                                    onclick="deleteCourse(${course.id})"
-                                >
-                                    حذف
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-                `;
-
-            }).join("");
-
+                            <button
+                                class="btn btn-danger btn-small"
+                                onclick="deleteCourse(${course.id})">
+                                حذف
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join("");
         }
 
-
-        /* =====================================================
-           COURSE MODAL
-        ===================================================== */
+        /* COURSE MODAL */
 
         function openCourseModal(course = null) {
-
             document.getElementById("courseModal").classList.add("show");
 
             if (course) {
-
                 editingCourseId = course.id;
 
                 document.getElementById("courseModalTitle").textContent =
@@ -1521,14 +1273,25 @@
                 document.getElementById("courseSubmitBtn").textContent =
                     "حفظ التعديلات";
 
-                document.getElementById("courseId").value =
-                    course.id;
+                document.getElementById("courseId").value = course.id;
+                document.getElementById("courseTitle").value = course.title || "";
 
-                document.getElementById("courseTitle").value =
-                    course.title || "";
+                // دعم أي تصنيف موجود مسبقًا حتى لو لم يكن ضمن الخيارات
+                const categorySelect =
+                    document.getElementById("courseCategory");
 
-                document.getElementById("courseCategory").value =
-                    course.category || "برمجة";
+                const courseCategory = course.category || "برمجة";
+
+                if (![...categorySelect.options].some(
+                    option => option.value === courseCategory
+                )) {
+                    const option = document.createElement("option");
+                    option.value = courseCategory;
+                    option.textContent = courseCategory;
+                    categorySelect.appendChild(option);
+                }
+
+                categorySelect.value = courseCategory;
 
                 document.getElementById("courseInstructor").value =
                     course.instructor || "";
@@ -1543,7 +1306,6 @@
                     course.description || "";
 
             } else {
-
                 editingCourseId = null;
 
                 document.getElementById("courseModalTitle").textContent =
@@ -1553,57 +1315,33 @@
                     "حفظ الدورة";
 
                 document.getElementById("courseForm").reset();
-
+                document.getElementById("courseCategory").value = "برمجة";
             }
-
         }
-
 
         function closeCourseModal() {
-
-            document.getElementById("courseModal")
-                .classList.remove("show");
-
+            document.getElementById("courseModal").classList.remove("show");
             document.getElementById("courseForm").reset();
-
             editingCourseId = null;
-
         }
-
 
         document.getElementById("courseForm")
             .addEventListener("submit", async function (event) {
-
                 event.preventDefault();
 
                 const body = {
-
-                    title:
-                        document.getElementById("courseTitle").value.trim(),
-
-                    description:
-                        document.getElementById("courseDescription").value.trim(),
-
-                    category:
-                        document.getElementById("courseCategory").value,
-
-                    instructor:
-                        document.getElementById("courseInstructor").value.trim(),
-
-                    duration:
-                        document.getElementById("courseDuration").value.trim(),
-
-                    image:
-                        document.getElementById("courseImage").value.trim()
-
+                    title: document.getElementById("courseTitle").value.trim(),
+                    description: document.getElementById("courseDescription").value.trim(),
+                    category: document.getElementById("courseCategory").value,
+                    instructor: document.getElementById("courseInstructor").value.trim(),
+                    duration: document.getElementById("courseDuration").value.trim(),
+                    image: document.getElementById("courseImage").value.trim()
                 };
 
                 try {
-
                     let result;
 
                     if (editingCourseId) {
-
                         result = await adminFetch(
                             `${API}/courses/${editingCourseId}`,
                             {
@@ -1611,9 +1349,7 @@
                                 body: JSON.stringify(body)
                             }
                         );
-
                     } else {
-
                         result = await adminFetch(
                             `${API}/courses`,
                             {
@@ -1621,23 +1357,13 @@
                                 body: JSON.stringify(body)
                             }
                         );
-
                     }
 
                     if (!result.response.ok || !result.data.success) {
-
-                        throw new Error(
-                            result.data.message ||
-                            "تعذر حفظ الدورة"
-                        );
-
+                        throw new Error(result.data.message || "تعذر حفظ الدورة");
                     }
 
-                    showToast(
-                        result.data.message ||
-                        "تم حفظ الدورة بنجاح",
-                        "success"
-                    );
+                    showToast(result.data.message || "تم حفظ الدورة بنجاح", "success");
 
                     closeCourseModal();
 
@@ -1645,175 +1371,105 @@
                     await loadDashboard();
 
                 } catch (error) {
-
                     console.error(error);
-
-                    showToast(
-                        error.message || "حدث خطأ",
-                        "error"
-                    );
-
+                    showToast(error.message || "حدث خطأ", "error");
                 }
-
             });
 
-
         function editCourse(id) {
-
             const course = courses.find(
                 item => Number(item.id) === Number(id)
             );
 
             if (!course) {
-
-                showToast(
-                    "الدورة غير موجودة",
-                    "error"
-                );
-
+                showToast("الدورة غير موجودة", "error");
                 return;
             }
 
             openCourseModal(course);
-
         }
 
-
         async function deleteCourse(id) {
-
             const course = courses.find(
                 item => Number(item.id) === Number(id)
             );
 
-            if (!course) {
-                return;
-            }
+            if (!course) return;
 
             const confirmed = confirm(
                 `هل أنت متأكد من حذف الدورة:\n\n${course.title}\n\nسيتم حذف المحاضرات والتسجيلات والتقدم والشهادات المرتبطة بها أيضًا.`
             );
 
-            if (!confirmed) {
-                return;
-            }
+            if (!confirmed) return;
 
             try {
-
-                const { response, data } =
-                    await adminFetch(
-                        `${API}/courses/${id}`,
-                        {
-                            method: "DELETE"
-                        }
-                    );
+                const { response, data } = await adminFetch(
+                    `${API}/courses/${id}`,
+                    { method: "DELETE" }
+                );
 
                 if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.message ||
-                        "تعذر حذف الدورة"
-                    );
-
+                    throw new Error(data.message || "تعذر حذف الدورة");
                 }
 
-                showToast(
-                    data.message || "تم حذف الدورة",
-                    "success"
-                );
+                showToast(data.message || "تم حذف الدورة", "success");
 
                 await loadCourses();
                 await loadDashboard();
 
             } catch (error) {
-
                 console.error(error);
-
-                showToast(
-                    error.message || "حدث خطأ",
-                    "error"
-                );
-
+                showToast(error.message || "حدث خطأ", "error");
             }
-
         }
 
-
-        /* =====================================================
-           COURSE SELECTS
-        ===================================================== */
+        /* COURSE SELECTS */
 
         function loadCoursesIntoLessonSelects() {
-
-            const filter =
-                document.getElementById("lessonCourseFilter");
-
-            const lessonCourse =
-                document.getElementById("lessonCourse");
+            const filter = document.getElementById("lessonCourseFilter");
+            const lessonCourse = document.getElementById("lessonCourse");
 
             const currentFilter = filter.value;
             const currentLessonCourse = lessonCourse.value;
 
-            const options = courses.map(course => {
-
-                return `
-                    <option value="${course.id}">
-                        ${escapeHtml(course.title)}
-                    </option>
-                `;
-
-            }).join("");
+            const options = courses.map(course => `
+                <option value="${course.id}">
+                    ${escapeHtml(course.title)}
+                </option>
+            `).join("");
 
             filter.innerHTML = `
-                <option value="">
-                    -- اختر الدورة --
-                </option>
+                <option value="">-- اختر الدورة --</option>
                 ${options}
             `;
 
             lessonCourse.innerHTML = `
-                <option value="">
-                    -- اختر الدورة --
-                </option>
+                <option value="">-- اختر الدورة --</option>
                 ${options}
             `;
 
-            if (
-                courses.some(
-                    course => String(course.id) === String(currentFilter)
-                )
-            ) {
-
+            if (courses.some(course =>
+                String(course.id) === String(currentFilter)
+            )) {
                 filter.value = currentFilter;
-
             }
 
-            if (
-                courses.some(
-                    course => String(course.id) === String(currentLessonCourse)
-                )
-            ) {
-
+            if (courses.some(course =>
+                String(course.id) === String(currentLessonCourse)
+            )) {
                 lessonCourse.value = currentLessonCourse;
-
             }
-
         }
 
-
-        /* =====================================================
-           LESSONS
-        ===================================================== */
+        /* LESSONS */
 
         async function loadLessonsByCourse() {
-
             const courseId =
                 document.getElementById("lessonCourseFilter").value;
 
-            const table =
-                document.getElementById("lessonsTable");
+            const table = document.getElementById("lessonsTable");
 
             if (!courseId) {
-
                 table.innerHTML = `
                     <tr>
                         <td colspan="6" class="empty">
@@ -1821,7 +1477,6 @@
                         </td>
                     </tr>
                 `;
-
                 return;
             }
 
@@ -1834,25 +1489,17 @@
             `;
 
             try {
-
-                const { response, data } =
-                    await adminFetch(
-                        `${API}/courses/${courseId}/lessons`
-                    );
+                const { response, data } = await adminFetch(
+                    `${API}/courses/${courseId}/lessons`
+                );
 
                 if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.message ||
-                        "تعذر تحميل المحاضرات"
-                    );
-
+                    throw new Error(data.message || "تعذر تحميل المحاضرات");
                 }
 
                 const lessons = data.lessons || [];
 
                 if (!lessons.length) {
-
                     table.innerHTML = `
                         <tr>
                             <td colspan="6" class="empty">
@@ -1860,70 +1507,46 @@
                             </td>
                         </tr>
                     `;
-
                     return;
                 }
 
-                table.innerHTML = lessons.map(lesson => {
+                table.innerHTML = lessons.map(lesson => `
+                    <tr>
+                        <td>${lesson.id}</td>
 
-                    return `
-                        <tr>
+                        <td>
+                            <strong>${escapeHtml(lesson.title)}</strong>
+                        </td>
 
-                            <td>
-                                ${lesson.id}
-                            </td>
+                        <td>
+                            ${escapeHtml(getCourseTitle(lesson.course_id))}
+                        </td>
 
-                            <td>
-                                <strong>
-                                    ${escapeHtml(lesson.title)}
-                                </strong>
-                            </td>
+                        <td>${lesson.lesson_order || "-"}</td>
 
-                            <td>
-                                ${escapeHtml(
-                        getCourseTitle(lesson.course_id)
-                    )}
-                            </td>
+                        <td>${escapeHtml(lesson.duration || "-")}</td>
 
-                            <td>
-                                ${lesson.lesson_order || "-"}
-                            </td>
+                        <td>
+                            <div class="actions">
+                                <button
+                                    class="btn btn-secondary btn-small"
+                                    onclick="editLessonById(${lesson.id})">
+                                    تعديل
+                                </button>
 
-                            <td>
-                                ${escapeHtml(
-                        lesson.duration || "-"
-                    )}
-                            </td>
+                                <button
+                                    class="btn btn-danger btn-small"
+                                    onclick="deleteLesson(${lesson.id})">
+                                    حذف
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join("");
 
-                            <td>
-
-                                <div class="actions">
-
-                                    <button
-                                        class="btn btn-secondary btn-small"
-                                        onclick='editLesson(${JSON.stringify(lesson)})'
-                                    >
-                                        تعديل
-                                    </button>
-
-                                    <button
-                                        class="btn btn-danger btn-small"
-                                        onclick="deleteLesson(${lesson.id})"
-                                    >
-                                        حذف
-                                    </button>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-                    `;
-
-                }).join("");
+                window.currentLessons = lessons;
 
             } catch (error) {
-
                 console.error(error);
 
                 table.innerHTML = `
@@ -1933,49 +1556,29 @@
                         </td>
                     </tr>
                 `;
-
             }
-
         }
 
-
         function openLessonModal(lesson = null) {
-
-            document.getElementById("lessonModal")
-                .classList.add("show");
+            document.getElementById("lessonModal").classList.add("show");
 
             loadCoursesIntoLessonSelects();
 
             if (lesson) {
-
                 editingLessonId = lesson.id;
 
                 document.getElementById("lessonModalTitle").textContent =
                     "تعديل المحاضرة";
 
-                document.getElementById("lessonId").value =
-                    lesson.id;
-
-                document.getElementById("lessonCourse").value =
-                    lesson.course_id;
-
-                document.getElementById("lessonTitle").value =
-                    lesson.title || "";
-
-                document.getElementById("lessonVideo").value =
-                    lesson.video_url || "";
-
-                document.getElementById("lessonDuration").value =
-                    lesson.duration || "";
-
-                document.getElementById("lessonOrder").value =
-                    lesson.lesson_order || "";
-
-                document.getElementById("lessonDescription").value =
-                    lesson.description || "";
+                document.getElementById("lessonId").value = lesson.id;
+                document.getElementById("lessonCourse").value = lesson.course_id;
+                document.getElementById("lessonTitle").value = lesson.title || "";
+                document.getElementById("lessonVideo").value = lesson.video_url || "";
+                document.getElementById("lessonDuration").value = lesson.duration || "";
+                document.getElementById("lessonOrder").value = lesson.lesson_order || "";
+                document.getElementById("lessonDescription").value = lesson.description || "";
 
             } else {
-
                 editingLessonId = null;
 
                 document.getElementById("lessonModalTitle").textContent =
@@ -1983,70 +1586,43 @@
 
                 document.getElementById("lessonForm").reset();
 
+                const selectedCourse =
+                    document.getElementById("lessonCourseFilter").value;
+
+                if (selectedCourse) {
+                    document.getElementById("lessonCourse").value = selectedCourse;
+                }
             }
-
         }
-
 
         function closeLessonModal() {
-
-            document.getElementById("lessonModal")
-                .classList.remove("show");
-
+            document.getElementById("lessonModal").classList.remove("show");
             document.getElementById("lessonForm").reset();
-
             editingLessonId = null;
-
         }
-
 
         document.getElementById("lessonForm")
             .addEventListener("submit", async function (event) {
-
                 event.preventDefault();
 
                 const body = {
-
-                    course_id:
-                        Number(
-                            document.getElementById("lessonCourse").value
-                        ),
-
-                    title:
-                        document.getElementById("lessonTitle").value.trim(),
-
-                    description:
-                        document.getElementById("lessonDescription").value.trim(),
-
-                    video_url:
-                        document.getElementById("lessonVideo").value.trim(),
-
-                    duration:
-                        document.getElementById("lessonDuration").value.trim(),
-
-                    lesson_order:
-                        Number(
-                            document.getElementById("lessonOrder").value
-                        ) || 0
-
+                    course_id: Number(document.getElementById("lessonCourse").value),
+                    title: document.getElementById("lessonTitle").value.trim(),
+                    description: document.getElementById("lessonDescription").value.trim(),
+                    video_url: document.getElementById("lessonVideo").value.trim(),
+                    duration: document.getElementById("lessonDuration").value.trim(),
+                    lesson_order: Number(document.getElementById("lessonOrder").value) || 0
                 };
 
                 if (!body.course_id) {
-
-                    showToast(
-                        "يجب اختيار الدورة",
-                        "error"
-                    );
-
+                    showToast("يجب اختيار الدورة", "error");
                     return;
                 }
 
                 try {
-
                     let result;
 
                     if (editingLessonId) {
-
                         result = await adminFetch(
                             `${API}/lessons/${editingLessonId}`,
                             {
@@ -2054,9 +1630,7 @@
                                 body: JSON.stringify(body)
                             }
                         );
-
                     } else {
-
                         result = await adminFetch(
                             `${API}/lessons`,
                             {
@@ -2064,26 +1638,15 @@
                                 body: JSON.stringify(body)
                             }
                         );
-
                     }
 
                     if (!result.response.ok || !result.data.success) {
-
-                        throw new Error(
-                            result.data.message ||
-                            "تعذر حفظ المحاضرة"
-                        );
-
+                        throw new Error(result.data.message || "تعذر حفظ المحاضرة");
                     }
 
-                    showToast(
-                        result.data.message ||
-                        "تم حفظ المحاضرة بنجاح",
-                        "success"
-                    );
+                    showToast(result.data.message || "تم حفظ المحاضرة بنجاح", "success");
 
-                    const selectedCourse =
-                        body.course_id;
+                    const selectedCourse = body.course_id;
 
                     closeLessonModal();
 
@@ -2095,104 +1658,69 @@
                     await loadLessonsByCourse();
 
                 } catch (error) {
-
                     console.error(error);
-
-                    showToast(
-                        error.message || "حدث خطأ",
-                        "error"
-                    );
-
+                    showToast(error.message || "حدث خطأ", "error");
                 }
-
             });
 
+        function editLessonById(id) {
+            const lessons = window.currentLessons || [];
 
-        function editLesson(lesson) {
+            const lesson = lessons.find(
+                item => Number(item.id) === Number(id)
+            );
+
+            if (!lesson) {
+                showToast("تعذر العثور على المحاضرة", "error");
+                return;
+            }
 
             openLessonModal(lesson);
-
         }
 
-
         async function deleteLesson(id) {
-
             const confirmed = confirm(
                 "هل أنت متأكد من حذف هذه المحاضرة؟"
             );
 
-            if (!confirmed) {
-                return;
-            }
+            if (!confirmed) return;
 
             try {
-
-                const { response, data } =
-                    await adminFetch(
-                        `${API}/lessons/${id}`,
-                        {
-                            method: "DELETE"
-                        }
-                    );
+                const { response, data } = await adminFetch(
+                    `${API}/lessons/${id}`,
+                    { method: "DELETE" }
+                );
 
                 if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.message ||
-                        "تعذر حذف المحاضرة"
-                    );
-
+                    throw new Error(data.message || "تعذر حذف المحاضرة");
                 }
 
-                showToast(
-                    data.message || "تم حذف المحاضرة",
-                    "success"
-                );
+                showToast(data.message || "تم حذف المحاضرة", "success");
 
                 await loadDashboard();
                 await loadLessonsByCourse();
 
             } catch (error) {
-
                 console.error(error);
-
-                showToast(
-                    error.message || "حدث خطأ",
-                    "error"
-                );
-
+                showToast(error.message || "حدث خطأ", "error");
             }
-
         }
 
-
-        /* =====================================================
-           USERS
-        ===================================================== */
+        /* USERS */
 
         async function loadUsers() {
-
-            const table =
-                document.getElementById("usersTable");
+            const table = document.getElementById("usersTable");
 
             try {
-
-                const { response, data } =
-                    await adminFetch(`${API}/users`);
+                const { response, data } = await adminFetch(`${API}/users`);
 
                 if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.message ||
-                        "تعذر تحميل الطلاب"
-                    );
-
+                    throw new Error(data.message || "تعذر تحميل الطلاب");
                 }
 
                 const users = data.users || [];
 
                 if (!users.length) {
-
                     table.innerHTML = `
                         <tr>
                             <td colspan="6" class="empty">
@@ -2200,58 +1728,32 @@
                             </td>
                         </tr>
                     `;
-
                     return;
                 }
 
-                table.innerHTML = users.map(user => {
-
-                    return `
-                        <tr>
-
-                            <td>
-                                ${user.id}
-                            </td>
-
-                            <td>
-                                ${escapeHtml(user.name || "-")}
-                            </td>
-
-                            <td>
-                                ${escapeHtml(user.email || "-")}
-                            </td>
-
-                            <td>
-                                ${escapeHtml(user.role || "student")}
-                            </td>
-
-                            <td>
-                                ${formatDate(user.created_at)}
-                            </td>
-
-                            <td>
-
-                                ${user.role === "admin"
-                            ? "-"
-                            : `
-                                            <button
-                                                class="btn btn-danger btn-small"
-                                                onclick="deleteUser(${user.id})"
-                                            >
-                                                حذف
-                                            </button>
-                                        `
-                        }
-
-                            </td>
-
-                        </tr>
-                    `;
-
-                }).join("");
+                table.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${escapeHtml(user.name || "-")}</td>
+                        <td>${escapeHtml(user.email || "-")}</td>
+                        <td>${escapeHtml(user.role || "student")}</td>
+                        <td>${formatDate(user.created_at)}</td>
+                        <td>
+                            ${user.role === "admin"
+                                ? "-"
+                                : `
+                                    <button
+                                        class="btn btn-danger btn-small"
+                                        onclick="deleteUser(${user.id})">
+                                        حذف
+                                    </button>
+                                `
+                            }
+                        </td>
+                    </tr>
+                `).join("");
 
             } catch (error) {
-
                 console.error(error);
 
                 table.innerHTML = `
@@ -2261,93 +1763,53 @@
                         </td>
                     </tr>
                 `;
-
             }
-
         }
 
-
         async function deleteUser(id) {
-
             const confirmed = confirm(
                 "هل أنت متأكد من حذف هذا الطالب؟ سيتم حذف تسجيلاته وتقدمه وشهاداته أيضًا."
             );
 
-            if (!confirmed) {
-                return;
-            }
+            if (!confirmed) return;
 
             try {
-
-                const { response, data } =
-                    await adminFetch(
-                        `${API}/users/${id}`,
-                        {
-                            method: "DELETE"
-                        }
-                    );
+                const { response, data } = await adminFetch(
+                    `${API}/users/${id}`,
+                    { method: "DELETE" }
+                );
 
                 if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.message ||
-                        "تعذر حذف الطالب"
-                    );
-
+                    throw new Error(data.message || "تعذر حذف الطالب");
                 }
 
-                showToast(
-                    data.message || "تم حذف الطالب",
-                    "success"
-                );
+                showToast(data.message || "تم حذف الطالب", "success");
 
                 await loadUsers();
                 await loadDashboard();
 
             } catch (error) {
-
                 console.error(error);
-
-                showToast(
-                    error.message || "حدث خطأ",
-                    "error"
-                );
-
+                showToast(error.message || "حدث خطأ", "error");
             }
-
         }
 
-
-        /* =====================================================
-           CERTIFICATES
-        ===================================================== */
+        /* CERTIFICATES */
 
         async function loadCertificates() {
-
-            const table =
-                document.getElementById("certificatesTable");
+            const table = document.getElementById("certificatesTable");
 
             try {
-
                 const { response, data } =
-                    await adminFetch(
-                        `${API}/certificates`
-                    );
+                    await adminFetch(`${API}/certificates`);
 
                 if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.message ||
-                        "تعذر تحميل الشهادات"
-                    );
-
+                    throw new Error(data.message || "تعذر تحميل الشهادات");
                 }
 
-                const certificates =
-                    data.certificates || [];
+                const certificates = data.certificates || [];
 
                 if (!certificates.length) {
-
                     table.innerHTML = `
                         <tr>
                             <td colspan="7" class="empty">
@@ -2355,68 +1817,33 @@
                             </td>
                         </tr>
                     `;
-
                     return;
                 }
 
-                table.innerHTML =
-                    certificates.map(cert => {
+                table.innerHTML = certificates.map(cert => `
+                    <tr>
+                        <td>${cert.id}</td>
 
-                        return `
-                            <tr>
+                        <td>
+                            <strong>${escapeHtml(cert.certificate_id || "-")}</strong>
+                        </td>
 
-                                <td>
-                                    ${cert.id}
-                                </td>
+                        <td>${escapeHtml(cert.user_name || "-")}</td>
+                        <td>${escapeHtml(cert.user_email || "-")}</td>
+                        <td>${escapeHtml(cert.course_title || "-")}</td>
+                        <td>${formatDate(cert.issued_at)}</td>
 
-                                <td>
-                                    <strong>
-                                        ${escapeHtml(
-                            cert.certificate_id || "-"
-                        )}
-                                    </strong>
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                            cert.user_name || "-"
-                        )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                            cert.user_email || "-"
-                        )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                            cert.course_title || "-"
-                        )}
-                                </td>
-
-                                <td>
-                                    ${formatDate(cert.issued_at)}
-                                </td>
-
-                                <td>
-
-                                    <button
-                                        class="btn btn-danger btn-small"
-                                        onclick="deleteCertificate(${cert.id})"
-                                    >
-                                        حذف
-                                    </button>
-
-                                </td>
-
-                            </tr>
-                        `;
-
-                    }).join("");
+                        <td>
+                            <button
+                                class="btn btn-danger btn-small"
+                                onclick="deleteCertificate(${cert.id})">
+                                حذف
+                            </button>
+                        </td>
+                    </tr>
+                `).join("");
 
             } catch (error) {
-
                 console.error(error);
 
                 table.innerHTML = `
@@ -2426,111 +1853,63 @@
                         </td>
                     </tr>
                 `;
-
             }
-
         }
 
-
         async function deleteCertificate(id) {
-
             const confirmed = confirm(
                 "هل أنت متأكد من حذف هذه الشهادة؟"
             );
 
-            if (!confirmed) {
-                return;
-            }
+            if (!confirmed) return;
 
             try {
-
-                const { response, data } =
-                    await adminFetch(
-                        `${API}/certificates/${id}`,
-                        {
-                            method: "DELETE"
-                        }
-                    );
+                const { response, data } = await adminFetch(
+                    `${API}/certificates/${id}`,
+                    { method: "DELETE" }
+                );
 
                 if (!response.ok || !data.success) {
-
-                    throw new Error(
-                        data.message ||
-                        "تعذر حذف الشهادة"
-                    );
-
+                    throw new Error(data.message || "تعذر حذف الشهادة");
                 }
 
-                showToast(
-                    data.message || "تم حذف الشهادة",
-                    "success"
-                );
+                showToast(data.message || "تم حذف الشهادة", "success");
 
                 await loadCertificates();
                 await loadDashboard();
 
             } catch (error) {
-
                 console.error(error);
-
-                showToast(
-                    error.message || "حدث خطأ",
-                    "error"
-                );
-
+                showToast(error.message || "حدث خطأ", "error");
             }
-
         }
 
-
-        /* =====================================================
-           HELPERS
-        ===================================================== */
+        /* HELPERS */
 
         function getCourseTitle(courseId) {
-
             const course = courses.find(
                 item => Number(item.id) === Number(courseId)
             );
 
-            return course
-                ? course.title
-                : `الدورة #${courseId}`;
-
+            return course ? course.title : `الدورة #${courseId}`;
         }
-
 
         function formatDate(date) {
-
-            if (!date) {
-                return "-";
-            }
+            if (!date) return "-";
 
             try {
-
-                return new Date(date).toLocaleDateString(
-                    "ar",
-                    {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric"
-                    }
-                );
-
+                return new Date(date).toLocaleDateString("ar", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric"
+                });
             } catch (error) {
-
                 return date;
-
             }
-
         }
 
-
         function escapeHtml(value) {
-
-            if (value === null || value === undefined) {
-                return "";
-            }
+            if (value === null || value === undefined) return "";
 
             return String(value)
                 .replace(/&/g, "&amp;")
@@ -2538,54 +1917,37 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
-
         }
-
 
         function showToast(message, type = "success") {
-
-            const toast =
-                document.getElementById("toast");
+            const toast = document.getElementById("toast");
 
             toast.textContent = message;
-
-            toast.className =
-                `toast show ${type}`;
+            toast.className = `toast show ${type}`;
 
             setTimeout(() => {
-
                 toast.classList.remove("show");
-
             }, 3500);
-
         }
 
-
-        /* =====================================================
-           CLOSE MODALS WHEN CLICK OUTSIDE
-        ===================================================== */
+        /* CLOSE MODALS WHEN CLICKING OUTSIDE */
 
         document.getElementById("courseModal")
             .addEventListener("click", function (event) {
-
                 if (event.target === this) {
                     closeCourseModal();
                 }
-
             });
-
 
         document.getElementById("lessonModal")
             .addEventListener("click", function (event) {
-
                 if (event.target === this) {
                     closeLessonModal();
                 }
-
             });
-
     </script>
 
 </body>
 
 </html>
+```
