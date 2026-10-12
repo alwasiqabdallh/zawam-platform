@@ -12,6 +12,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        .cybersecurity-bg {
+            background: linear-gradient(135deg, #102a43, #176b87, #00a896);
+        }
+    </style>
 </head>
 
 <body>
@@ -122,6 +128,10 @@
         let allSpecialties = [];
         let selectedCategory = "all";
 
+        // ==============================
+        // التخصصات الافتراضية
+        // ==============================
+
         const defaultSpecialties = [
             {
                 id: "default-programming",
@@ -140,14 +150,23 @@
                 name: "تصميم",
                 description: "تعلم أساسيات التصميم الجرافيكي وتصميم واجهات المواقع والتطبيقات.",
                 icon: "🎨"
+            },
+            {
+                id: "default-cybersecurity",
+                name: "الأمن السيبراني",
+                description: "تعلم أساسيات الأمن السيبراني وحماية الأنظمة والشبكات والبيانات من التهديدات الرقمية.",
+                icon: "🛡️"
             }
         ];
 
-        // دعم الروابط القديمة، مثل ?category=programming
+        // دعم الروابط القديمة
         const legacyCategoryMap = {
             programming: "برمجة",
             english: "إنجليزي",
-            design: "تصميم"
+            design: "تصميم",
+            cybersecurity: "الأمن السيبراني",
+            "cyber-security": "الأمن السيبراني",
+            cyber: "الأمن السيبراني"
         };
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -181,7 +200,13 @@
                 "English": "إنجليزي",
                 "Programming": "برمجة",
                 "Graphic Design": "تصميم",
-                "التصميم الجرافيكي": "تصميم"
+                "التصميم الجرافيكي": "تصميم",
+                "Cybersecurity": "الأمن السيبراني",
+                "Cyber Security": "الأمن السيبراني",
+                "Cyber Security Fundamentals": "الأمن السيبراني",
+                "الأمن السيبراني": "الأمن السيبراني",
+                "امن سيبراني": "الأمن السيبراني",
+                "الأمن المعلوماتي": "الأمن السيبراني"
             };
 
             return aliases[category] || category;
@@ -191,15 +216,33 @@
             const normalized = normalizeCategory(category);
 
             return allSpecialties.find(
-                specialty => normalizeCategory(specialty.name) === normalized
+                specialty =>
+                    normalizeCategory(specialty.name) === normalized
             );
         }
 
         function getSpecialtyIcon(category) {
-            const specialty = getSpecialty(category);
+            const normalized = normalizeCategory(category);
+            const specialty = getSpecialty(normalized);
 
             if (specialty && specialty.icon) {
                 return specialty.icon;
+            }
+
+            if (normalized === "الأمن السيبراني") {
+                return "🛡️";
+            }
+
+            if (normalized === "برمجة") {
+                return "💻";
+            }
+
+            if (normalized === "إنجليزي") {
+                return "🇬🇧";
+            }
+
+            if (normalized === "تصميم") {
+                return "🎨";
             }
 
             return "📚";
@@ -220,6 +263,10 @@
                 return "design-bg";
             }
 
+            if (normalized === "الأمن السيبراني") {
+                return "cybersecurity-bg";
+            }
+
             return "programming-bg";
         }
 
@@ -232,15 +279,16 @@
                 return "all";
             }
 
-            // الروابط القديمة
             if (legacyCategoryMap[value]) {
                 return legacyCategoryMap[value];
             }
 
-            // الروابط التي تحتوي اسم التخصص مباشرة
+            const decodedValue = String(value).trim();
+
             const matchedSpecialty = allSpecialties.find(
                 specialty =>
-                    normalizeCategory(specialty.name) === normalizeCategory(value)
+                    normalizeCategory(specialty.name) ===
+                    normalizeCategory(decodedValue)
             );
 
             return matchedSpecialty ? matchedSpecialty.name : "all";
@@ -264,7 +312,7 @@
                     throw new Error("بيانات التخصصات غير صحيحة");
                 }
 
-                allSpecialties = data.specialties
+                const databaseSpecialties = data.specialties
                     .filter(specialty => specialty && specialty.name)
                     .map(specialty => ({
                         ...specialty,
@@ -273,11 +321,11 @@
                         icon: String(specialty.icon || "📚").trim()
                     }));
 
-                // إزالة الأسماء المكررة دون حذف أي تخصص مختلف
+                // إزالة الأسماء المكررة
                 const uniqueSpecialties = [];
                 const seenNames = new Set();
 
-                for (const specialty of allSpecialties) {
+                for (const specialty of databaseSpecialties) {
                     const key = normalizeCategory(specialty.name);
 
                     if (!key || seenNames.has(key)) {
@@ -290,15 +338,24 @@
 
                 allSpecialties = uniqueSpecialties;
 
-                // في حال كان الجدول فارغًا، نحافظ على الفلاتر الأساسية
-                if (allSpecialties.length === 0) {
-                    allSpecialties = [...defaultSpecialties];
+                // إضافة التخصصات الافتراضية الناقصة فقط
+                // دون تكرار التخصصات الموجودة في قاعدة البيانات
+                for (const defaultSpecialty of defaultSpecialties) {
+                    const exists = allSpecialties.some(
+                        specialty =>
+                            normalizeCategory(specialty.name) ===
+                            normalizeCategory(defaultSpecialty.name)
+                    );
+
+                    if (!exists) {
+                        allSpecialties.push(defaultSpecialty);
+                    }
                 }
 
             } catch (error) {
                 console.error("SPECIALTIES ERROR:", error);
 
-                // عرض التخصصات الأساسية إذا تعذر الوصول إلى API
+                // استخدام التخصصات الافتراضية عند تعذر تحميل API
                 allSpecialties = [...defaultSpecialties];
             }
 
@@ -309,7 +366,7 @@
         }
 
         // ==============================
-        // إنشاء أزرار التخصصات تلقائيًا
+        // إنشاء أزرار التخصصات
         // ==============================
 
         function renderSpecialtyFilters() {
@@ -397,7 +454,6 @@
             if (selectedCategory === "all") {
                 newURL.searchParams.delete("category");
             } else {
-                // نخزن اسم التخصص نفسه لدعم التخصصات الجديدة
                 newURL.searchParams.set("category", selectedCategory);
             }
 
@@ -407,7 +463,9 @@
         window.addEventListener("popstate", () => {
             const params = new URLSearchParams(window.location.search);
 
-            selectedCategory = resolveCategoryFromURL(params.get("category"));
+            selectedCategory = resolveCategoryFromURL(
+                params.get("category")
+            );
 
             updatePageHeader();
             updateActiveFilter();
@@ -434,7 +492,7 @@
                     throw new Error("بيانات الدورات غير صحيحة");
                 }
 
-                // لا نستبعد التخصصات الجديدة
+                // عدم استبعاد أي تخصص جديد
                 allCourses = data.courses;
 
                 applyFilters();
