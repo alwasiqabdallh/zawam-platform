@@ -1,3 +1,8 @@
+
+// ============================================================
+// ZAWAM ADMIN ROUTES
+// ============================================================
+
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
@@ -5,22 +10,20 @@ const db = require("./db");
 
 const router = express.Router();
 
-/* =========================================================
-   ADMIN SESSIONS
-========================================================= */
+// ============================================================
+// ADMIN SESSIONS
+// ============================================================
 
 const adminSessions = new Map();
 
-/* =========================================================
-   HELPERS
-========================================================= */
+// ============================================================
+// HELPERS
+// ============================================================
 
 function getToken(req) {
     const auth = req.headers.authorization || "";
 
-    if (!auth.startsWith("Bearer ")) {
-        return null;
-    }
+    if (!auth.startsWith("Bearer ")) return null;
 
     return auth.substring(7).trim();
 }
@@ -40,7 +43,7 @@ function requireAdmin(req, res, next) {
     if (!session) {
         return res.status(401).json({
             success: false,
-            message: "جلسة الأدمن غير صالحة أو انتهت"
+            message: "جلسة الأدمن غير صالحة أو انتهت. سجّل الدخول مجددًا."
         });
     }
 
@@ -52,9 +55,38 @@ function createToken() {
     return crypto.randomBytes(32).toString("hex");
 }
 
-/* =========================================================
-   ADMIN LOGIN
-========================================================= */
+function sendServerError(res, error, message) {
+    console.error(message, error);
+
+    return res.status(500).json({
+        success: false,
+        message: `${message}: ${error.sqlMessage || error.message || "خطأ غير معروف"}`
+    });
+}
+
+// ============================================================
+// ENSURE SPECIALTIES TABLE
+// ============================================================
+
+async function ensureSpecialtiesTable() {
+    await db.query(`
+        CREATE TABLE IF NOT EXISTS specialties (
+            id INT NOT NULL AUTO_INCREMENT,
+            name VARCHAR(100) NOT NULL,
+            description TEXT NOT NULL,
+            icon VARCHAR(20) NOT NULL DEFAULT '📚',
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY unique_specialty_name (name)
+        ) ENGINE=InnoDB
+          DEFAULT CHARSET=utf8mb4
+          COLLATE=utf8mb4_unicode_ci
+    `);
+}
+
+// ============================================================
+// ADMIN LOGIN
+// ============================================================
 
 router.post("/login", async (req, res) => {
     try {
@@ -82,7 +114,7 @@ router.post("/login", async (req, res) => {
             [email]
         );
 
-        if (admins.length === 0) {
+        if (!admins.length) {
             return res.status(401).json({
                 success: false,
                 message: "بيانات الأدمن غير صحيحة"
@@ -124,36 +156,33 @@ router.post("/login", async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("ADMIN LOGIN ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "حدث خطأ في السيرفر أثناء تسجيل الدخول"
-        });
+        return sendServerError(
+            res,
+            error,
+            "حدث خطأ في السيرفر أثناء تسجيل الدخول"
+        );
     }
 });
 
-/* =========================================================
-   ADMIN ME
-========================================================= */
+// ============================================================
+// ADMIN ME
+// ============================================================
 
-router.get("/me", requireAdmin, async (req, res) => {
+router.get("/me", requireAdmin, (req, res) => {
     return res.json({
         success: true,
         admin: req.admin
     });
 });
 
-/* =========================================================
-   ADMIN LOGOUT
-========================================================= */
+// ============================================================
+// ADMIN LOGOUT
+// ============================================================
 
-router.post("/logout", requireAdmin, async (req, res) => {
+router.post("/logout", requireAdmin, (req, res) => {
     const token = getToken(req);
 
-    if (token) {
-        adminSessions.delete(token);
-    }
+    if (token) adminSessions.delete(token);
 
     return res.json({
         success: true,
@@ -161,55 +190,68 @@ router.post("/logout", requireAdmin, async (req, res) => {
     });
 });
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+// ============================================================
+// DASHBOARD
+// ============================================================
 
 router.get("/dashboard", requireAdmin, async (req, res) => {
     try {
-        const [courses] = await db.query(
+        const [[courses]] = await db.query(
             "SELECT COUNT(*) AS count FROM courses"
         );
 
-        const [lessons] = await db.query(
+        const [[lessons]] = await db.query(
             "SELECT COUNT(*) AS count FROM lessons"
         );
 
-        const [users] = await db.query(
+        const [[users]] = await db.query(
             "SELECT COUNT(*) AS count FROM users"
         );
 
-        const [certificates] = await db.query(
+        const [[certificates]] = await db.query(
             "SELECT COUNT(*) AS count FROM certificates"
         );
+
+        const totalCourses = Number(courses.count);
+        const totalLessons = Number(lessons.count);
+        const totalUsers = Number(users.count);
+        const totalCertificates = Number(certificates.count);
 
         return res.json({
             success: true,
             stats: {
-                courses: courses[0].count,
-                lessons: lessons[0].count,
-                users: users[0].count,
-                certificates: certificates[0].count
+                courses: totalCourses,
+                lessons: totalLessons,
+                users: totalUsers,
+                certificates: totalCertificates,
+
+                totalCourses,
+                totalLessons,
+                totalUsers,
+                totalCertificates,
+
+                total_courses: totalCourses,
+                total_lessons: totalLessons,
+                total_users: totalUsers,
+                total_certificates: totalCertificates
             }
         });
     } catch (error) {
-        console.error("DASHBOARD ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر تحميل بيانات لوحة التحكم"
-        });
+        return sendServerError(
+            res,
+            error,
+            "تعذر تحميل بيانات لوحة التحكم"
+        );
     }
 });
 
-/* =========================================================
-   COURSES - GET
-========================================================= */
+// ============================================================
+// COURSES - GET
+// ============================================================
 
 router.get("/courses", requireAdmin, async (req, res) => {
     try {
-        const [courses] = await db.query(
-            `
+        const [courses] = await db.query(`
             SELECT
                 id,
                 title,
@@ -221,26 +263,20 @@ router.get("/courses", requireAdmin, async (req, res) => {
                 created_at
             FROM courses
             ORDER BY id DESC
-            `
-        );
+        `);
 
         return res.json({
             success: true,
             courses
         });
     } catch (error) {
-        console.error("GET COURSES ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر تحميل الدورات"
-        });
+        return sendServerError(res, error, "تعذر تحميل الدورات");
     }
 });
 
-/* =========================================================
-   COURSES - CREATE
-========================================================= */
+// ============================================================
+// COURSES - CREATE
+// ============================================================
 
 router.post("/courses", requireAdmin, async (req, res) => {
     try {
@@ -263,14 +299,7 @@ router.post("/courses", requireAdmin, async (req, res) => {
         const [result] = await db.query(
             `
             INSERT INTO courses
-            (
-                title,
-                description,
-                category,
-                instructor,
-                duration,
-                image
-            )
+                (title, description, category, instructor, duration, image)
             VALUES (?, ?, ?, ?, ?, ?)
             `,
             [
@@ -289,24 +318,19 @@ router.post("/courses", requireAdmin, async (req, res) => {
             courseId: result.insertId
         });
     } catch (error) {
-        console.error("CREATE COURSE ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر إضافة الدورة"
-        });
+        return sendServerError(res, error, "تعذر إضافة الدورة");
     }
 });
 
-/* =========================================================
-   COURSES - UPDATE
-========================================================= */
+// ============================================================
+// COURSES - UPDATE
+// ============================================================
 
 router.put("/courses/:id", requireAdmin, async (req, res) => {
     try {
         const courseId = Number(req.params.id);
 
-        if (!courseId) {
+        if (!Number.isInteger(courseId) || courseId <= 0) {
             return res.status(400).json({
                 success: false,
                 message: "رقم الدورة غير صحيح"
@@ -352,11 +376,18 @@ router.put("/courses/:id", requireAdmin, async (req, res) => {
             ]
         );
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "الدورة غير موجودة"
-            });
+        if (!result.affectedRows) {
+            const [existing] = await db.query(
+                "SELECT id FROM courses WHERE id = ? LIMIT 1",
+                [courseId]
+            );
+
+            if (!existing.length) {
+                return res.status(404).json({
+                    success: false,
+                    message: "الدورة غير موجودة"
+                });
+            }
         }
 
         return res.json({
@@ -364,17 +395,13 @@ router.put("/courses/:id", requireAdmin, async (req, res) => {
             message: "تم تحديث الدورة بنجاح"
         });
     } catch (error) {
-        console.error("UPDATE COURSE ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر تحديث الدورة"
-        });
+        return sendServerError(res, error, "تعذر تحديث الدورة");
     }
 });
-/* =========================================================
-   COURSES - DELETE
-========================================================= */
+
+// ============================================================
+// COURSES - DELETE
+// ============================================================
 
 router.delete("/courses/:id", requireAdmin, async (req, res) => {
     let connection;
@@ -382,7 +409,7 @@ router.delete("/courses/:id", requireAdmin, async (req, res) => {
     try {
         const courseId = Number(req.params.id);
 
-        if (!courseId) {
+        if (!Number.isInteger(courseId) || courseId <= 0) {
             return res.status(400).json({
                 success: false,
                 message: "رقم الدورة غير صحيح"
@@ -417,7 +444,7 @@ router.delete("/courses/:id", requireAdmin, async (req, res) => {
             [courseId]
         );
 
-        if (result.affectedRows === 0) {
+        if (!result.affectedRows) {
             await connection.rollback();
 
             return res.status(404).json({
@@ -430,7 +457,7 @@ router.delete("/courses/:id", requireAdmin, async (req, res) => {
 
         return res.json({
             success: true,
-            message: "تم حذف الدورة وجميع بياناتها المرتبطة"
+            message: "تم حذف الدورة والبيانات المرتبطة بها"
         });
     } catch (error) {
         if (connection) {
@@ -441,27 +468,19 @@ router.delete("/courses/:id", requireAdmin, async (req, res) => {
             }
         }
 
-        console.error("DELETE COURSE ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر حذف الدورة"
-        });
+        return sendServerError(res, error, "تعذر حذف الدورة");
     } finally {
-        if (connection) {
-            connection.release();
-        }
+        if (connection) connection.release();
     }
 });
 
-/* =========================================================
-   LESSONS - GET ALL
-========================================================= */
+// ============================================================
+// LESSONS - GET ALL
+// ============================================================
 
 router.get("/lessons", requireAdmin, async (req, res) => {
     try {
-        const [lessons] = await db.query(
-            `
+        const [lessons] = await db.query(`
             SELECT
                 l.id,
                 l.course_id,
@@ -473,104 +492,99 @@ router.get("/lessons", requireAdmin, async (req, res) => {
                 l.created_at,
                 c.title AS course_title
             FROM lessons l
-            LEFT JOIN courses c
-                ON c.id = l.course_id
-            ORDER BY
-                l.course_id ASC,
-                l.lesson_order ASC,
-                l.id ASC
-            `
-        );
+            LEFT JOIN courses c ON c.id = l.course_id
+            ORDER BY l.course_id ASC, l.lesson_order ASC, l.id ASC
+        `);
 
         return res.json({
             success: true,
             lessons
         });
     } catch (error) {
-        console.error("GET LESSONS ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر تحميل الدروس"
-        });
+        return sendServerError(res, error, "تعذر تحميل المحاضرات");
     }
 });
 
-/* =========================================================
-   LESSONS - GET BY COURSE
-========================================================= */
+// ============================================================
+// LESSONS - GET BY COURSE
+// ============================================================
 
-router.get("/courses/:courseId/lessons", requireAdmin, async (req, res) => {
-    try {
-        const courseId = Number(req.params.courseId);
+router.get(
+    "/courses/:courseId/lessons",
+    requireAdmin,
+    async (req, res) => {
+        try {
+            const courseId = Number(req.params.courseId);
 
-        if (!courseId) {
-            return res.status(400).json({
-                success: false,
-                message: "رقم الدورة غير صحيح"
+            if (!Number.isInteger(courseId) || courseId <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "رقم الدورة غير صحيح"
+                });
+            }
+
+            const [lessons] = await db.query(
+                `
+                SELECT
+                    id,
+                    course_id,
+                    title,
+                    description,
+                    video_url,
+                    duration,
+                    lesson_order,
+                    created_at
+                FROM lessons
+                WHERE course_id = ?
+                ORDER BY lesson_order ASC, id ASC
+                `,
+                [courseId]
+            );
+
+            return res.json({
+                success: true,
+                lessons
             });
+        } catch (error) {
+            return sendServerError(
+                res,
+                error,
+                "تعذر تحميل محاضرات الدورة"
+            );
         }
+    }
+);
 
-        const [lessons] = await db.query(
-            `
-            SELECT
-                id,
-                course_id,
-                title,
-                description,
-                video_url,
-                duration,
-                lesson_order,
-                created_at
-            FROM lessons
-            WHERE course_id = ?
-            ORDER BY lesson_order ASC, id ASC
-            `,
-            [courseId]
+// ============================================================
+// LESSONS - CREATE HANDLER
+// Supports both /lessons and /courses/:courseId/lessons
+// ============================================================
+
+async function createLesson(req, res) {
+    try {
+        const courseId = Number(
+            req.params.courseId || req.body.course_id || req.body.courseId
         );
 
-        return res.json({
-            success: true,
-            lessons
-        });
-    } catch (error) {
-        console.error("GET COURSE LESSONS ERROR:", error);
+        const title = String(req.body.title || "").trim();
+        const description = String(req.body.description || "").trim();
+        const videoUrl = String(
+            req.body.video_url || req.body.videoUrl || ""
+        ).trim();
 
-        return res.status(500).json({
-            success: false,
-            message: "تعذر تحميل دروس الدورة"
-        });
-    }
-});
+        const duration = req.body.duration ?? "";
 
-/* =========================================================
-   LESSONS - CREATE
-========================================================= */
-
-router.post("/lessons", requireAdmin, async (req, res) => {
-    try {
-        const {
-            course_id,
-            title,
-            description,
-            video_url,
-            duration,
-            lesson_order
-        } = req.body;
-
-        const courseId = Number(course_id);
-
-        if (!courseId) {
+        if (!Number.isInteger(courseId) || courseId <= 0) {
             return res.status(400).json({
                 success: false,
                 message: "يجب اختيار الدورة"
             });
         }
 
-        if (!title || !String(title).trim()) {
+        if (!title) {
             return res.status(400).json({
                 success: false,
-                message: "عنوان الدرس مطلوب"
+                message: "عنوان المحاضرة مطلوب"
             });
         }
 
@@ -579,17 +593,23 @@ router.post("/lessons", requireAdmin, async (req, res) => {
             [courseId]
         );
 
-        if (courses.length === 0) {
+        if (!courses.length) {
             return res.status(404).json({
                 success: false,
                 message: "الدورة غير موجودة"
             });
         }
 
-        let order = Number(lesson_order);
+        const requestedOrder = Number(
+            req.body.lesson_order ?? req.body.lessonOrder
+        );
 
-        if (!order || order < 1) {
-            const [last] = await db.query(
+        let order;
+
+        if (Number.isInteger(requestedOrder) && requestedOrder > 0) {
+            order = requestedOrder;
+        } else {
+            const [[last]] = await db.query(
                 `
                 SELECT COALESCE(MAX(lesson_order), 0) AS max_order
                 FROM lessons
@@ -598,78 +618,100 @@ router.post("/lessons", requireAdmin, async (req, res) => {
                 [courseId]
             );
 
-            order = Number(last[0].max_order) + 1;
+            order = Number(last.max_order) + 1;
         }
 
         const [result] = await db.query(
             `
             INSERT INTO lessons
-            (
-                course_id,
-                title,
-                description,
-                video_url,
-                duration,
-                lesson_order
-            )
+                (
+                    course_id,
+                    title,
+                    description,
+                    video_url,
+                    duration,
+                    lesson_order
+                )
             VALUES (?, ?, ?, ?, ?, ?)
             `,
             [
                 courseId,
-                String(title).trim(),
-                description || "",
-                video_url || "",
-                duration || "",
+                title,
+                description,
+                videoUrl,
+                duration,
                 order
             ]
         );
 
         return res.status(201).json({
             success: true,
-            message: "تمت إضافة الدرس بنجاح",
-            lessonId: result.insertId
+            message: "تمت إضافة المحاضرة بنجاح",
+            lessonId: result.insertId,
+            lesson: {
+                id: result.insertId,
+                course_id: courseId,
+                title,
+                description,
+                video_url: videoUrl,
+                duration,
+                lesson_order: order
+            }
         });
     } catch (error) {
-        console.error("CREATE LESSON ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر إضافة الدرس"
-        });
+        return sendServerError(res, error, "تعذر إضافة المحاضرة");
     }
-});
+}
 
-/* =========================================================
-   LESSONS - UPDATE
-========================================================= */
+router.post("/lessons", requireAdmin, createLesson);
+
+router.post(
+    "/courses/:courseId/lessons",
+    requireAdmin,
+    createLesson
+);
+
+// ============================================================
+// LESSONS - UPDATE
+// ============================================================
 
 router.put("/lessons/:id", requireAdmin, async (req, res) => {
     try {
         const lessonId = Number(req.params.id);
 
-        const {
-            course_id,
-            title,
-            description,
-            video_url,
-            duration,
-            lesson_order
-        } = req.body;
+        const courseId = Number(
+            req.body.course_id || req.body.courseId
+        );
 
-        const courseId = Number(course_id);
-        const order = Number(lesson_order);
+        const title = String(req.body.title || "").trim();
+        const description = String(req.body.description || "").trim();
+        const videoUrl = String(
+            req.body.video_url || req.body.videoUrl || ""
+        ).trim();
 
-        if (!lessonId || !courseId) {
+        const duration = req.body.duration ?? "";
+        const order = Number(
+            req.body.lesson_order || req.body.lessonOrder
+        );
+
+        if (!Number.isInteger(lessonId) || lessonId <= 0) {
             return res.status(400).json({
                 success: false,
-                message: "بيانات الدرس غير صحيحة"
+                message: "رقم المحاضرة غير صحيح"
             });
         }
 
-        if (!title || !String(title).trim()) {
+        if (!Number.isInteger(courseId) || courseId <= 0) {
             return res.status(400).json({
                 success: false,
-                message: "عنوان الدرس مطلوب"
+                message: "يجب اختيار الدورة"
+            });
+        }
+
+        if (!title) {
+            return res.status(400).json({
+                success: false,
+                message: "عنوان المحاضرة مطلوب"
             });
         }
 
@@ -687,48 +729,50 @@ router.put("/lessons/:id", requireAdmin, async (req, res) => {
             `,
             [
                 courseId,
-                String(title).trim(),
-                description || "",
-                video_url || "",
-                duration || "",
-                order > 0 ? order : 1,
+                title,
+                description,
+                videoUrl,
+                duration,
+                Number.isInteger(order) && order > 0 ? order : 1,
                 lessonId
             ]
         );
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "الدرس غير موجود"
-            });
+        if (!result.affectedRows) {
+            const [existing] = await db.query(
+                "SELECT id FROM lessons WHERE id = ? LIMIT 1",
+                [lessonId]
+            );
+
+            if (!existing.length) {
+                return res.status(404).json({
+                    success: false,
+                    message: "المحاضرة غير موجودة"
+                });
+            }
         }
 
         return res.json({
             success: true,
-            message: "تم تحديث الدرس بنجاح"
+            message: "تم تحديث المحاضرة بنجاح"
         });
     } catch (error) {
-        console.error("UPDATE LESSON ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر تحديث الدرس"
-        });
+        return sendServerError(res, error, "تعذر تحديث المحاضرة");
     }
 });
 
-/* =========================================================
-   LESSONS - DELETE
-========================================================= */
+// ============================================================
+// LESSONS - DELETE
+// ============================================================
 
 router.delete("/lessons/:id", requireAdmin, async (req, res) => {
     try {
         const lessonId = Number(req.params.id);
 
-        if (!lessonId) {
+        if (!Number.isInteger(lessonId) || lessonId <= 0) {
             return res.status(400).json({
                 success: false,
-                message: "رقم الدرس غير صحيح"
+                message: "رقم المحاضرة غير صحيح"
             });
         }
 
@@ -742,63 +786,46 @@ router.delete("/lessons/:id", requireAdmin, async (req, res) => {
             [lessonId]
         );
 
-        if (result.affectedRows === 0) {
+        if (!result.affectedRows) {
             return res.status(404).json({
                 success: false,
-                message: "الدرس غير موجود"
+                message: "المحاضرة غير موجودة"
             });
         }
 
         return res.json({
             success: true,
-            message: "تم حذف الدرس بنجاح"
+            message: "تم حذف المحاضرة بنجاح"
         });
     } catch (error) {
-        console.error("DELETE LESSON ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر حذف الدرس"
-        });
+        return sendServerError(res, error, "تعذر حذف المحاضرة");
     }
 });
 
-/* =========================================================
-   USERS
-========================================================= */
+// ============================================================
+// USERS - GET
+// ============================================================
 
 router.get("/users", requireAdmin, async (req, res) => {
     try {
-        const [users] = await db.query(
-            `
-            SELECT
-                id,
-                name,
-                email,
-                role,
-                created_at
+        const [users] = await db.query(`
+            SELECT id, name, email, role, created_at
             FROM users
             ORDER BY id DESC
-            `
-        );
+        `);
 
         return res.json({
             success: true,
             users
         });
     } catch (error) {
-        console.error("GET USERS ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر تحميل المستخدمين"
-        });
+        return sendServerError(res, error, "تعذر تحميل المستخدمين");
     }
 });
 
-/* =========================================================
-   USER DELETE
-========================================================= */
+// ============================================================
+// USERS - DELETE
+// ============================================================
 
 router.delete("/users/:id", requireAdmin, async (req, res) => {
     let connection;
@@ -806,14 +833,14 @@ router.delete("/users/:id", requireAdmin, async (req, res) => {
     try {
         const userId = Number(req.params.id);
 
-        if (!userId) {
+        if (!Number.isInteger(userId) || userId <= 0) {
             return res.status(400).json({
                 success: false,
                 message: "رقم المستخدم غير صحيح"
             });
         }
 
-        if (userId === req.admin.id) {
+        if (Number(userId) === Number(req.admin.id)) {
             return res.status(400).json({
                 success: false,
                 message: "لا يمكنك حذف حساب الأدمن الحالي"
@@ -843,7 +870,7 @@ router.delete("/users/:id", requireAdmin, async (req, res) => {
             [userId]
         );
 
-        if (result.affectedRows === 0) {
+        if (!result.affectedRows) {
             await connection.rollback();
 
             return res.status(404).json({
@@ -856,7 +883,7 @@ router.delete("/users/:id", requireAdmin, async (req, res) => {
 
         return res.json({
             success: true,
-            message: "تم حذف المستخدم"
+            message: "تم حذف المستخدم بنجاح"
         });
     } catch (error) {
         if (connection) {
@@ -867,27 +894,19 @@ router.delete("/users/:id", requireAdmin, async (req, res) => {
             }
         }
 
-        console.error("DELETE USER ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر حذف المستخدم"
-        });
+        return sendServerError(res, error, "تعذر حذف المستخدم");
     } finally {
-        if (connection) {
-            connection.release();
-        }
+        if (connection) connection.release();
     }
 });
 
-/* =========================================================
-   CERTIFICATES
-========================================================= */
+// ============================================================
+// CERTIFICATES - GET
+// ============================================================
 
 router.get("/certificates", requireAdmin, async (req, res) => {
     try {
-        const [certificates] = await db.query(
-            `
+        const [certificates] = await db.query(`
             SELECT
                 c.id,
                 c.certificate_id,
@@ -898,37 +917,29 @@ router.get("/certificates", requireAdmin, async (req, res) => {
                 u.email AS user_email,
                 co.title AS course_title
             FROM certificates c
-            LEFT JOIN users u
-                ON u.id = c.user_id
-            LEFT JOIN courses co
-                ON co.id = c.course_id
+            LEFT JOIN users u ON u.id = c.user_id
+            LEFT JOIN courses co ON co.id = c.course_id
             ORDER BY c.id DESC
-            `
-        );
+        `);
 
         return res.json({
             success: true,
             certificates
         });
     } catch (error) {
-        console.error("GET CERTIFICATES ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر تحميل الشهادات"
-        });
+        return sendServerError(res, error, "تعذر تحميل الشهادات");
     }
 });
 
-/* =========================================================
-   CERTIFICATE DELETE
-========================================================= */
+// ============================================================
+// CERTIFICATES - DELETE
+// ============================================================
 
 router.delete("/certificates/:id", requireAdmin, async (req, res) => {
     try {
         const certificateId = Number(req.params.id);
 
-        if (!certificateId) {
+        if (!Number.isInteger(certificateId) || certificateId <= 0) {
             return res.status(400).json({
                 success: false,
                 message: "رقم الشهادة غير صحيح"
@@ -940,7 +951,7 @@ router.delete("/certificates/:id", requireAdmin, async (req, res) => {
             [certificateId]
         );
 
-        if (result.affectedRows === 0) {
+        if (!result.affectedRows) {
             return res.status(404).json({
                 success: false,
                 message: "الشهادة غير موجودة"
@@ -949,59 +960,52 @@ router.delete("/certificates/:id", requireAdmin, async (req, res) => {
 
         return res.json({
             success: true,
-            message: "تم حذف الشهادة"
+            message: "تم حذف الشهادة بنجاح"
         });
     } catch (error) {
-        console.error("DELETE CERTIFICATE ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "تعذر حذف الشهادة"
-        });
+        return sendServerError(res, error, "تعذر حذف الشهادة");
     }
 });
-/* =========================================================
-   SPECIALTIES MANAGEMENT
-========================================================= */
 
-// جلب التخصصات
+// ============================================================
+// SPECIALTIES - GET
+// ============================================================
+
 router.get("/specialties", requireAdmin, async (req, res) => {
     try {
-        const [specialties] = await db.query(
-            `
+        await ensureSpecialtiesTable();
+
+        const [specialties] = await db.query(`
             SELECT id, name, description, icon, created_at
             FROM specialties
             ORDER BY id ASC
-            `
-        );
+        `);
 
         return res.json({
             success: true,
             specialties
         });
     } catch (error) {
-        console.error("LOAD SPECIALTIES ERROR:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: `تعذر تحميل التخصصات: ${
-                error.sqlMessage || error.message
-            }`
-        });
+        return sendServerError(res, error, "تعذر تحميل التخصصات");
     }
 });
 
-// إضافة تخصص جديد
+// ============================================================
+// SPECIALTIES - CREATE
+// ============================================================
+
 router.post("/specialties", requireAdmin, async (req, res) => {
     try {
+        await ensureSpecialtiesTable();
+
         const name = String(req.body.name || "").trim();
         const description = String(req.body.description || "").trim();
         const icon = String(req.body.icon || "📚").trim();
 
-        if (!name || !description || !icon) {
+        if (!name || !description) {
             return res.status(400).json({
                 success: false,
-                message: "أدخل اسم التخصص ووصفه وأيقونته."
+                message: "أدخل اسم التخصص ووصفه."
             });
         }
 
@@ -1017,7 +1021,7 @@ router.post("/specialties", requireAdmin, async (req, res) => {
             [name]
         );
 
-        if (existing.length > 0) {
+        if (existing.length) {
             return res.status(409).json({
                 success: false,
                 message: "هذا التخصص موجود بالفعل."
@@ -1043,21 +1047,19 @@ router.post("/specialties", requireAdmin, async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("ADD SPECIALTY ERROR:", error);
+        if (error.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                success: false,
+                message: "هذا التخصص موجود بالفعل."
+            });
+        }
 
-        return res.status(500).json({
-            success: false,
-            message: error.code === "ER_DUP_ENTRY"
-                ? "هذا التخصص موجود بالفعل."
-                : `خطأ قاعدة البيانات: ${
-                    error.sqlMessage || error.message
-                }`
-        });
+        return sendServerError(res, error, "تعذرت إضافة التخصص");
     }
 });
 
-/* =========================================================
-   EXPORT
-========================================================= */
+// ============================================================
+// EXPORT
+// ============================================================
 
 module.exports = router;
