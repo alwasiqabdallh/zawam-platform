@@ -1,8 +1,7 @@
 
- // ============================================================
- // ZAWAM ADMIN DASHBOARD
- // PART 1 OF 3
- // ============================================================
+// ============================================================
+// ZAWAM ADMIN DASHBOARD
+// ============================================================
 
 const API = "/api/admin";
 
@@ -20,7 +19,7 @@ async function initializeAdmin() {
     try {
         await loadAdminInfo();
 
-        await Promise.all([
+        await Promise.allSettled([
             loadDashboard(),
             loadCourses(),
             loadUsers(),
@@ -43,7 +42,7 @@ async function apiRequest(url, options = {}) {
     const token = localStorage.getItem("zawamAdminToken");
 
     const headers = {
-        "Content-Type": "application/json",
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
         ...(options.headers || {})
     };
 
@@ -73,12 +72,13 @@ async function apiRequest(url, options = {}) {
         localStorage.removeItem("zawamAdminToken");
         localStorage.removeItem("zawamAdminName");
         localStorage.removeItem("zawamAdminEmail");
+        localStorage.removeItem("zawamAdminId");
 
         if (!window.location.pathname.includes("admin-login.html")) {
             window.location.href = "/admin-login.html";
         }
 
-        throw new Error(data.message || "انتهت جلسة الأدمن.");
+        throw new Error(data.message || "انتهت جلسة الأدمن. سجّل الدخول مجددًا.");
     }
 
     if (!response.ok || data.success === false) {
@@ -122,26 +122,26 @@ async function loadDashboard() {
 
         setText(
             ["coursesCount", "totalCourses", "total-courses"],
-            stats.totalCourses ?? 0
+            stats.totalCourses ?? stats.total_courses ?? 0
         );
 
         setText(
             ["lessonsCount", "totalLessons", "total-lessons"],
-            stats.totalLessons ?? 0
+            stats.totalLessons ?? stats.total_lessons ?? 0
         );
 
         setText(
             ["usersCount", "totalUsers", "total-users"],
-            stats.totalUsers ?? 0
+            stats.totalUsers ?? stats.total_users ?? 0
         );
 
         setText(
             ["certificatesCount", "totalCertificates", "total-certificates"],
-            stats.totalCertificates ?? 0
+            stats.totalCertificates ?? stats.total_certificates ?? 0
         );
     } catch (error) {
         console.error("Dashboard error:", error);
-        showToast(error.message || "تعذر تحميل لوحة التحكم", "error");
+        showToast(error.message || "تعذر تحميل لوحة التحكم.", "error");
     }
 }
 
@@ -168,13 +168,13 @@ async function loadCourses() {
             tableBody.innerHTML = `
                 <tr>
                     <td colspan="10" class="empty-row">
-                        تعذر تحميل الدورات
+                        تعذر تحميل الدورات: ${escapeHTML(error.message)}
                     </td>
                 </tr>
             `;
         }
 
-        showToast(error.message || "تعذر تحميل الدورات", "error");
+        showToast(error.message || "تعذر تحميل الدورات.", "error");
     }
 }
 
@@ -269,15 +269,33 @@ function openCourseModal(course = null) {
     const form = document.getElementById("courseForm");
     if (form) form.reset();
 
-    // تأكد من تجهيز خيارات التصنيف قبل اختيار التصنيف الحالي.
     populateSpecialtySelect();
 
     setValue("courseId", course?.id || "");
     setValue("courseTitle", course?.title || "");
     setValue("courseDescription", course?.description || "");
-    setValue("courseCategory", course?.category || "");
     setValue("courseInstructor", course?.instructor || "");
     setValue("courseDuration", course?.duration || "");
+
+    const categorySelect = document.getElementById("courseCategory");
+
+    if (categorySelect) {
+        const category = String(course?.category || "").trim();
+
+        if (
+            category &&
+            !Array.from(categorySelect.options).some(
+                option => option.value === category
+            )
+        ) {
+            const option = document.createElement("option");
+            option.value = category;
+            option.textContent = category;
+            categorySelect.appendChild(option);
+        }
+
+        categorySelect.value = category;
+    }
 
     modal.classList.add("show");
     modal.style.display = "flex";
@@ -297,7 +315,7 @@ function editCourse(id) {
     );
 
     if (!course) {
-        showToast("لم يتم العثور على الدورة", "error");
+        showToast("لم يتم العثور على الدورة.", "error");
         return;
     }
 
@@ -319,12 +337,12 @@ async function saveCourse(event) {
     const duration = getValue("courseDuration");
 
     if (!title) {
-        showToast("اكتب اسم الدورة", "error");
+        showToast("اكتب اسم الدورة.", "error");
         return;
     }
 
     if (!category) {
-        showToast("اختر تصنيف الدورة", "error");
+        showToast("اختر تصنيف الدورة.", "error");
         return;
     }
 
@@ -336,21 +354,27 @@ async function saveCourse(event) {
         duration
     };
 
+    const submitButton = document.querySelector(
+        "#courseForm button[type='submit']"
+    );
+
+    if (submitButton) submitButton.disabled = true;
+
     try {
         if (id) {
-            await apiRequest(`${API}/courses/${id}`, {
+            await apiRequest(`${API}/courses/${encodeURIComponent(id)}`, {
                 method: "PUT",
                 body: JSON.stringify(courseData)
             });
 
-            showToast("تم تعديل الدورة بنجاح", "success");
+            showToast("تم تعديل الدورة بنجاح.", "success");
         } else {
             await apiRequest(`${API}/courses`, {
                 method: "POST",
                 body: JSON.stringify(courseData)
             });
 
-            showToast("تمت إضافة الدورة بنجاح", "success");
+            showToast("تمت إضافة الدورة بنجاح.", "success");
         }
 
         closeCourseModal();
@@ -358,7 +382,9 @@ async function saveCourse(event) {
         await loadDashboard();
     } catch (error) {
         console.error("Save course error:", error);
-        showToast(error.message || "تعذر حفظ الدورة", "error");
+        showToast(error.message || "تعذر حفظ الدورة.", "error");
+    } finally {
+        if (submitButton) submitButton.disabled = false;
     }
 }
 
@@ -368,27 +394,27 @@ async function saveCourse(event) {
 
 async function deleteCourse(id) {
     const confirmed = confirm(
-        "هل أنت متأكد من حذف هذه الدورة؟\n\nسيتم حذف الدروس والتسجيلات والتقدم والشهادات المرتبطة بها."
+        "هل أنت متأكد من حذف هذه الدورة؟\n\nسيتم حذف البيانات المرتبطة بها حسب إعدادات قاعدة البيانات."
     );
 
     if (!confirmed) return;
 
     try {
-        await apiRequest(`${API}/courses/${id}`, {
+        await apiRequest(`${API}/courses/${encodeURIComponent(id)}`, {
             method: "DELETE"
         });
 
-        showToast("تم حذف الدورة بنجاح", "success");
+        showToast("تم حذف الدورة بنجاح.", "success");
         await loadCourses();
         await loadDashboard();
     } catch (error) {
         console.error("Delete course error:", error);
-        showToast(error.message || "تعذر حذف الدورة", "error");
+        showToast(error.message || "تعذر حذف الدورة.", "error");
     }
 }
 
 // ============================================================
-// POPULATE COURSE SELECTS
+// COURSE SELECTS
 // ============================================================
 
 function populateCourseSelects() {
@@ -398,16 +424,14 @@ function populateCourseSelects() {
     ].filter(Boolean);
 
     selects.forEach(select => {
-        const current = select.value;
+        const current = select.value || String(selectedCourseId || "");
 
-        select.innerHTML = `
-            <option value="">اختر الدورة</option>
-        `;
+        select.innerHTML = `<option value="">اختر الدورة</option>`;
 
         adminCourses.forEach(course => {
             const option = document.createElement("option");
             option.value = course.id;
-            option.textContent = course.title;
+            option.textContent = course.title || `الدورة ${course.id}`;
             select.appendChild(option);
         });
 
@@ -466,7 +490,7 @@ async function openLessonModal(courseId = null) {
     if (!Number.isInteger(id) || id <= 0) {
         showSectionByName("lessons");
         populateCourseSelects();
-        showToast("اختر دورة أولًا لإضافة محاضرة", "error");
+        showToast("اختر دورة أولًا لإضافة محاضرة.", "error");
         return;
     }
 
@@ -475,18 +499,25 @@ async function openLessonModal(courseId = null) {
     setValue("lessonCourse", id);
 
     const select = document.getElementById("lessonCourseSelect");
-    if (select) select.value = id;
+    if (select) select.value = String(id);
 
     const course = adminCourses.find(
         item => Number(item.id) === id
     );
 
     const titleElement = document.getElementById("lessonCourseTitle");
+
     if (titleElement) {
         titleElement.textContent = course?.title || `الدورة رقم ${id}`;
     }
 
+    const form = document.getElementById("lessonForm");
+    if (form) form.reset();
+
+    setValue("lessonCourse", id);
+
     const modal = document.getElementById("lessonModal");
+
     if (modal) {
         modal.classList.add("show");
         modal.style.display = "flex";
@@ -501,7 +532,6 @@ function closeLessonModal() {
 
     modal.classList.remove("show");
     modal.style.display = "none";
-    selectedCourseId = null;
 }
 
 // ============================================================
@@ -514,7 +544,7 @@ async function loadLessons(courseId) {
 
     try {
         const data = await apiRequest(
-            `${API}/courses/${courseId}/lessons`
+            `${API}/courses/${encodeURIComponent(courseId)}/lessons`
         );
 
         const lessons = Array.isArray(data.lessons) ? data.lessons : [];
@@ -539,11 +569,12 @@ async function loadLessons(courseId) {
                     <td>${escapeHTML(lesson.title || "-")}</td>
                     <td>${escapeHTML(lesson.duration || "-")}</td>
                     <td>
-                        ${videoUrl
-                            ? `<a href="${escapeAttribute(videoUrl)}"
-                                  target="_blank"
-                                  rel="noopener noreferrer">فتح الفيديو</a>`
-                            : "-"
+                        ${
+                            videoUrl
+                                ? `<a href="${escapeAttribute(videoUrl)}"
+                                      target="_blank"
+                                      rel="noopener noreferrer">فتح الفيديو</a>`
+                                : "-"
                         }
                     </td>
                     <td>
@@ -563,12 +594,12 @@ async function loadLessons(courseId) {
         tableBody.innerHTML = `
             <tr>
                 <td colspan="10" class="empty-row">
-                    تعذر تحميل المحاضرات
+                    تعذر تحميل المحاضرات: ${escapeHTML(error.message)}
                 </td>
             </tr>
         `;
 
-        showToast(error.message || "تعذر تحميل المحاضرات", "error");
+        showToast(error.message || "تعذر تحميل المحاضرات.", "error");
     }
 }
 
@@ -587,43 +618,70 @@ async function saveLesson(event) {
 
     const title = getValue("lessonTitle");
     const videoUrl = getValue("lessonUrl");
+    const description = getValue("lessonDescription");
+    const duration = getValue("lessonDuration") || "0";
+    const lessonOrderValue = getValue("lessonOrder");
 
     if (!Number.isInteger(courseId) || courseId <= 0) {
-        showToast("اختر الدورة", "error");
+        showToast("اختر الدورة.", "error");
         return;
     }
 
     if (!title) {
-        showToast("اكتب عنوان المحاضرة", "error");
+        showToast("اكتب عنوان المحاضرة.", "error");
         return;
     }
 
     if (!videoUrl) {
-        showToast("ضع رابط الفيديو", "error");
+        showToast("ضع رابط الفيديو.", "error");
         return;
     }
 
+    const lessonOrder = lessonOrderValue
+        ? Number(lessonOrderValue)
+        : 1;
+
+    if (!Number.isFinite(lessonOrder) || lessonOrder < 1) {
+        showToast("ترتيب المحاضرة يجب أن يكون رقمًا يبدأ من 1.", "error");
+        return;
+    }
+
+    const submitButton = document.querySelector(
+        "#lessonForm button[type='submit']"
+    );
+
+    if (submitButton) submitButton.disabled = true;
+
     try {
-        await apiRequest(`${API}/lessons`, {
+        const data = await apiRequest(`${API}/lessons`, {
             method: "POST",
             body: JSON.stringify({
                 course_id: courseId,
                 title,
-                video_url: videoUrl
+                description,
+                video_url: videoUrl,
+                duration,
+                lesson_order: lessonOrder
             })
         });
 
         selectedCourseId = courseId;
-        showToast("تمت إضافة المحاضرة بنجاح", "success");
+
+        showToast(data.message || "تمت إضافة المحاضرة بنجاح.", "success");
 
         setValue("lessonTitle", "");
         setValue("lessonUrl", "");
+        setValue("lessonDescription", "");
+        setValue("lessonDuration", "");
+        setValue("lessonOrder", "");
 
         await loadLessons(courseId);
         await loadDashboard();
     } catch (error) {
         console.error("Save lesson error:", error);
-        showToast(error.message || "تعذر إضافة المحاضرة", "error");
+        showToast(error.message || "تعذر إضافة المحاضرة.", "error");
+    } finally {
+        if (submitButton) submitButton.disabled = false;
     }
 }
 
@@ -632,15 +690,14 @@ async function saveLesson(event) {
 // ============================================================
 
 async function deleteLesson(lessonId, courseId = selectedCourseId) {
-    const confirmed = confirm("هل أنت متأكد من حذف هذه المحاضرة؟");
-    if (!confirmed) return;
+    if (!confirm("هل أنت متأكد من حذف هذه المحاضرة؟")) return;
 
     try {
-        await apiRequest(`${API}/lessons/${lessonId}`, {
+        await apiRequest(`${API}/lessons/${encodeURIComponent(lessonId)}`, {
             method: "DELETE"
         });
 
-        showToast("تم حذف المحاضرة بنجاح", "success");
+        showToast("تم حذف المحاضرة بنجاح.", "success");
 
         if (courseId) {
             selectedCourseId = Number(courseId);
@@ -650,7 +707,7 @@ async function deleteLesson(lessonId, courseId = selectedCourseId) {
         await loadDashboard();
     } catch (error) {
         console.error("Delete lesson error:", error);
-        showToast(error.message || "تعذر حذف المحاضرة", "error");
+        showToast(error.message || "تعذر حذف المحاضرة.", "error");
     }
 }
 
@@ -691,12 +748,12 @@ async function loadUsers() {
         tableBody.innerHTML = `
             <tr>
                 <td colspan="10" class="empty-row">
-                    تعذر تحميل المستخدمين
+                    تعذر تحميل المستخدمين: ${escapeHTML(error.message)}
                 </td>
             </tr>
         `;
 
-        showToast(error.message || "تعذر تحميل المستخدمين", "error");
+        showToast(error.message || "تعذر تحميل المستخدمين.", "error");
     }
 }
 
@@ -739,12 +796,12 @@ async function loadCertificates() {
         tableBody.innerHTML = `
             <tr>
                 <td colspan="4" class="empty-row">
-                    تعذر تحميل الشهادات
+                    تعذر تحميل الشهادات: ${escapeHTML(error.message)}
                 </td>
             </tr>
         `;
 
-        showToast(error.message || "تعذر تحميل الشهادات", "error");
+        showToast(error.message || "تعذر تحميل الشهادات.", "error");
     }
 }
 
@@ -771,15 +828,13 @@ async function loadSpecialties() {
             tableBody.innerHTML = `
                 <tr>
                     <td colspan="5" class="empty-row">
-                        تعذر تحميل التخصصات
+                        تعذر تحميل التخصصات: ${escapeHTML(error.message)}
                     </td>
                 </tr>
             `;
         }
 
-        // لا نوقف لوحة الإدارة إذا لم يكن مسار التخصصات جاهزًا بعد.
         populateSpecialtySelect();
-        console.warn("Specialties could not be loaded:", error.message);
     }
 }
 
@@ -791,7 +846,7 @@ function renderSpecialties() {
         tableBody.innerHTML = `
             <tr>
                 <td colspan="5" class="empty-row">
-                    لا توجد تخصصات
+                    لا توجد تخصصات مسجلة في قاعدة البيانات
                 </td>
             </tr>
         `;
@@ -814,7 +869,7 @@ function openSpecialtyModal() {
     const modal = document.getElementById("specialtyModal");
 
     if (!form || !modal) {
-        showToast("لم يتم العثور على نافذة إضافة التخصص في الصفحة.", "error");
+        showToast("لم يتم العثور على نموذج إضافة التخصص في الصفحة.", "error");
         return;
     }
 
@@ -854,7 +909,11 @@ async function saveSpecialty(event) {
     try {
         const data = await apiRequest(`${API}/specialties`, {
             method: "POST",
-            body: JSON.stringify({ name, icon, description })
+            body: JSON.stringify({
+                name,
+                icon,
+                description
+            })
         });
 
         showToast(data.message || "تمت إضافة التخصص بنجاح.", "success");
@@ -883,7 +942,8 @@ function populateSpecialtySelect() {
     const defaults = [
         { name: "برمجة", icon: "💻" },
         { name: "إنجليزي", icon: "🇬🇧" },
-        { name: "تصميم", icon: "🎨" }
+        { name: "تصميم", icon: "🎨" },
+        { name: "الأمن السيبراني", icon: "🛡️" }
     ];
 
     const names = new Set();
@@ -891,6 +951,7 @@ function populateSpecialtySelect() {
 
     [...defaults, ...adminSpecialties].forEach(item => {
         const name = String(item.name || "").trim();
+
         if (!name || names.has(name)) return;
 
         names.add(name);
@@ -900,7 +961,7 @@ function populateSpecialtySelect() {
         });
     });
 
-    // المحافظة على تصنيف أي دورة قديمة حتى لو لم يكن ضمن القائمة الحالية.
+    // المحافظة على تصنيف الدورات القديمة.
     if (currentValue && !names.has(currentValue)) {
         options.push({
             name: currentValue,
@@ -908,14 +969,14 @@ function populateSpecialtySelect() {
         });
     }
 
-    select.innerHTML = `
-        <option value="">اختر التصنيف</option>
-        ${options.map(item => `
-            <option value="${escapeHTML(item.name)}">
-                ${escapeHTML(item.icon)} ${escapeHTML(item.name)}
-            </option>
-        `).join("")}
-    `;
+    select.innerHTML = `<option value="">اختر التصنيف</option>`;
+
+    options.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.name;
+        option.textContent = `${item.icon} ${item.name}`;
+        select.appendChild(option);
+    });
 
     if (currentValue) {
         select.value = currentValue;
@@ -973,29 +1034,12 @@ function showSection(sectionName, clickedButton = null) {
         pageTitle.textContent = titleMap[sectionName] || "لوحة التحكم";
     }
 
-    if (sectionName === "courses") {
-        loadCourses();
-    }
-
-    if (sectionName === "lessons") {
-        populateCourseSelects();
-    }
-
-    if (sectionName === "users") {
-        loadUsers();
-    }
-
-    if (sectionName === "certificates") {
-        loadCertificates();
-    }
-
-    if (sectionName === "dashboard") {
-        loadDashboard();
-    }
-
-    if (sectionName === "specialties") {
-        loadSpecialties();
-    }
+    if (sectionName === "courses") loadCourses();
+    if (sectionName === "lessons") populateCourseSelects();
+    if (sectionName === "users") loadUsers();
+    if (sectionName === "certificates") loadCertificates();
+    if (sectionName === "dashboard") loadDashboard();
+    if (sectionName === "specialties") loadSpecialties();
 }
 
 function showSectionByName(sectionName) {
@@ -1064,17 +1108,9 @@ document.addEventListener("click", event => {
     const lessonModal = document.getElementById("lessonModal");
     const specialtyModal = document.getElementById("specialtyModal");
 
-    if (courseModal && event.target === courseModal) {
-        closeCourseModal();
-    }
-
-    if (lessonModal && event.target === lessonModal) {
-        closeLessonModal();
-    }
-
-    if (specialtyModal && event.target === specialtyModal) {
-        closeSpecialtyModal();
-    }
+    if (courseModal && event.target === courseModal) closeCourseModal();
+    if (lessonModal && event.target === lessonModal) closeLessonModal();
+    if (specialtyModal && event.target === specialtyModal) closeSpecialtyModal();
 });
 
 document.addEventListener("keydown", event => {
@@ -1116,9 +1152,7 @@ function setText(ids, value) {
 }
 
 function escapeHTML(value) {
-    if (value === null || value === undefined) {
-        return "";
-    }
+    if (value === null || value === undefined) return "";
 
     return String(value)
         .replace(/&/g, "&amp;")
