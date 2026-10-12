@@ -982,4 +982,272 @@ router.post("/specialties", requireAdmin, async (req, res) => {
         });
     }
 });
+/*
+========================================
+CATEGORIES (التخصصات)
+========================================
+*/
+
+const categoriesModule = require("./categories-routes");
+
+function cleanCategoryBody(body) {
+    return {
+        name: String((body && body.name) || "").trim(),
+        icon: String((body && body.icon) || "").trim() || "📚",
+        description: String((body && body.description) || "").trim()
+    };
+}
+
+function validateCategory({ name, icon, description }) {
+    if (!name) {
+        return "اسم التخصص مطلوب";
+    }
+
+    if (name.length > 100) {
+        return "اسم التخصص طويل جدًا (الحد الأقصى 100 حرف)";
+    }
+
+    if (Array.from(icon).length > 8) {
+        return "الأيقونة يجب أن تكون إيموجي واحد فقط";
+    }
+
+    if (description.length > 500) {
+        return "الوصف طويل جدًا (الحد الأقصى 500 حرف)";
+    }
+
+    return null;
+}
+
+router.get("/categories", requireAdmin, async (req, res) => {
+    try {
+        const categories = await categoriesModule.listCategories();
+
+        res.json({
+            success: true,
+            categories
+        });
+
+    } catch (error) {
+        console.error("Get categories error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "حدث خطأ أثناء تحميل التخصصات",
+            error: error.message
+        });
+    }
+});
+
+router.post("/categories", requireAdmin, async (req, res) => {
+    try {
+        await categoriesModule.ensureCategoriesTable();
+
+        const category = cleanCategoryBody(req.body);
+        const problem = validateCategory(category);
+
+        if (problem) {
+            return res.status(400).json({
+                success: false,
+                message: problem
+            });
+        }
+
+        const [result] = await db.query(
+            `
+            INSERT INTO categories
+            (name, icon, description)
+            VALUES (?, ?, ?)
+            `,
+            [
+                category.name,
+                category.icon,
+                category.description || null
+            ]
+        );
+
+        res.status(201).json({
+            success: true,
+            message: "تمت إضافة التخصص بنجاح",
+            category: {
+                id: result.insertId,
+                ...category
+            }
+        });
+
+    } catch (error) {
+        if (error.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                success: false,
+                message: "هذا التخصص موجود بالفعل"
+            });
+        }
+
+        console.error("Create category error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "حدث خطأ أثناء إضافة التخصص",
+            error: error.message
+        });
+    }
+});
+
+router.put("/categories/:id", requireAdmin, async (req, res) => {
+    const id = Number(req.params.id);
+
+    if (!id) {
+        return res.status(400).json({
+            success: false,
+            message: "رقم التخصص غير صحيح"
+        });
+    }
+
+    const category = cleanCategoryBody(req.body);
+    const problem = validateCategory(category);
+
+    if (problem) {
+        return res.status(400).json({
+            success: false,
+            message: problem
+        });
+    }
+
+    let connection;
+
+    try {
+        await categoriesModule.ensureCategoriesTable();
+
+        connection = await db.getConnection();
+
+        await connection.beginTransaction();
+
+        const [rows] = await connection.query(
+            "SELECT id, name FROM categories WHERE id = ? FOR UPDATE",
+            [id]
+        );
+
+        if (rows.length === 0) {
+            await connection.rollback();
+
+            return res.status(404).json({
+                success: false,
+                message: "التخصص غير موجود"
+            });
+        }
+
+        const oldName = rows[0].name;
+
+        await connection.query(
+            `
+            UPDATE categories
+            SET name = ?, icon = ?, description = ?
+            WHERE id = ?
+            `,
+            [
+                category.name,
+                category.icon,
+                category.description || null,
+                id
+            ]
+        );
+
+        // لو تغيّر الاسم، نحدّث الدورات المرتبطة بنفس التخصص
+        if (oldName !== category.name) {
+            await connection.query(
+                "UPDATE courses SET category = ? WHERE category = ?",
+                [category.name, oldName]
+            );
+        }
+
+        await connection.commit();
+
+        res.json({
+            success: true,
+            message: "تم تحديث التخصص بنجاح"
+        });
+
+    } catch (error) {
+        if (connection) {
+            try { await connection.rollback(); } catch (e) { }
+        }
+
+        if (error.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                success: false,
+                message: "يوجد تخصص آخر بنفس الاسم"
+            });
+        }
+
+        console.error("Update category error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "حدث خطأ أثناء تحديث التخصص",
+            error: error.message
+        });
+
+    } finally {
+        if (connection) {
+            connection.release();
+        }
+    }
+});
+
+router.delete("/categories/:id", requireAdmin, async (req, res) => {
+    try {
+        await categoriesModule.ensureCategoriesTable();
+
+        const id = Number(req.params.id);
+
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: "رقم التخصص غير صحيح"
+            });
+        }
+
+        const [rows] = await db.query(
+            "SELECT id, name FROM categories WHERE id = ?",
+            [id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "التخصص غير موجود"
+            });
+        }
+
+        const [used] = await db.query(
+            "SELECT COUNT(*) AS count FROM courses WHERE category = ?",
+            [rows[0].name]
+        );
+
+        if (Number(used[0].count) > 0) {
+            return res.status(400).json({
+                success: false,
+                message: `لا يمكن حذف التخصص لأنه مرتبط بـ ${used[0].count} دورة. انقل الدورات لتخصص آخر أولًا.`
+            });
+        }
+
+        await db.query(
+            "DELETE FROM categories WHERE id = ?",
+            [id]
+        );
+
+        res.json({
+            success: true,
+            message: "تم حذف التخصص"
+        });
+
+    } catch (error) {
+        console.error("Delete category error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "حدث خطأ أثناء حذف التخصص",
+            error: error.message
+        });
+    }
+});
 module.exports = router;
