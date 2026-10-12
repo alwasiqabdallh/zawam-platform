@@ -18,7 +18,15 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/admin", adminRoutes);
+const categoriesRoutes = require("./categories-routes");
 
+app.use("/api/categories", categoriesRoutes);
+
+categoriesRoutes
+    .ensureCategoriesTable()
+    .catch(error => {
+        console.error("Categories init error:", error.message);
+    });
 app.use(
     express.static(
         path.resolve(__dirname, "..")
