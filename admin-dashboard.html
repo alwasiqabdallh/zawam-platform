@@ -527,7 +527,9 @@
                 <button class="active" onclick="showSection('dashboard', this)">
                     🏠 الرئيسية
                 </button>
-
+<button onclick="showSection('categories', this)">
+    🏷️ التخصصات
+</button>
                 <button onclick="showSection('courses', this)">
                     📚 الدورات
                 </button>
@@ -658,7 +660,48 @@
                 </div>
 
             </section>
+<section id="categories" class="section">
 
+    <div class="section-header">
+
+        <h2>
+            إدارة التخصصات
+        </h2>
+
+        <button class="btn btn-gold" onclick="openCategoryModal()">
+            + إضافة تخصص
+        </button>
+
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الأيقونة</th>
+                    <th>اسم التخصص</th>
+                    <th>الوصف</th>
+                    <th>عدد الدورات</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+
+            <tbody id="categoriesTable">
+                <tr>
+                    <td colspan="6" class="loading">
+                        جاري تحميل التخصصات...
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
             <!-- LESSONS -->
 
             <section id="lessons" class="section">
@@ -792,7 +835,60 @@
         </main>
 
     </div>
+<div class="modal" id="categoryModal">
 
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h3 id="categoryModalTitle">
+                إضافة تخصص
+            </h3>
+
+            <button class="close" onclick="closeCategoryModal()">
+                ×
+            </button>
+
+        </div>
+
+        <form id="categoryForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>اسم التخصص</label>
+                    <input type="text" id="categoryName" maxlength="100" placeholder="مثال: الأمن السيبراني" required>
+                </div>
+
+                <div class="form-group">
+                    <label>الأيقونة (إيموجي)</label>
+                    <input type="text" id="categoryIcon" maxlength="8" placeholder="🔒">
+                </div>
+
+                <div class="form-group full">
+                    <label>الوصف</label>
+                    <textarea id="categoryDescription" maxlength="500" placeholder="وصف قصير يظهر للطلاب في الصفحة الرئيسية..."></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-buttons">
+
+                <button type="submit" class="btn btn-primary" id="categorySubmitBtn">
+                    حفظ التخصص
+                </button>
+
+                <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">
+                    إلغاء
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
     <!-- COURSE MODAL -->
 
     <div class="modal" id="courseModal">
@@ -830,14 +926,6 @@
                         <label>التصنيف</label>
 
                         <select id="courseCategory">
-
-                            <option value="برمجة">💻 برمجة</option>
-
-                            <option value="إنجليزي">🇬🇧 إنجليزي</option>
-
-                            <option value="تصميم">🎨 تصميم</option>
-
-                            <option value="الأمن السيبراني">🛡️ الأمن السيبراني</option>
 
                         </select>
 
@@ -1022,6 +1110,8 @@
         let adminToken = localStorage.getItem("zawamAdminToken");
 
         let courses = [];
+let categories = [];
+let editingCategoryId = null;
         let editingCourseId = null;
         let editingLessonId = null;
 
@@ -1061,6 +1151,7 @@
                 }
 
                 await loadDashboard();
+                await loadCategories();
                 await loadCourses();
                 await loadUsers();
                 await loadCertificates();
@@ -1139,6 +1230,7 @@
             const titles = {
                 dashboard: "لوحة تحكم ZAWAM",
                 courses: "إدارة الدورات",
+                categories: "إدارة التخصصات",
                 lessons: "إدارة المحاضرات",
                 users: "إدارة الطلاب",
                 certificates: "إدارة الشهادات"
@@ -1258,7 +1350,332 @@
                 </tr>
             `).join("");
         }
+async function loadCategories() {
 
+    try {
+
+        const { response, data } =
+            await adminFetch(`${API}/categories`);
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "تعذر تحميل التخصصات");
+        }
+
+        categories = data.categories || [];
+
+        renderCategories();
+
+        fillCategorySelect();
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("categoriesTable").innerHTML = `
+            <tr>
+                <td colspan="6" class="empty">
+                    ${escapeHtml(error.message)}
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+
+function renderCategories() {
+
+    const table = document.getElementById("categoriesTable");
+
+    if (!categories.length) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty">
+                    لا توجد تخصصات حاليًا
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    table.innerHTML = categories.map(category => {
+
+        return `
+            <tr>
+
+                <td>${category.id}</td>
+
+                <td style="font-size:22px;">
+                    ${escapeHtml(category.icon || "📚")}
+                </td>
+
+                <td>
+                    <strong>${escapeHtml(category.name)}</strong>
+                </td>
+
+                <td>
+                    ${escapeHtml(category.description || "-")}
+                </td>
+
+                <td>${Number(category.courses_count) || 0}</td>
+
+                <td>
+
+                    <div class="actions">
+
+                        <button
+                            class="btn btn-secondary btn-small"
+                            onclick="editCategory(${category.id})"
+                        >
+                            تعديل
+                        </button>
+
+                        <button
+                            class="btn btn-danger btn-small"
+                            onclick="deleteCategory(${category.id})"
+                        >
+                            حذف
+                        </button>
+
+                    </div>
+
+                </td>
+
+            </tr>
+        `;
+
+    }).join("");
+
+}
+
+
+function fillCategorySelect(selected) {
+
+    const select = document.getElementById("courseCategory");
+
+    const current =
+        selected !== undefined ? selected : select.value;
+
+    const names = categories.map(category => category.name);
+
+    if (current && !names.includes(current)) {
+        names.push(current);
+    }
+
+    if (!names.length) {
+
+        select.innerHTML =
+            '<option value="">أضف تخصصًا أولًا من قسم التخصصات</option>';
+
+        return;
+    }
+
+    select.innerHTML = names.map(name => {
+
+        return `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`;
+
+    }).join("");
+
+    if (current && names.includes(current)) {
+        select.value = current;
+    }
+
+}
+
+
+function openCategoryModal(category = null) {
+
+    document.getElementById("categoryModal").classList.add("show");
+
+    if (category) {
+
+        editingCategoryId = category.id;
+
+        document.getElementById("categoryModalTitle").textContent =
+            "تعديل التخصص";
+
+        document.getElementById("categorySubmitBtn").textContent =
+            "حفظ التعديلات";
+
+        document.getElementById("categoryName").value =
+            category.name || "";
+
+        document.getElementById("categoryIcon").value =
+            category.icon || "";
+
+        document.getElementById("categoryDescription").value =
+            category.description || "";
+
+    } else {
+
+        editingCategoryId = null;
+
+        document.getElementById("categoryModalTitle").textContent =
+            "إضافة تخصص";
+
+        document.getElementById("categorySubmitBtn").textContent =
+            "حفظ التخصص";
+
+        document.getElementById("categoryForm").reset();
+
+    }
+
+}
+
+
+function closeCategoryModal() {
+
+    document.getElementById("categoryModal")
+        .classList.remove("show");
+
+    document.getElementById("categoryForm").reset();
+
+    editingCategoryId = null;
+
+}
+
+
+document.getElementById("categoryForm")
+    .addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        const body = {
+
+            name:
+                document.getElementById("categoryName").value.trim(),
+
+            icon:
+                document.getElementById("categoryIcon").value.trim(),
+
+            description:
+                document.getElementById("categoryDescription").value.trim()
+
+        };
+
+        try {
+
+            const url = editingCategoryId
+                ? `${API}/categories/${editingCategoryId}`
+                : `${API}/categories`;
+
+            const result = await adminFetch(url, {
+                method: editingCategoryId ? "PUT" : "POST",
+                body: JSON.stringify(body)
+            });
+
+            if (!result.response.ok || !result.data.success) {
+
+                throw new Error(
+                    result.data.message || "تعذر حفظ التخصص"
+                );
+
+            }
+
+            showToast(
+                result.data.message || "تم حفظ التخصص بنجاح",
+                "success"
+            );
+
+            closeCategoryModal();
+
+            await loadCategories();
+            await loadCourses();
+
+        } catch (error) {
+
+            console.error(error);
+
+            showToast(error.message || "حدث خطأ", "error");
+
+        }
+
+    });
+
+
+function editCategory(id) {
+
+    const category = categories.find(
+        item => Number(item.id) === Number(id)
+    );
+
+    if (!category) {
+
+        showToast("التخصص غير موجود", "error");
+
+        return;
+    }
+
+    openCategoryModal(category);
+
+}
+
+
+async function deleteCategory(id) {
+
+    const category = categories.find(
+        item => Number(item.id) === Number(id)
+    );
+
+    if (!category) {
+        return;
+    }
+
+    const confirmed = confirm(
+        `هل أنت متأكد من حذف التخصص:\n\n${category.name}`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const { response, data } =
+            await adminFetch(
+                `${API}/categories/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.message || "تعذر حذف التخصص"
+            );
+
+        }
+
+        showToast(
+            data.message || "تم حذف التخصص",
+            "success"
+        );
+
+        await loadCategories();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(error.message || "حدث خطأ", "error");
+
+    }
+
+}
+
+
+document.getElementById("categoryModal")
+    .addEventListener("click", function (event) {
+
+        if (event.target === this) {
+            closeCategoryModal();
+        }
+
+    });
         /* COURSE MODAL */
 
         function openCourseModal(course = null) {
@@ -1315,7 +1732,8 @@
                     "حفظ الدورة";
 
                 document.getElementById("courseForm").reset();
-                document.getElementById("courseCategory").value = "برمجة";
+                fillCategorySelect("");
+               fillCategorySelect(course.category || "");
             }
         }
 
