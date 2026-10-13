@@ -330,92 +330,13 @@
 
         </div>
 
+<div class="category-grid" id="categoryGrid">
 
+    <p style="text-align:center;grid-column:1/-1;">جاري تحميل التخصصات...</p>
 
-        <div class="category-grid">
+</div>
 
-
-            <!-- البرمجة -->
-
-            <div class="category-card" onclick="window.location.href='course.html?category=programming'">
-
-                <div class="category-icon programming">
-                    💻
-                </div>
-
-
-                <h3>
-                    البرمجة
-                </h3>
-
-
-                <p>
-                    تعلم البرمجة من الصفر وتطوير المواقع والتطبيقات.
-                </p>
-
-
-                <span class="courses-count">
-                    دورات البرمجة
-                </span>
-
-            </div>
-
-
-
-            <!-- الإنجليزية -->
-
-            <div class="category-card" onclick="window.location.href='course.html?category=english'">
-
-                <div class="category-icon networking">
-                    🇬🇧
-                </div>
-
-
-                <h3>
-                    اللغة الإنجليزية
-                </h3>
-
-
-                <p>
-                    طوّر مهاراتك في اللغة الإنجليزية من البداية.
-                </p>
-
-
-                <span class="courses-count">
-                    دورات الإنجليزية
-                </span>
-
-            </div>
-
-
-
-            <!-- التصميم الجرافيكي -->
-
-            <div class="category-card" onclick="window.location.href='course.html?category=design'">
-
-                <div class="category-icon design">
-                    🎨
-                </div>
-
-
-                <h3>
-                    التصميم الجرافيكي
-                </h3>
-
-
-                <p>
-                    تعلم أساسيات التصميم الجرافيكي وتصميم الواجهات.
-                </p>
-
-
-                <span class="courses-count">
-                    دورات التصميم
-                </span>
-
-            </div>
-
-
-        </div>
+       
 
     </section>
 
@@ -804,13 +725,114 @@
         /* ==========================================
            تحميل الدورات
            ========================================== */
+const CATEGORY_ICON_CLASSES = ["programming", "networking", "design", "security", "ai", "data"];
+const CATEGORY_BG_CLASSES = ["programming-bg", "network-bg", "design-bg", "cyber-bg", "data-bg"];
 
+let categoriesList = [];
+
+function escapeHtml(value) {
+    return String(value === null || value === undefined ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function getCategoryInfo(name) {
+    const index = categoriesList.findIndex(c => c.name === name);
+    const category = index >= 0 ? categoriesList[index] : null;
+    const position = index >= 0 ? index : 0;
+
+    return {
+        icon: (category && category.icon) || "📚",
+        iconClass: CATEGORY_ICON_CLASSES[position % CATEGORY_ICON_CLASSES.length],
+        bgClass: CATEGORY_BG_CLASSES[position % CATEGORY_BG_CLASSES.length]
+    };
+}
+
+async function loadCategories() {
+
+    const grid = document.getElementById("categoryGrid");
+
+    try {
+
+        const response = await fetch("/api/categories");
+
+        if (!response.ok) {
+            throw new Error("Failed to load categories");
+        }
+
+        const data = await response.json();
+
+        if (!data.success || !Array.isArray(data.categories)) {
+            throw new Error("Invalid categories data");
+        }
+
+        categoriesList = data.categories;
+
+        if (!grid) {
+            return;
+        }
+
+        if (categoriesList.length === 0) {
+            grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;">لا توجد تخصصات حالياً.</p>';
+            return;
+        }
+
+        grid.innerHTML = categoriesList.map(category => {
+
+            const info = getCategoryInfo(category.name);
+
+            return `
+                <div class="category-card" data-name="${escapeHtml(category.name)}">
+
+                    <div class="category-icon ${info.iconClass}">
+                        ${escapeHtml(category.icon || "📚")}
+                    </div>
+
+                    <h3>${escapeHtml(category.name)}</h3>
+
+                    <p>${escapeHtml(category.description || "")}</p>
+
+                    <span class="courses-count">
+                        ${Number(category.courses_count) || 0} دورة
+                    </span>
+
+                </div>
+            `;
+
+        }).join("");
+
+        grid.querySelectorAll(".category-card").forEach(card => {
+
+            card.addEventListener("click", () => {
+
+                window.location.href =
+                    "course.html?category=" +
+                    encodeURIComponent(card.dataset.name);
+
+            });
+
+        });
+
+    } catch (error) {
+
+        console.error("CATEGORIES ERROR:", error);
+
+        if (grid) {
+            grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;">تعذر تحميل التخصصات.</p>';
+        }
+
+    }
+
+}
         async function loadCourses() {
 
             const courseGrid =
                 document.getElementById("courseGrid");
 
-
+await loadCategories();
             try {
 
                 const response =
@@ -851,20 +873,7 @@
                 }
 
 
-                const allowedCategories = [
-                    "برمجة",
-                    "إنجليزي",
-                    "تصميم"
-                ];
-
-
-                const filteredCourses =
-                    courses.filter(course =>
-                        allowedCategories.includes(
-                            course.category
-                        )
-                    );
-
+                const filteredCourses = courses;
 
                 if (filteredCourses.length === 0) {
 
@@ -883,47 +892,11 @@
                     filteredCourses.map(course => {
 
 
-                        let icon = "📚";
+                       const categoryInfo = getCategoryInfo(course.category);
 
-                        let imageClass =
-                            "programming-bg";
+const icon = categoryInfo.icon;
 
-
-                        if (
-                            course.category === "برمجة"
-                        ) {
-
-                            icon = "💻";
-
-                            imageClass =
-                                "programming-bg";
-
-                        }
-
-
-                        else if (
-                            course.category === "إنجليزي"
-                        ) {
-
-                            icon = "🇬🇧";
-
-                            imageClass =
-                                "network-bg";
-
-                        }
-
-
-                        else if (
-                            course.category === "تصميم"
-                        ) {
-
-                            icon = "🎨";
-
-                            imageClass =
-                                "cyber-bg";
-
-                        }
-
+const imageClass = categoryInfo.bgClass;
 
                         return `
 
