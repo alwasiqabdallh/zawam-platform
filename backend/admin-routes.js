@@ -1250,4 +1250,108 @@ router.delete("/categories/:id", requireAdmin, async (req, res) => {
         });
     }
 });
+router.put("/lessons/:lessonId", requireAdmin, async (req, res) => {
+    try {
+        const lessonId = Number(req.params.lessonId);
+
+        if (!Number.isInteger(lessonId) || lessonId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "رقم المحاضرة غير صحيح"
+            });
+        }
+
+        const {
+            course_id,
+            title,
+            description,
+            video_url,
+            duration,
+            lesson_order
+        } = req.body;
+
+        const courseId = Number(course_id);
+
+        if (!Number.isInteger(courseId) || courseId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "يجب اختيار دورة صحيحة"
+            });
+        }
+
+        if (!title || !String(title).trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "عنوان المحاضرة مطلوب"
+            });
+        }
+
+        const [lessons] = await db.query(
+            "SELECT id, lesson_order FROM lessons WHERE id = ? LIMIT 1",
+            [lessonId]
+        );
+
+        if (lessons.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "المحاضرة غير موجودة"
+            });
+        }
+
+        const [courses] = await db.query(
+            "SELECT id FROM courses WHERE id = ? LIMIT 1",
+            [courseId]
+        );
+
+        if (courses.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "الدورة غير موجودة"
+            });
+        }
+
+        let order = Number(lesson_order);
+
+        if (!Number.isInteger(order) || order <= 0) {
+            order = lessons[0].lesson_order || 1;
+        }
+
+        await db.query(
+            `
+            UPDATE lessons
+            SET
+                course_id = ?,
+                title = ?,
+                description = ?,
+                video_url = ?,
+                duration = ?,
+                lesson_order = ?
+            WHERE id = ?
+            `,
+            [
+                courseId,
+                String(title).trim(),
+                description || null,
+                video_url || null,
+                duration || null,
+                order,
+                lessonId
+            ]
+        );
+
+        res.json({
+            success: true,
+            message: "تم تحديث المحاضرة بنجاح"
+        });
+
+    } catch (error) {
+        console.error("Update lesson error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "حدث خطأ أثناء تحديث المحاضرة",
+            error: error.message
+        });
+    }
+});
 module.exports = router;
